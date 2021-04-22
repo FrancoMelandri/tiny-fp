@@ -15,8 +15,8 @@ jobs:
         dotnet-version: '5.0.103'
     - name: Build
       run: |
-        dotnet build tiny-fp.sln
+        dotnet build
     - name: Test
       run: |
-        dotnet test tiny-fp.sln
+        dotnet test
   
