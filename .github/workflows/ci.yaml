@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup .NET 5
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '5.0.x'
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build
+    - name: Test
+      run: dotnet test
+  
