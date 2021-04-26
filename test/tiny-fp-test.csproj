@@ -15,8 +15,4 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DataTypes\Try\" />
-  </ItemGroup>
-
 </Project>

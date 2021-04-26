@@ -1,5 +1,4 @@
-﻿using System;
-using TinyFp.Common;
+﻿using TinyFp.Common;
 
 namespace TinyFp
 {

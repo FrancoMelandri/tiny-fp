@@ -114,8 +114,9 @@ namespace TinyFpTest.DataTypes
         public void MapLeftAsync_WhenRight_DontMapToOutput()
         {
             var called = false;
-            Either<int, string>.Right("either")
-                .MapLeftAsync(_ => { called = true;  return Task.FromResult(0); });
+            _ = Either<int, string>.Right("either")
+                .MapLeftAsync(_ => { called = true;  return Task.FromResult(0); })
+                .Result;
 
             called.Should().BeFalse();
         }
@@ -124,8 +125,9 @@ namespace TinyFpTest.DataTypes
         public void MapLeftAsync_WhenLeft_MapToOutput()
         {
             var called = false;
-            Either<int, string>.Left(0)
-                .MapLeftAsync(_ => { called = true; return Task.FromResult(0); });
+            _ = Either<int, string>.Left(0)
+                .MapLeftAsync(_ => { called = true; return Task.FromResult(0); })
+                .Result;
 
             called.Should().BeTrue();
         }

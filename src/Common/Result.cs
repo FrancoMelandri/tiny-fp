@@ -5,16 +5,15 @@ using TinyFp.Exceptions;
 
 namespace TinyFp.Common
 {
-
     public struct Result<A>
     {
         public readonly static Result<A> Bottom = default(Result<A>);
 
-        private readonly ResultState State;
-        private readonly A Value;
+        internal readonly ResultState State;
+        internal readonly A Value;
         private Exception exception;
 
-        private Exception Exception => exception ?? BottomException.Default;
+        internal Exception Exception => exception ?? BottomException.Default;
 
         [Pure]
         public Result(A value)
@@ -31,6 +30,10 @@ namespace TinyFp.Common
             exception = e;
             Value = default(A);
         }
+
+        [Pure]
+        public static implicit operator Result<A>(A value) =>
+            new Result<A>(value);
 
         [Pure]
         public bool IsFaulted 
