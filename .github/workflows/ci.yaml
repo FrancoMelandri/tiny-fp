@@ -16,6 +16,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '5.0.103'
+        source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{ github.GITHUB_TOKEN }}
 
     - name: Build
       run: |
@@ -23,5 +26,15 @@ jobs:
 
     - name: Test
       run: |
-        dotnet test
+        dotnet test --no-restore
+
+    - name: Create package
+      run: |
+        dotnet pack --no-build --output .
+
+    - name: Publish the package to GitHub
+      run: |
+        dotnet nuget push *.nupkg --no-symbols --skip-duplicate true
+      env:
+        NUGET_AUTH_TOKEN: ${{ github.GITHUB_TOKEN }}
   
