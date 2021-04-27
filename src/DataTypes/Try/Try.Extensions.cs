@@ -6,23 +6,6 @@ namespace TinyFp
 {
     public static class TryExtensions
     {
-        public static Try<A> Memo<A>(this Try<A> ma)
-        {
-            var run = false;
-            var result = new Result<A>();
-            return () =>
-            {
-                if (run) return result;
-                var ra = ma.Try();
-                if (result.IsSuccess)
-                {
-                    run = true;
-                    result = ra;
-                }
-                return ra;
-            };
-        }
-
         [Pure]
         public static Result<T> Try<T>(this Try<T> self)
         {
@@ -38,6 +21,23 @@ namespace TinyFp
             {
                 return new Result<T>(e);
             }
+        }
+
+        public static Try<A> Memo<A>(this Try<A> ma)
+        {
+            var run = false;
+            var result = new Result<A>();
+            return () =>
+            {
+                if (run) return result;
+                var ra = ma.Try();
+                if (result.IsSuccess)
+                {
+                    run = true;
+                    result = ra;
+                }
+                return ra;
+            };
         }
 
         [Pure]
