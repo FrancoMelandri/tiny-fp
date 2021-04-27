@@ -8,15 +8,15 @@ namespace TinyFp
     public static class TryAsyncExtensions
     {
         [Pure]
-        public static async Task<Result<T>> Try<T>(this TryAsync<T> self)
+        public static async Task<Result<T>> Try<T>(this TryAsync<T> @this)
         {
             try
             {
-                if (self == null)
+                if (@this == null)
                 {
-                    throw new ArgumentNullException(nameof(self));
+                    throw new ArgumentNullException(nameof(@this));
                 }
-                return await self();
+                return await @this();
             }
             catch (Exception e)
             {
@@ -24,14 +24,14 @@ namespace TinyFp
             }
         }
 
-        public static TryAsync<A> Memo<A>(this TryAsync<A> ma)
+        public static TryAsync<A> Memo<A>(this TryAsync<A> @this)
         {
             bool run = false;
             var result = Result<A>.Bottom;
             return new TryAsync<A>(async () =>
             {
                 if (run) return result;
-                var tra = ma.Try();
+                var tra = @this.Try();
                 var ra = await tra;
                 if (ra.IsSuccess)
                 {
@@ -42,65 +42,65 @@ namespace TinyFp
             });
         }
         [Pure]
-        public static async Task<R> Match<A, R>(this TryAsync<A> self, Func<A, R> Succ, Func<Exception, R> Fail)
+        public static async Task<R> Match<A, R>(this TryAsync<A> @this, Func<A, R> Succ, Func<Exception, R> Fail)
         {
-            var res = await self.Try();
+            var res = await @this.Try();
             return res.IsFaulted
                 ? Fail(res.Exception)
                 : Succ(res.Value);
         }
 
         [Pure]
-        public static async Task<R> Match<A, R>(this TryAsync<A> self, Func<A, Task<R>> Succ, Func<Exception, R> Fail)
+        public static async Task<R> Match<A, R>(this TryAsync<A> @this, Func<A, Task<R>> Succ, Func<Exception, R> Fail)
         {
-            var res = await self.Try();
+            var res = await @this.Try();
             return res.IsFaulted
                 ? Fail(res.Exception)
                 : await Succ(res.Value);
         }
 
         [Pure]
-        public static async Task<R> Match<A, R>(this TryAsync<A> self, Func<A, R> Succ, Func<Exception, Task<R>> Fail)
+        public static async Task<R> Match<A, R>(this TryAsync<A> @this, Func<A, R> Succ, Func<Exception, Task<R>> Fail)
         {
-            var res = await self.Try();
+            var res = await @this.Try();
             return res.IsFaulted
                 ? await Fail(res.Exception)
                 : Succ(res.Value);
         }
 
         [Pure]
-        public static async Task<R> Match<A, R>(this TryAsync<A> self, Func<A, Task<R>> Succ, Func<Exception, Task<R>> Fail)
+        public static async Task<R> Match<A, R>(this TryAsync<A> @this, Func<A, Task<R>> Succ, Func<Exception, Task<R>> Fail)
         {
-            var res = await self.Try();
+            var res = await @this.Try();
             return res.IsFaulted
                 ? await Fail(res.Exception)
                 : await Succ(res.Value);
         }
 
         [Pure]
-        public static async Task<R> Match<A, R>(this TryAsync<A> self, Func<A, R> Succ, R Fail)
+        public static async Task<R> Match<A, R>(this TryAsync<A> @this, Func<A, R> Succ, R Fail)
         {
-            var res = await self.Try();
+            var res = await @this.Try();
             return res.IsFaulted
                 ? Fail
                 : Succ(res.Value);
         }
 
         [Pure]
-        public static async Task<R> Match<A, R>(this TryAsync<A> self, Func<A, Task<R>> Succ, R Fail)
+        public static async Task<R> Match<A, R>(this TryAsync<A> @this, Func<A, Task<R>> Succ, R Fail)
         {
-            var res = await self.Try();
+            var res = await @this.Try();
             return res.IsFaulted
                 ? Fail
                 : await Succ(res.Value);
         }
 
         [Pure]
-        public static async Task<A> OnFail<A>(this TryAsync<A> self, A failValue)
+        public static async Task<A> OnFail<A>(this TryAsync<A> @this, A failValue)
         {
             try
             {
-                var res = await self.Try();
+                var res = await @this.Try();
                 return res.IsSuccess ?
                     res.Value :
                     failValue;
@@ -112,19 +112,19 @@ namespace TinyFp
         }
 
         [Pure]
-        public static async Task<A> OnFail<A>(this TryAsync<A> self, Func<Task<A>> Fail)
-            => await self.OnFail(await Fail());
+        public static async Task<A> OnFail<A>(this TryAsync<A> @this, Func<Task<A>> Fail)
+            => await @this.OnFail(await Fail());
 
         [Pure]
-        public static async Task<A> OnFail<A>(this TryAsync<A> self, Func<A> Fail)
-            => await self.OnFail(Fail());
+        public static async Task<A> OnFail<A>(this TryAsync<A> @this, Func<A> Fail)
+            => await @this.OnFail(Fail());
 
         [Pure]
-        public static async Task<A> OnFail<A>(this TryAsync<A> self, Func<Exception, A> Fail)
+        public static async Task<A> OnFail<A>(this TryAsync<A> @this, Func<Exception, A> Fail)
         {
             try
             {
-                var res = await self.Try();
+                var res = await @this.Try();
                 return res.IsSuccess ?
                     res.Value :
                     Fail(res.Exception);
@@ -136,11 +136,11 @@ namespace TinyFp
         }
 
         [Pure]
-        public static async Task<A> OnFail<A>(this TryAsync<A> self, Func<Exception, Task<A>> Fail)
+        public static async Task<A> OnFail<A>(this TryAsync<A> @this, Func<Exception, Task<A>> Fail)
         {
             try
             {
-                var res = await self.Try();
+                var res = await @this.Try();
                 return res.IsSuccess ?
                     res.Value :
                     await Fail(res.Exception);
@@ -152,21 +152,21 @@ namespace TinyFp
         }
 
         [Pure]
-        public static async Task<Either<Exception, A>> ToEither<A>(this TryAsync<A> self)
+        public static async Task<Either<Exception, A>> ToEither<A>(this TryAsync<A> @this)
         {
-            var res = await self.Try();
+            var res = await @this.Try();
             return res.IsFaulted ?
                 Either<Exception, A>.Left(res.Exception) :
                 Either<Exception, A>.Right(res.Value);
         }
 
         [Pure]
-        public static TryAsync<B> Bind<A, B>(this TryAsync<A> ma, Func<A, TryAsync<B>> f) 
+        public static TryAsync<B> Bind<A, B>(this TryAsync<A> @this, Func<A, TryAsync<B>> f) 
             => Memo(async () =>
                 {
                     try
                     {
-                        var ra = await ma();
+                        var ra = await @this();
                         return ra.IsSuccess ?
                             await f(ra.Value)() :
                             new Result<B>(ra.Exception);                        
@@ -177,9 +177,9 @@ namespace TinyFp
                     }
                 });
 
-        public static TryAsync<A> Do<A>(this TryAsync<A> ma, Action<A> f) => new TryAsync<A>(async () =>
+        public static TryAsync<A> Do<A>(this TryAsync<A> @this, Action<A> f) => new TryAsync<A>(async () =>
         {
-            var r = await ma.Try();
+            var r = await @this.Try();
             if (!r.IsFaulted)
             {
                 f(r.Value);

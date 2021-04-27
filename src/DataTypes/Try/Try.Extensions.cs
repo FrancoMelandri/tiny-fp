@@ -7,15 +7,15 @@ namespace TinyFp
     public static class TryExtensions
     {
         [Pure]
-        public static Result<T> Try<T>(this Try<T> self)
+        public static Result<T> Try<T>(this Try<T> @this)
         {
             try
             {
-                if (self == null)
+                if (@this == null)
                 {
-                    throw new ArgumentNullException(nameof(self));
+                    throw new ArgumentNullException(nameof(@this));
                 }
-                return self();
+                return @this();
             }
             catch (Exception e)
             {
@@ -23,14 +23,14 @@ namespace TinyFp
             }
         }
 
-        public static Try<A> Memo<A>(this Try<A> ma)
+        public static Try<A> Memo<A>(this Try<A> @this)
         {
             var run = false;
             var result = new Result<A>();
             return () =>
             {
                 if (run) return result;
-                var ra = ma.Try();
+                var ra = @this.Try();
                 if (result.IsSuccess)
                 {
                     run = true;
@@ -41,52 +41,52 @@ namespace TinyFp
         }
 
         [Pure]
-        public static R Match<A, R>(this Try<A> self, Func<A, R> Succ, Func<Exception, R> Fail)
+        public static R Match<A, R>(this Try<A> @this, Func<A, R> Succ, Func<Exception, R> Fail)
         {
-            var res = self.Try();
+            var res = @this.Try();
             return res.IsSuccess ?
                 Succ(res.Value) :
                 Fail(res.Exception);
         }
 
         [Pure]
-        public static R Match<A, R>(this Try<A> self, Func<A, R> Succ, R Fail)
+        public static R Match<A, R>(this Try<A> @this, Func<A, R> Succ, R Fail)
         {
-            var res = self.Try();
+            var res = @this.Try();
             return res.IsFaulted ?
                 Fail :
                 Succ(res.Value);
         }
 
         [Pure]
-        public static A OnFail<A>(this Try<A> self, A failValue)
-            => OnFail(self, () => failValue);
+        public static A OnFail<A>(this Try<A> @this, A failValue)
+            => OnFail(@this, () => failValue);
 
         [Pure]
-        public static A OnFail<A>(this Try<A> self, Func<A> Fail)
+        public static A OnFail<A>(this Try<A> @this, Func<A> Fail)
         {
-            var res = self.Try();
+            var res = @this.Try();
             return res.IsSuccess ?
                 res.Value :
                 Fail();
         }
 
         [Pure]
-        public static Either<Exception, A> ToEither<A>(this Try<A> self)
+        public static Either<Exception, A> ToEither<A>(this Try<A> @this)
         {
-            var res = self.Try();
+            var res = @this.Try();
             return res.IsFaulted ?
                 Either<Exception, A>.Left(res.Exception) :
                 Either<Exception, A>.Right(res.Value);
         }
 
         [Pure]
-        public static Try<B> Bind<A, B>(this Try<A> ma, Func<A, Try<B>> f)
+        public static Try<B> Bind<A, B>(this Try<A> @this, Func<A, Try<B>> f)
             => Memo(() =>
                 {
                     try
                     {
-                        var ra = ma.Try();
+                        var ra = @this.Try();
                         return ra.IsSuccess ?
                             f(ra.Value)() :
                             new Result<B>(ra.Exception);
@@ -97,9 +97,9 @@ namespace TinyFp
                     }
                 });
 
-        public static Try<A> Do<A>(this Try<A> ma, Action<A> f) => () =>
+        public static Try<A> Do<A>(this Try<A> @this, Action<A> f) => () =>
         {
-            var r = ma.Try();
+            var r = @this.Try();
             if (!r.IsFaulted)
             {
                 f(r.Value);
