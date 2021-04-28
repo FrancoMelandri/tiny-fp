@@ -1,8 +1,8 @@
 ﻿using NUnit.Framework;
 using System.Threading.Tasks;
 using TinyFp.Common;
-using FluentAssertions;
 using System;
+using FluentAssertions;
 
 namespace TinyFpTest.DataTypes.Common
 {

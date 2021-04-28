@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using TinyFp;
 using static TinyFp.Prelude;
 
-namespace TinyFpTest
+namespace TinyFpTest.DataTypes
 {
     [TestFixture]
     public class TryAsyncTests

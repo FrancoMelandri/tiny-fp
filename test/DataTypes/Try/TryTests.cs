@@ -4,7 +4,7 @@ using System;
 using TinyFp;
 using static TinyFp.Prelude;
 
-namespace TinyFpTest
+namespace TinyFpTest.DataTypes
 {
     [TestFixture]
     public class TryTests
