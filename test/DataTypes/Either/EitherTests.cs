@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using TinyFp;
 using FluentAssertions;
+using System;
 
 namespace TinyFpTest.DataTypes
 {
@@ -15,10 +16,30 @@ namespace TinyFpTest.DataTypes
                 .Should().BeTrue();
 
         [Test]
+        public void Right_WhenNull_RaiseException()
+        {
+            Action act = () => Either<object, object>.Right(null);
+
+            act.Should()
+                .Throw<ArgumentNullException>()
+                .And.ParamName.Should().Be("right");
+        }
+
+        [Test]
         public void Left_CreaateLeft()
             => Either<int, string>.Left(0)
                 .IsLeft
                 .Should().BeTrue();
+
+        [Test]
+        public void Left_WhenNull_RaiseException()
+        {
+            Action act = () => Either<object, object>.Left(null);
+
+            act.Should()
+                .Throw<ArgumentNullException>()
+                .And.ParamName.Should().Be("left");
+        }
 
         [Test]
         public void OnRight_WhenRight_CallAction()
@@ -210,5 +231,23 @@ namespace TinyFpTest.DataTypes
                 .MatchAsync(_ => Task.FromResult(false), _ => Task.FromResult(true))
                 .Result
                 .Should().BeTrue();
+
+        [Test]
+        public void WhenRight_ImplicitCast()
+        {
+            Either<int, string> result = "right";
+
+            result.IsRight.Should().BeTrue();
+            result.IsLeft.Should().BeFalse();
+        }
+
+        [Test]
+        public void WhenLeft_ImplicitCast()
+        {
+            Either<int, string> result = 1;
+
+            result.IsLeft.Should().BeTrue();
+            result.IsRight.Should().BeFalse();
+        }
     }
 }
