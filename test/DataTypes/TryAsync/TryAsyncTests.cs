@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
+using System;
 using System.Threading.Tasks;
 using TinyFp;
 using static TinyFp.Prelude;
@@ -193,7 +194,7 @@ namespace TinyFpTest
                 .Should().Be(20);
 
         [Test]
-        public void TryBind_WhenFirstException_DontCall()
+        public void TryAsyncBind_WhenFirstException_DontCall()
             => TryAsync(() => GetValueAsync(0))
                 .Bind(_ => { Assert.Fail(); return TryAsync(() => GetValueAsync(5)); })
                 .OnFail(0)
@@ -201,7 +202,7 @@ namespace TinyFpTest
                 .Should().Be(0);
 
         [Test]
-        public void TryDo_WhenNoException_Call()
+        public void TryAsyncDo_WhenNoException_Call()
             => TryAsync(() => GetValueAsync(10))
                 .Do(_ => { })
                 .OnFail(0)
@@ -209,11 +210,36 @@ namespace TinyFpTest
                 .Should().Be(10);
 
         [Test]
-        public void TryDo_WhenException_DontCall()
+        public void TryAsyncDo_WhenException_DontCall()
             => TryAsync(() => GetValueAsync(0))
                 .Do(_ => { })
                 .OnFail(0)
                 .Result
                 .Should().Be(0);
+
+        [Test]
+        public void TryAsyncMemo_WhenNoExcpetion_MemoizeTheTryCall()
+        {
+            var counter = 0;
+            var @try = TryAsync(() => Task.FromResult(counter++));
+            var memo = @try.Memo();
+            memo().Wait();
+            memo().Wait();
+            memo().Wait();
+            counter.Should().Be(1);
+        }
+
+        [Test]
+        public void TryAsyncMemo_WhenExcpetion_DontMemoizeTheTryCall()
+        {
+            var counter = 0;
+            var @try = TryAsync(() => Task.FromResult(counter++ == 0 ? throw new Exception() : counter));
+            var memo = @try.Memo();
+            memo().Wait();
+            memo().Wait();
+            memo().Wait();
+            counter.Should().Be(2);
+        }
+
     }
 }

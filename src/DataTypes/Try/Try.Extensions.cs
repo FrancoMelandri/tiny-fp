@@ -21,18 +21,20 @@ namespace TinyFp
 
         public static Try<A> Memo<A>(this Try<A> @this)
         {
-            var run = false;
-            var result = new Result<A>();
+            var isMemoized = false;
+            var memoized = new Result<A>();
             return () =>
             {
-                if (run) return result;
-                var ra = @this.Try();
-                if (result.IsSuccess)
+                if (isMemoized) return memoized;
+
+                var @try = @this.Try();
+                if (@try.IsSuccess)
                 {
-                    run = true;
-                    result = ra;
+                    isMemoized = true;
+                    memoized = @try;
                 }
-                return ra;
+
+                return @try;
             };
         }
 

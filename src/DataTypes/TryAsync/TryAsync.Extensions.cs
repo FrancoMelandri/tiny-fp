@@ -12,10 +12,6 @@ namespace TinyFp
         {
             try
             {
-                if (@this == null)
-                {
-                    throw new ArgumentNullException(nameof(@this));
-                }
                 return await @this();
             }
             catch (Exception e)
@@ -26,21 +22,24 @@ namespace TinyFp
 
         public static TryAsync<A> Memo<A>(this TryAsync<A> @this)
         {
-            bool run = false;
-            var result = Result<A>.Bottom;
+            var isMemoized = false;
+            var memoized = new Result<A>();
             return new TryAsync<A>(async () =>
-            {
-                if (run) return result;
-                var tra = @this.Try();
-                var ra = await tra;
-                if (ra.IsSuccess)
                 {
-                    result = ra;
-                    run = true;
+                    if (isMemoized) return memoized;
+
+                    var @try = await  @this.Try();
+                    if (@try.IsSuccess)
+                    {
+                        isMemoized = true;
+                        memoized = @try;
+                    }
+
+                    return @try;
                 }
-                return ra;
-            });
+            );
         }
+
         [Pure]
         public static async Task<R> Match<A, R>(this TryAsync<A> @this, Func<A, R> Succ, Func<Exception, R> Fail)
         {

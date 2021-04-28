@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
+using System;
 using TinyFp;
 using static TinyFp.Prelude;
 
@@ -102,5 +103,29 @@ namespace TinyFpTest
                 .Do(_ => { } )
                 .OnFail(0)
                 .Should().Be(0);
+
+        [Test]
+        public void Memo_WhenNoExcpetion_MemoizeTheTryCall()
+        {
+            var counter = 0;
+            var @try = Try(() => counter++);
+            var memo = @try.Memo();
+            memo();
+            memo();
+            memo();
+            counter.Should().Be(1);
+        }
+
+        [Test]
+        public void Memo_WhenExcpetion_DontMemoizeTheTryCall()
+        {
+            var counter = 0;
+            var @try = Try(() => counter++ == 0 ? throw new Exception() : counter );
+            var memo = @try.Memo();
+            memo();
+            memo();
+            memo();
+            counter.Should().Be(2);
+        }
     }
 }

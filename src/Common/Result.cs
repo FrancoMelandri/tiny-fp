@@ -32,8 +32,8 @@ namespace TinyFp.Common
         }
 
         [Pure]
-        public static implicit operator Result<A>(A value) =>
-            new Result<A>(value);
+        public static implicit operator Result<A>(A value) 
+            => new Result<A>(value);
 
         [Pure]
         public bool IsFaulted 
