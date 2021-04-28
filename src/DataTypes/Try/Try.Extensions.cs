@@ -11,10 +11,6 @@ namespace TinyFp
         {
             try
             {
-                if (@this == null)
-                {
-                    throw new ArgumentNullException(nameof(@this));
-                }
                 return @this();
             }
             catch (Exception e)

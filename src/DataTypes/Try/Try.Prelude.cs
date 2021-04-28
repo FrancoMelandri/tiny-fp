@@ -8,9 +8,5 @@ namespace TinyFp
         [Pure]
         public static Try<A> Try<A>(Func<A> f) =>
             () => f();
-
-        [Pure]
-        public static Try<A> Try<A>(A v) =>
-             () => v;
     }
 }

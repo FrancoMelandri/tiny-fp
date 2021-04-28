@@ -10,9 +10,5 @@ namespace TinyFp
         [Pure]
         public static TryAsync<A> TryAsync<A>(Func<Task<A>> f) 
             => new TryAsync<A>(async () => new Result<A>(await f()));
-
-        [Pure]
-        public static TryAsync<A> TryAsync<A>(A v) =>
-             () => new Result<A>(v).AsTask();
     }
 }
