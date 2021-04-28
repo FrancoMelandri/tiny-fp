@@ -1,18 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>TinyFpTest</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<RootNamespace>TinyFpTest</RootNamespace>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="5.7.0" />
-    <ProjectReference Include="../src/tiny-fp.csproj" />
+	<ItemGroup>
+		<PackageReference Include="coverlet.msbuild" Version="3.0.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 
-    <PackageReference Include="Moq" Version="4.7.145" />
-    <PackageReference Include="nunit" Version="3.9.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
-  </ItemGroup>
+		<PackageReference Include="FluentAssertions" Version="5.7.0" />
+		<ProjectReference Include="../src/tiny-fp.csproj" />
+
+		<PackageReference Include="Moq" Version="4.7.145" />
+		<PackageReference Include="nunit" Version="3.9.0" />
+		<PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+
+
+	</ItemGroup>
 
 </Project>
