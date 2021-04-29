@@ -33,15 +33,11 @@ namespace TinyFp
 
         [Pure]
         public M Match<M>(Func<T1, M> onT1, Func<T2, M> OnT2)
-            => IsT1 ? onT1(_t1) :
-               IsT2 ? OnT2(_t2) :
-               throw new Exception();
+            => IsT1 ? onT1(_t1) : OnT2(_t2);
 
         [Pure]
         public Task<M> MatchAsync<M>(Func<T1, Task<M>> onT1Async, Func<T2, Task<M>> onT2Async)
-            => IsT1 ? onT1Async(_t1) :
-               IsT2 ? onT2Async(_t2) :
-               throw new Exception();
+            => IsT1 ? onT1Async(_t1) : onT2Async(_t2);
 
         public static implicit operator Union<T1, T2> (T1 t1) => FromT1(t1);
         public static implicit operator Union<T1, T2> (T2 t2) => FromT2(t2);

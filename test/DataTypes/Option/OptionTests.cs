@@ -37,14 +37,21 @@ namespace TinyFpTest.DataTypes
         public void OnNone_CallTheFunction()
             => Option<string>
                     .None()
-                    .OnNone(() => "not-empty")
-                .Should().Be("not-empty");
+                    .OnNone(() => "empty")
+                .Should().Be("empty");
 
         [Test]
         public void OnNone_ReturnSomeObject()
             => Option<string>
                     .None()
-                    .OnNone("not-empty")
+                    .OnNone("empty")
+                .Should().Be("empty");
+
+        [Test]
+        public void OnNone_WhenSome_ReturnSome()
+            => Option<string>
+                    .Some("not-empty")
+                    .OnNone("empty")
                 .Should().Be("not-empty");
 
         [Test]
