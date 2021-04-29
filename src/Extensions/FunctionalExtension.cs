@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using TinyFp;
 
 namespace TinyFp.Extensions
@@ -36,5 +37,21 @@ namespace TinyFp.Extensions
 
         public static Option<A> ToOption<A>(this A @this)
             => ToOption(@this, _ => _, _ => false);
+
+        public static async Task<Option<M>> ToOptionAsync<A, M>(this Task<A> @this,
+                                                                Func<A, M> map,
+                                                                Predicate<A> noneWhen)
+        {
+            var value = await @this;
+            return value == null || noneWhen(value) ?
+                    Option<M>.None() :
+                    Option<M>.Some(map(value));
+        }
+
+        public static Task<Option<A>> ToOptionAsync<A>(this Task<A> @this, Predicate<A> noneWhen)
+            => ToOptionAsync(@this, _ => _, noneWhen);
+
+        public static Task<Option<A>> ToOptionAsync<A>(this Task<A> @this)
+            => ToOptionAsync(@this, _ => _, _ => false);
     }
 }
