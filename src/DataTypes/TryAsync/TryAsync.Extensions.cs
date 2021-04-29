@@ -97,17 +97,10 @@ namespace TinyFp
         [Pure]
         public static async Task<A> OnFail<A>(this TryAsync<A> @this, A failValue)
         {
-            try
-            {
-                var res = await @this.Try();
-                return res.IsSuccess ?
-                    res.Value :
-                    failValue;
-            }
-            catch
-            {
-                return failValue;
-            }
+            var res = await @this.Try();
+            return res.IsSuccess ?
+                res.Value :
+                failValue;
         }
 
         [Pure]
@@ -121,33 +114,19 @@ namespace TinyFp
         [Pure]
         public static async Task<A> OnFail<A>(this TryAsync<A> @this, Func<Exception, A> Fail)
         {
-            try
-            {
-                var res = await @this.Try();
-                return res.IsSuccess ?
-                    res.Value :
-                    Fail(res.Exception);
-            }
-            catch (Exception e)
-            {
-                return Fail(e);
-            }
+            var res = await @this.Try();
+            return res.IsSuccess ?
+                res.Value :
+                Fail(res.Exception);
         }
 
         [Pure]
         public static async Task<A> OnFail<A>(this TryAsync<A> @this, Func<Exception, Task<A>> Fail)
         {
-            try
-            {
-                var res = await @this.Try();
-                return res.IsSuccess ?
-                    res.Value :
-                    await Fail(res.Exception);
-            }
-            catch (Exception e)
-            {
-                return await Fail(e);
-            }
+            var res = await @this.Try();
+            return res.IsSuccess ?
+                res.Value :
+                await Fail(res.Exception);
         }
 
         [Pure]

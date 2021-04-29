@@ -91,6 +91,13 @@ namespace TinyFpTest.DataTypes
                 .Should().Be(0);
 
         [Test]
+        public void TryBind_WhenSecondException_DontCall()
+            => Try(() => GetValue(10))
+                .Bind(_ => Try(() => GetValue(0)))
+                .OnFail(-1)
+                .Should().Be(-1);
+
+        [Test]
         public void TryDo_WhenNoException_Call()
             => Try(() => GetValue(10))
                 .Do(_ => { } )

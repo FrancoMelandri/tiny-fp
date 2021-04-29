@@ -17,7 +17,7 @@ namespace TinyFpTest.Extensions
         [TestCase(true, "teezed")]
         [TestCase(false, "any")]
         public void TeeWhen_WithTrueOrFalseConditionOnInput_TransformOrNot(bool whenResult, string expected)
-            => "any".TeeWhen(_ => "teezed", () => whenResult)
+            => "any".TeeWhen(_ => "teezed", _ => whenResult)
                 .Should().Be(expected);
 
         [Test]
