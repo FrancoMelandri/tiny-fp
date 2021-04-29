@@ -1,4 +1,5 @@
 ﻿using System;
+using TinyFp;
 
 namespace TinyFp.Extensions
 {
@@ -22,5 +23,18 @@ namespace TinyFp.Extensions
 
         public static void Do<T>(this T @this, Action<T> action)
             => action(@this);
+
+        public static Option<M> ToOption<A, M>(this A @this,
+                                               Func<A, M> map,
+                                               Predicate<A> noneWhen)
+            => @this == null || noneWhen(@this) ?
+                Option<M>.None() :
+                Option<M>.Some(map(@this));
+
+        public static Option<A> ToOption<A>(this A @this, Predicate<A> noneWhen)
+            => ToOption(@this, _ => _, noneWhen);
+
+        public static Option<A> ToOption<A>(this A @this)
+            => ToOption(@this, _ => _, _ => false);
     }
 }
