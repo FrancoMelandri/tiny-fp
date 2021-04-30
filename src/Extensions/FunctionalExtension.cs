@@ -79,5 +79,25 @@ namespace TinyFp.Extensions
 
         public static Task<Option<A>> ToOptionAsync<A>(this Task<A> @this)
             => ToOptionAsync(@this, _ => _, _ => false);
+
+        public static Either<L, M> ToEither<A, M, L>(this A @this,
+                                                     Func<A, M> map,
+                                                     Predicate<A> leftWhen,
+                                                     L leftValue)
+            => ToOption(@this, map, leftWhen)
+                .ToEither(leftValue);
+
+        public static Either<L, M> ToEither<A, M, L>(this A @this,
+                                                     Func<A, M> map,
+                                                     Predicate<A> leftWhen,
+                                                     Func<L> leftValue)
+            => ToEither(@this, map, leftWhen, leftValue());
+
+        public static Either<L, R> ToEither<L, R>(this R @this, L leftValue)
+            => ToEither(@this, _ => _, _ => false, leftValue);
+
+        public static Either<L, R> ToEither<L, R>(this R @this, Func<L> onLeft)
+            => ToEither(@this, _ => _, _ => false, onLeft());
+
     }
 }

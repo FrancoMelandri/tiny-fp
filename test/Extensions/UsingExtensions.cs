@@ -7,6 +7,111 @@ using static TinyFp.Extensions.FunctionalExtension;
 namespace TinyFpTest.Extensions
 {
     [TestFixture]
+    public class ToEitherExtensions
+    {
+        [Test]
+        public void ToEither_WithMapAndWhen_WhenNoValue_AndWhenFalse_Left()
+        {
+            var sut = ((string)null).ToEither(_ => 10, _ => false, 0);
+
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
+        }
+
+        [Test]
+        public void ToEither_WithMapAndWhen_WhenNoValue_AndWhenTrue_Left()
+        {
+            var sut = ((string)null).ToEither(_ => 10, _ => true, 0);
+
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
+        }
+
+        [Test]
+        public void ToEither_WithMapAndWhen_WhenValue_AndWhenTrue_Left()
+        {
+            var sut = "not-empty".ToEither(_ => 10, _ => true, 0);
+
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
+        }
+
+        [Test]
+        public void ToEither_WithMapAndWhen_WhenValue_AndWhenFalse_Right()
+        {
+            var sut = "not-empty".ToEither(_ => 10, _ => false, 0);
+
+            sut.IsRight.Should().BeTrue();
+            sut.OnRight(_ => _.Should().Be(10));
+        }
+
+        [Test]
+        public void ToEither_Func_WithMapAndWhen_WhenNoValue_AndWhenFalse_Left()
+        {
+            var sut = ((string)null).ToEither(_ => 10, _ => false, () => 0);
+
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
+        }
+
+        [Test]
+        public void ToEither_Func_WithMapAndWhen_WhenNoValue_AndWhenTrue_Left()
+        {
+            var sut = ((string)null).ToEither(_ => 10, _ => true, () => 0);
+
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
+        }
+
+        [Test]
+        public void ToEither_Func_WithMapAndWhen_WhenValue_AndWhenTrue_Left()
+        {
+            var sut = "not-empty".ToEither(_ => 10, _ => true, () => 0);
+
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
+        }
+
+        [Test]
+        public void ToEither_Func_WithMapAndWhen_WhenValue_AndWhenFalse_Right()
+        {
+            var sut = "not-empty".ToEither(_ => 10, _ => false, () => 0);
+
+            sut.IsRight.Should().BeTrue();
+            sut.OnRight(_ => _.Should().Be(10));
+        }
+
+        [Test]
+        public void ToEither_WhenNoValue_Left()
+        {
+            var sut = ((string)null).ToEither(0);
+
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
+        }
+
+        [Test]
+        public void ToEither_WhenValue_Right()
+            => "not-empty".ToEither(0)
+                .IsRight.Should().BeTrue();
+
+        [Test]
+        public void ToEither_Func_WhenNoValue_Left()
+        {
+            var sut = ((string)null).ToEither(() => 0);
+
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
+        }
+
+        [Test]
+        public void ToEither_Func_WhenValue_Right()
+            => "not-empty".ToEither(() => 0)
+                .IsRight.Should().BeTrue();
+
+    }
+
+    [TestFixture]
     public class UsingExtensions
     {
         public interface ILog

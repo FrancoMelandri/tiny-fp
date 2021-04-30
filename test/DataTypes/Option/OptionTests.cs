@@ -166,5 +166,37 @@ namespace TinyFpTest.DataTypes
                            () => Task.FromResult(true))
                     .Result
                 .Should().BeTrue();
+
+        [Test]
+        public void ToEither_Func_WhenSome_Right()
+            => Option<string>
+                    .Some("not-empty")
+                    .ToEither(() => 0)
+                .IsRight
+                .Should().BeTrue();
+
+        [Test]
+        public void ToEither_Func_WhenNone_Left()
+            => Option<string>
+                    .None()
+                    .ToEither(() => 0)
+                .IsLeft
+                .Should().BeTrue();
+
+        [Test]
+        public void ToEither_WhenSome_Right()
+            => Option<string>
+                    .Some("not-empty")
+                    .ToEither(0)
+                .IsRight
+                .Should().BeTrue();
+
+        [Test]
+        public void ToEither_WhenNone_Left()
+            => Option<string>
+                    .None()
+                    .ToEither(0)
+                .IsLeft
+                .Should().BeTrue();
     }
 }
