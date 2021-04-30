@@ -7,7 +7,7 @@ namespace TinyFp.Common
 {
     public struct Result<A>
     {
-        public readonly static Result<A> Bottom = default(Result<A>);
+        public readonly static Result<A> Bottom = default;
 
         internal readonly ResultState State;
         internal readonly A Value;
@@ -28,12 +28,12 @@ namespace TinyFp.Common
         {
             State = ResultState.Faulted;
             exception = e;
-            Value = default(A);
+            Value = default;
         }
 
         [Pure]
         public static implicit operator Result<A>(A value) 
-            => new Result<A>(value);
+            => new(value);
 
         [Pure]
         public bool IsFaulted 

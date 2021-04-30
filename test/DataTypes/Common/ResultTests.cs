@@ -22,6 +22,12 @@ namespace TinyFpTest.DataTypes.Common
                 .Should().BeTrue();
 
         [Test]
+        public void Ctor_CreateFaulted_Bottom()
+            => new Result<string>((Exception)null)
+                .IsBottom
+                .Should().BeTrue();
+
+        [Test]
         public void Match_WhenSuccees_ToOuptut()
             => new Result<string>("result")
                 .Match(_ => true, _ => false)
