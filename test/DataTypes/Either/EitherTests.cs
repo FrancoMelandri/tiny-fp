@@ -207,6 +207,61 @@ namespace TinyFpTest.DataTypes
         }
 
         [Test]
+        public void BindLeft_WhenLeft_ChainCallRight()
+            => Either<int, string>.Left(10)
+                .BindLeft(_ => Either<int, string>.Right("not-empty"))
+                .OnRight(_ => _.Should().Be("not-empty"))
+                .OnLeft(_ => Assert.Fail());
+
+        [Test]
+        public void BindLeft_WhenLeft_ChainCallLeft()
+            => Either<int, string>.Left(0)
+                .BindLeft(_ => Either<int, string>.Left(42))
+                .OnRight(_ => Assert.Fail())
+                .OnLeft(_ => _.Should().Be(42));
+
+        [Test]
+        public void BindLeft_WhenRight_DontChainCall()
+        {
+            var called = false;
+            Either<int, string>.Right("")
+                .BindLeft(_ => { called = true; return Either<int, string>.Right("not-empty"); })
+                .OnLeft(_ => Assert.Fail())
+                .OnRight(_ => _.Should().Be(""));
+
+            called.Should().BeFalse();
+        }
+
+        [Test]
+        public void BindLeftAsync_WhenLeft_ChainCallRight()
+            => Either<int, string>.Left(10)
+                .BindLeftAsync(_ => Task.FromResult(Either<int, string>.Right("not-empty")))
+                .Result
+                .OnRight(_ => _.Should().Be("not-empty"))
+                .OnLeft(_ => Assert.Fail());
+
+        [Test]
+        public void BindLeftAsync_WhenLeft_ChainCallLeft()
+            => Either<int, string>.Left(0)
+                .BindLeftAsync(_ => Task.FromResult(Either<int, string>.Left(42)))
+                .Result
+                .OnRight(_ => Assert.Fail())
+                .OnLeft(_ => _.Should().Be(42));
+
+        [Test]
+        public void BindLeftAsync_WhenRight_DontChainCall()
+        {
+            var called = false;
+            Either<int, string>.Right("")
+                .BindLeftAsync(_ => { called = true; return Task.FromResult(Either<int, string>.Right("not-empty")); })
+                .Result
+                .OnLeft(_ => Assert.Fail())
+                .OnRight(_ => _.Should().Be(""));
+
+            called.Should().BeFalse();
+        }
+
+        [Test]
         public void Match_WhenRight_ToOuput()
             => Either<int, string>.Right("either")
                 .Match(_ => true, _ => false)

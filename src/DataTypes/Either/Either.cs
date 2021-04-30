@@ -72,6 +72,14 @@ namespace TinyFp
             => _isRight ? bindAsync(_right) : Task.FromResult(Either<L, M>.Left(_left));
 
         [Pure]
+        public Either<B, R> BindLeft<B>(Func<L, Either<B, R>> bind)
+            => !_isRight ? bind(_left) : Either<B, R>.Right(_right);
+
+        [Pure]
+        public Task<Either<B, R>> BindLeftAsync<B>(Func<L, Task<Either<B, R>>> bindAsync)
+            => !_isRight ? bindAsync(_left) : Task.FromResult(Either<B, R>.Right(_right));
+
+        [Pure]
         public M Match<M>(Func<R, M> onRight, Func<L, M> onLeft)
             => IsRight ? onRight(_right) : onLeft(_left);
 
