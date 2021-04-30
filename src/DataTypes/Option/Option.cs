@@ -22,10 +22,10 @@ namespace TinyFp
         }
 
         public static Option<A> None()
-            => new Option<A>(false, default);
+            => new(false, default);
 
         public static Option<A> Some(A value) 
-            => new Option<A>(true, value);
+            => new(true, value);
 
         [Pure]
         public Option<A> OnSome(Action<A> action)

@@ -29,9 +29,9 @@ namespace TinyFp
             _right = default;
         }
 
-        public static Either<L, R> Right(R right) => new Either<L, R>(right);
+        public static Either<L, R> Right(R right) => new(right);
 
-        public static Either<L, R> Left(L left) => new Either<L, R>(left);
+        public static Either<L, R> Left(L left) => new(left);
 
         [Pure]
         public Either<L, R> OnRight(Action<R> action)
