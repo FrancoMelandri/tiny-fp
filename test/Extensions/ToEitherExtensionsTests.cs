@@ -1,13 +1,12 @@
 ﻿using NUnit.Framework;
 using FluentAssertions;
-using System;
-using Moq;
 using static TinyFp.Extensions.FunctionalExtension;
+using System.Threading.Tasks;
 
 namespace TinyFpTest.Extensions
 {
     [TestFixture]
-    public class ToEitherExtensions
+    public class ToEitherExtensionsTests
     {
         [Test]
         public void ToEither_WithMapAndWhen_WhenNoValue_AndWhenFalse_Left()
@@ -109,93 +108,104 @@ namespace TinyFpTest.Extensions
             => "not-empty".ToEither(() => 0)
                 .IsRight.Should().BeTrue();
 
-    }
-
-    [TestFixture]
-    public class UsingExtensions
-    {
-        public interface ILog
+        [Test]
+        public void ToEitherAsync_WithMapAndWhen_WhenNoValue_AndWhenFalse_Left()
         {
-            void Log(string message);
-        }
+            var sut = Task.FromResult((string)null).ToEitherAsync(_ => 10, _ => false, 0).Result;
 
-        public class CanBeDisposed : IDisposable
-        {
-            private readonly ILog _logger;
-
-            public CanBeDisposed(ILog logger)
-            {
-                _logger = logger;
-            }
-
-            public void Dispose()
-            {
-                _logger.Log("dispose");
-            }
-
-            public bool Mock { get; set; }
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
         }
 
         [Test]
-        public void Using_WithAction_ShouldCallDispose()
+        public void ToEitherAsync_WithMapAndWhen_WhenNoValue_AndWhenTrue_Left()
         {
-            var called = false;
-            Action action = () => called = true;
-            var log = new Mock<ILog>();
-            var disposable = new CanBeDisposed(log.Object);
+            var sut = Task.FromResult((string)null).ToEitherAsync(_ => 10, _ => true, 0).Result;
 
-            Using(disposable, action);
-
-            called.Should().BeTrue();
-            log.Verify(m => m.Log("dispose"), Times.Once);
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
         }
 
         [Test]
-        public void Using_WithFunction_ShouldCallDispose()
-        {            
-            Func<bool> action = () => true;
-            var log = new Mock<ILog>();
-            var disposable = new CanBeDisposed(log.Object);
+        public void ToEitherAsync_WithMapAndWhen_WhenValue_AndWhenTrue_Left()
+        {
+            var sut = Task.FromResult("not-empty").ToEitherAsync(_ => 10, _ => true, 0).Result;
 
-            var called = Using(disposable, action);
-
-            called.Should().BeTrue();
-            log.Verify(m => m.Log("dispose"), Times.Once);
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
         }
 
         [Test]
-        public void Using_WithFunctionlnDisposable_ShouldCallWithObject()
+        public void ToEitherAsync_WithMapAndWhen_WhenValue_AndWhenFalse_Right()
         {
-            Func<CanBeDisposed, bool> action = _ =>
-            {
-                _.GetType().Should().Be(typeof(CanBeDisposed));
-                return true;
-            };
-            var log = new Mock<ILog>();
-            var disposable = new CanBeDisposed(log.Object);
+            var sut = Task.FromResult("not-empty").ToEitherAsync(_ => 10, _ => false, 0).Result;
 
-            var called = Using(disposable, action);
-
-            called.Should().BeTrue();
-            log.Verify(m => m.Log("dispose"), Times.Once);
+            sut.IsRight.Should().BeTrue();
+            sut.OnRight(_ => _.Should().Be(10));
         }
 
         [Test]
-        public void Using_WithActiolnDisposable_ShouldCallWithObject()
+        public void ToEitherAsync_Func_WithMapAndWhen_WhenNoValue_AndWhenFalse_Left()
         {
-            var called = false;
-            Action<IDisposable> action = _ =>
-            {
-                _.GetType().Should().Be(typeof(CanBeDisposed));
-                called = true;
-            };
-            var log = new Mock<ILog>();
-            var disposable = new CanBeDisposed(log.Object);
+            var sut = Task.FromResult((string)null).ToEitherAsync(_ => 10, _ => false, () => 0).Result;
 
-            Using(disposable, action);
-
-            called.Should().BeTrue();
-            log.Verify(m => m.Log("dispose"), Times.Once);
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
         }
+
+        [Test]
+        public void ToEitherAsync_Func_WithMapAndWhen_WhenNoValue_AndWhenTrue_Left()
+        {
+            var sut = Task.FromResult((string)null).ToEitherAsync(_ => 10, _ => true, () => 0).Result;
+
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
+        }
+
+        [Test]
+        public void ToEitherAsync_Func_WithMapAndWhen_WhenValue_AndWhenTrue_Left()
+        {
+            var sut = Task.FromResult("not-empty").ToEitherAsync(_ => 10, _ => true, () => 0).Result;
+
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
+        }
+
+        [Test]
+        public void ToEitherAsync_Func_WithMapAndWhen_WhenValue_AndWhenFalse_Right()
+        {
+            var sut = Task.FromResult("not-empty").ToEitherAsync(_ => 10, _ => false, () => 0).Result;
+
+            sut.IsRight.Should().BeTrue();
+            sut.OnRight(_ => _.Should().Be(10));
+        }
+
+        [Test]
+        public void ToEitherAsync_WhenNoValue_Left()
+        {
+            var sut = Task.FromResult((string)null).ToEitherAsync(0).Result;
+
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
+        }
+
+        [Test]
+        public void ToEitherAsync_WhenValue_Right()
+            => Task.FromResult("not-empty").ToEitherAsync(0).Result
+                .IsRight.Should().BeTrue();
+
+        [Test]
+        public void ToEitherAsync_Func_WhenNoValue_Left()
+        {
+            var sut = Task.FromResult((string)null).ToEitherAsync(() => 0).Result;
+
+            sut.IsLeft.Should().BeTrue();
+            sut.OnLeft(_ => _.Should().Be(0));
+        }
+
+        [Test]
+        public void ToEitherAsync_Func_WhenValue_Right()
+            => Task.FromResult("not-empty").ToEitherAsync(() => 0).Result
+                .IsRight.Should().BeTrue();
     }
 }
