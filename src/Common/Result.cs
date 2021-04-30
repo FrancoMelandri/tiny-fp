@@ -7,8 +7,6 @@ namespace TinyFp.Common
 {
     public struct Result<A>
     {
-        public readonly static Result<A> Bottom = default;
-
         internal readonly ResultState State;
         internal readonly A Value;
         private Exception exception;

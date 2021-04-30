@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using TinyFp.Common;
 using System;
 using FluentAssertions;
+using TinyFp.Exceptions;
 
 namespace TinyFpTest.DataTypes.Common
 {
@@ -36,7 +37,17 @@ namespace TinyFpTest.DataTypes.Common
         [Test]
         public void Match_WhenFail_ToOuptut()
             => new Result<string>(new Exception("result"))
-                .Match(_ => false, _ => true)
+                .Match(
+                _ => false, 
+                _ => { _.Message.Should().Be("result"); return true; })
+                .Should().BeTrue();
+
+        [Test]
+        public void Match_WhenFail_Bottom_ToOuptut()
+            => new Result<string>((Exception)null)
+                .Match(
+                _ => false, 
+                _ => { _.Should().BeOfType(typeof(BottomException)); return true; })
                 .Should().BeTrue();
 
         [Test]
