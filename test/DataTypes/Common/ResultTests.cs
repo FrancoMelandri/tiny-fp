@@ -23,8 +23,14 @@ namespace TinyFpTest.DataTypes.Common
                 .Should().BeTrue();
 
         [Test]
-        public void Ctor_CreateFaulted_Bottom()
+        public void Ctor_CreateFaulted_Bottom_NullException()
             => new Result<string>((Exception)null)
+                .IsBottom
+                .Should().BeTrue();
+
+        [Test]
+        public void Ctor_CreateFaulted_Bottom_BottomException()
+            => new Result<string>(new BottomException())
                 .IsBottom
                 .Should().BeTrue();
 
