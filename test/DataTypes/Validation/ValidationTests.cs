@@ -158,5 +158,85 @@ namespace TinyFpTest.DataTypes
                 .MatchAsync(Task.FromResult(false), Task.FromResult(true))
                 .Result
                 .Should().BeTrue();
+
+        [Test]
+        public void Bind_WhenSuccess_ChainCall_NewSuccess()
+            => Validation<string, int>.Success(1)
+                .Bind(_ => Validation<string, int>.Success(42))
+                .Match(
+                    _ => { _.Should().Be(42); return 0; }, 
+                    _ => { Assert.Fail(); return 0; });
+
+        [Test]
+        public void Bind_WhenSuccess_ChainCall_NewFail()
+            => Validation<string, int>.Success(1)
+                .Bind(_ => Validation<string, int>.Fail("error"))
+                .Match(
+                    _ => { Assert.Fail(); return 0; }, 
+                    _ => { _.Should().Be("error"); return 0; });
+
+        [Test]
+        public void Bind_WhenFail_DontChainCall()
+            => Validation<string, int>.Fail("error")
+                .Bind(_ => { Assert.Fail(); return Validation<string, int>.Success(42); })
+                .Match(
+                    _ => { Assert.Fail(); return 0; }, 
+                    _ => { _.Should().Be("error"); return 0; });
+
+        [Test]
+        public void BindFail_WhenSuccess_DontChainCall()
+            => Validation<string, int>.Success(1)
+                .BindFail(_ => { Assert.Fail(); return Validation<string, int>.Success(42); })
+                .Match(
+                    _ => { _.Should().Be(1); return 0; }, 
+                    _ => { Assert.Fail(); return 0; });
+
+        [Test]
+        public void BindFail_WhenFail_ChainCall_NewFail()   
+            => Validation<string, int>.Fail("")
+                .BindFail(_ => Validation<string, int>.Fail("error"))
+                .Match(
+                    _ => { Assert.Fail(); return 0; }, 
+                    _ => { _.Should().Be("error"); return 0; });
+
+        [Test]
+        public void BindFail_WhenFail_ChainCall_NewSuccessl()
+            => Validation<string, int>.Fail("error")
+                .BindFail(_ => Validation<string, int>.Success(42))
+                .Match(
+                    _ => { _.Should().Be(42); return 0; },
+                    _ => { Assert.Fail(); return 0; });
+
+        [Test]
+        public void Map_WhenSuccess_ToOutput()
+            => Validation<string, int>.Success(1)
+                .Map(_ => 42)
+                .Match(
+                    _ => { _.Should().Be(42); return 0; },
+                    _ => { Assert.Fail(); return 0; });
+
+        [Test]
+        public void Map_WhenFail_Dontmap()
+            => Validation<string, int>.Fail("error")
+                .Map(_ => { Assert.Fail(); return 42; })
+                .Match(
+                    _ => { Assert.Fail(); return 0; },
+                    _ => { _.Should().Be("error"); return 0; });
+
+        [Test]
+        public void MapFail_WhenSuccess_DontMap()
+            => Validation<string, int>.Success(1)
+                .MapFail(_ => { Assert.Fail(); return 42; })
+                .Match(
+                    _ => { _.Should().Be(1); return 0; },
+                    _ => { Assert.Fail(); return 0; });
+
+        [Test]
+        public void MapFail_WhenFail_ToOutput()
+            => Validation<string, int>.Fail("error")
+                .MapFail(_ => 42)
+                .Match(
+                    _ => { Assert.Fail(); return 0; },
+                    _ => { _.Should().Be(42); return 0; });
     }
 }
