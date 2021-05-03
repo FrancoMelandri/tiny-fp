@@ -63,6 +63,18 @@ namespace TinyFpTest.DataTypes
                 .Should().Be(100);
 
         [Test]
+        public void TryOnFail_FuncWithEx_WhenNoException_Value()
+            => Try(() => GetValue(10))
+                .OnFail(_ => 0)
+                .Should().Be(10);
+
+        [Test]
+        public void TryOnFail_FuncWithEx_WhenException_Fallback()
+            => Try(() => GetValue(0))
+                .OnFail(_ => _.Message.Length)
+                .Should().Be(28);
+
+        [Test]
         public void TryToEither_WhenNoException_Right()
             => Try(() => GetValue(10))
                 .ToEither()

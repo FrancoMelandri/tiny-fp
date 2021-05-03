@@ -22,11 +22,7 @@ namespace TinyFpTest.Examples.Basics.Catalog
                             .BindLeft(
                                 _ => _catalog
                                         .Get()
-                                        .Map(_ => _.Tee(__ => _cache.Set(__))))
-                )
-                .Match(
-                    _ => _,
-                    ex => ex.Message
-                );
+                                        .Map(_ => _.Tee(__ => _cache.Set(__)))))
+                .OnFail(_ => _.Message);
     }
 }

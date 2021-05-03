@@ -62,11 +62,15 @@ namespace TinyFp
 
         [Pure]
         public static A OnFail<A>(this Try<A> @this, Func<A> Fail)
+            => OnFail(@this, _ => Fail());
+
+        [Pure]
+        public static A OnFail<A>(this Try<A> @this, Func<Exception, A> Fail)
         {
             var res = @this.Try();
             return res.IsSuccess ?
                 res.Value :
-                Fail();
+                Fail(res.Exception);
         }
 
         [Pure]
