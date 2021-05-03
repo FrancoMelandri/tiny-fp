@@ -1,4 +1,4 @@
-﻿namespace TinyFp.DataTypes
+﻿namespace TinyFp
 {
     public enum ValidationStateType : byte
     {

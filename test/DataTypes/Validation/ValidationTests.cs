@@ -3,7 +3,6 @@ using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 using TinyFp;
-using TinyFp.DataTypes;
 using TinyFp.Exceptions;
 
 namespace TinyFpTest.DataTypes

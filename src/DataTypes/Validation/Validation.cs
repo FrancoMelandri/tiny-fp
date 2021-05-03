@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using TinyFp.Exceptions;
 
-namespace TinyFp.DataTypes
+namespace TinyFp
 {
     public struct Validation<FAIL, SUCCESS>        
     {

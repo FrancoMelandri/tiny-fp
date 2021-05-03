@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using TinyFp;
-using TinyFp.DataTypes;
 using static TinyFp.Prelude;
 
 namespace TinyFpTest.Examples.Basics.Validation

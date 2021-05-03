@@ -1,6 +1,4 @@
-﻿using TinyFp.DataTypes;
-
-namespace TinyFp
+﻿namespace TinyFp
 {
     public static partial class Prelude
     {
