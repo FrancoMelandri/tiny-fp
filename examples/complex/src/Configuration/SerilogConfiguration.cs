@@ -12,9 +12,7 @@ namespace TinyFpTest.Configuration
         public string LogEventLevel { get; set; }
         public string SeqHost { get; set; }
         public string SeqApiKey { get; set; }
-        public FileLogConfiguration FileConfiguration { get; set; }
         public LogEventLevel MicrosoftLogEventLevel { get; set; } = Serilog.Events.LogEventLevel.Warning;
         public LogEventLevel SystemLogEventLevel { get; set; } = Serilog.Events.LogEventLevel.Warning;
     }
-
 }
