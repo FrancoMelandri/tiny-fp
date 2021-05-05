@@ -3,6 +3,7 @@ using NUnit.Framework;
 using TinyFp;
 using System.Threading.Tasks;
 using static TinyFp.Prelude;
+using System;
 
 namespace TinyFpTest.DataTypes
 {
@@ -28,5 +29,12 @@ namespace TinyFpTest.DataTypes
                 .MatchAsync(_ => { _.Should().Be(42); return Task.CompletedTask; }, 
                             _ => { Assert.Fail(); return Task.CompletedTask; })
                 .Wait();
+
+        [Test]
+        public void MapAsync_MapToOutput()
+            => Task.FromResult("42")
+                .MapAsync(_ => Task.FromResult(Convert.ToInt32(_)))
+                .Result
+                .Should().Be(42);
     }
 }

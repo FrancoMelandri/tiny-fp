@@ -2,7 +2,6 @@
 using NUnit.Framework;
 using FluentAssertions;
 using System;
-using System.Threading.Tasks;
 
 namespace TinyFpTest.Extensions
 {
@@ -32,12 +31,6 @@ namespace TinyFpTest.Extensions
         [Test]
         public void Map_MapToOutput()
             => "42".Map(Convert.ToInt32)
-                .Should().Be(42);
-
-        [Test]
-        public void MapAsync_MapToOutput()
-            => Task.FromResult("42").MapAsync(_ => Task.FromResult(Convert.ToInt32(_)))
-                .Result
                 .Should().Be(42);
 
         internal class TestClass

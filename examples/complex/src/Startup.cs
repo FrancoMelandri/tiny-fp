@@ -25,7 +25,13 @@ namespace TinyFpTest.Complex
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSingleton<ISearchService, SearchService>();
+
+            services.AddSingleton<SearchService>();
+            services.AddSingleton(_ =>
+                new CachedSearchService(_.GetRequiredService<SearchService>()));
+            services.AddSingleton<ISearchService>(_ =>
+                new LoggedSearchService(_.GetRequiredService<CachedSearchService>()));
+
             InitializeSerilog(services);
         }
 

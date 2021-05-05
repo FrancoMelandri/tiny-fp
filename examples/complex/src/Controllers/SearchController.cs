@@ -18,7 +18,8 @@ namespace TinyFpTest.Controllers
 
         [HttpGet]
         public Task<IActionResult> Search([FromQuery]string forName)
-            => _searchService.SearchProductsAsync(forName)
+            => _searchService
+                .SearchProductsAsync(forName)
                 .MatchAsync(
                     _ => new JsonResult(_), 
                     _ => (IActionResult)NotFound()

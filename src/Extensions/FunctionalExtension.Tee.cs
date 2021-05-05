@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace TinyFp.Extensions
 {
@@ -23,10 +22,6 @@ namespace TinyFp.Extensions
 
         public static M Map<A, M>(this A @this, Func<A, M> fn)
             => fn(@this);
-
-        public static async Task<M> MapAsync<A, M>(this Task<A> @this,
-                                                   Func<A, Task<M>> fn)
-            => await fn(await @this);
 
         public static void Do<T>(this T @this, Action<T> action)
             => action(@this);
