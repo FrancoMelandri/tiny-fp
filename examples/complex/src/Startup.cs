@@ -6,9 +6,11 @@ using Serilog;
 using Serilog.Events;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
 using TinyFp.Extensions;
 using TinyFpTest.Configuration;
 using TinyFpTest.Services;
+using TinyFpTest.Services.Api;
 
 namespace TinyFpTest.Complex
 {
@@ -25,12 +27,16 @@ namespace TinyFpTest.Complex
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddHttpClient();
 
             services.AddSingleton<SearchService>();
             services.AddSingleton(_ =>
                 new CachedSearchService(_.GetRequiredService<SearchService>()));
             services.AddSingleton<ISearchService>(_ =>
                 new LoggedSearchService(_.GetRequiredService<CachedSearchService>()));
+
+            services.AddSingleton<IApiClient>(_ =>
+                new ApiClient(() => _.GetRequiredService<IHttpClientFactory>().CreateClient()));
 
             InitializeSerilog(services);
         }
