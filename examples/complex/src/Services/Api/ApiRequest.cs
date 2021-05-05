@@ -15,6 +15,9 @@ namespace TinyFpTest.Services.Api
             Timeout = timeout;                 
         }
 
+        public static ApiRequest Create()
+            => new(string.Empty, new List<(string name, string value)>(), 5000);
+
         public ApiRequest WithUrl(string url)
             => new(url, Headers, Timeout);
 

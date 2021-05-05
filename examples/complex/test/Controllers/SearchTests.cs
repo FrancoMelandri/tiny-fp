@@ -10,8 +10,10 @@ namespace TinyFp.Complex.Contorllers
     public class SearchTests : BaseIntegrationTest
     {
         [Test]
-        public void Search_Get_ReturnsProductList()
+        public void Search_Get_ReturnsEmptyProductList()
         {
+            StubProducts("prd", 200, "[]");
+
             var response = Client.GetAsync("/search?forName=prd").Result;
             var responseContent = response.Content.ReadAsStringAsync().Result;
             var products = JsonConvert.DeserializeObject<Product[]>(responseContent);

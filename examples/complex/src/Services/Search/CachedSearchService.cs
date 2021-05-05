@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using TinyFp;
 using TinyFpTest.Models;
+using TinyFpTest.Services.Api;
 
 namespace TinyFpTest.Services
 {
@@ -13,7 +14,7 @@ namespace TinyFpTest.Services
             _searchService = searchService;
         }
 
-        public Task<Either<string, Product[]>> SearchProductsAsync(string forName)
+        public Task<Either<ApiError, Product[]>> SearchProductsAsync(string forName)
             => _searchService.SearchProductsAsync(forName);
     }
 }

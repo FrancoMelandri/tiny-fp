@@ -5,6 +5,9 @@ using Serilog;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
+using WireMock.Matchers;
+using WireMock.RequestBuilders;
+using WireMock.ResponseBuilders;
 using WireMock.Server;
 
 namespace TinyFp.Complex.Setup
@@ -26,7 +29,7 @@ namespace TinyFp.Complex.Setup
         [OneTimeSetUp]
         public void GlobalSetup()
         {
-            SearchServer = WireMockServer.Start(port: 5002);
+            SearchServer = WireMockServer.Start(port: 5001);
         }
 
         [OneTimeTearDown]
@@ -34,6 +37,12 @@ namespace TinyFp.Complex.Setup
         {
             SearchServer.Stop();
             TestStartup.InMemoryRedisCache.ClearCache();
+        }
+
+        [TearDown]
+        public void Teardown()
+        {
+            SearchServer.Reset();
         }
 
         protected BaseIntegrationTest()
@@ -57,5 +66,24 @@ namespace TinyFp.Complex.Setup
             TestServer.TestServer.Dispose();
             TestServer.Client.Dispose();            
         }
+
+        protected void StubProducts(string forName, int statusCode, string responseBody, int delayInMilliseconds = 1)
+            => SearchServer
+                .Given(
+                //Request.Create()
+                //    .WithPath("/products")
+                //    .WithParam("forName", new ExactMatcher(forName))
+                //Request.Create()
+                //    .WithUrl("http://localhost:5001/products?forName=prd")
+                    Request.Create()
+                        .WithPath($"/products/{forName}")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(statusCode)
+                        .WithBody(responseBody)
+                        .WithDelay(TimeSpan.FromMilliseconds(delayInMilliseconds))
+                );
     }
 }

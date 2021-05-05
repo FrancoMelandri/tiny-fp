@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
 using TinyFp;
 using TinyFpTest.Models;
+using TinyFpTest.Services.Api;
 
 namespace TinyFpTest.Services
 {
     public interface ISearchService
     {
-        Task<Either<string, Product[]>> SearchProductsAsync(string forName);
+        Task<Either<ApiError, Product[]>> SearchProductsAsync(string forName);
     }
 }

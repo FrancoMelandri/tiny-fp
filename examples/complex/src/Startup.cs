@@ -11,6 +11,7 @@ using TinyFp.Extensions;
 using TinyFpTest.Configuration;
 using TinyFpTest.Services;
 using TinyFpTest.Services.Api;
+using static TinyFp.Extensions.FunctionalExtension;
 
 namespace TinyFpTest.Complex
 {
@@ -25,21 +26,21 @@ namespace TinyFpTest.Complex
         }
 
         public virtual void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllers();
-            services.AddHttpClient();
-
-            services.AddSingleton<SearchService>();
-            services.AddSingleton(_ =>
-                new CachedSearchService(_.GetRequiredService<SearchService>()));
-            services.AddSingleton<ISearchService>(_ =>
-                new LoggedSearchService(_.GetRequiredService<CachedSearchService>()));
-
-            services.AddSingleton<IApiClient>(_ =>
-                new ApiClient(() => _.GetRequiredService<IHttpClientFactory>().CreateClient()));
-
-            InitializeSerilog(services);
-        }
+            => services
+                .Tee(_ => _.AddControllers())
+                .Tee(_ => _.AddHttpClient())
+                .Tee(_ => Configuration
+                            .GetSection(typeof(ProductsApiConfiguration).Name)
+                            .Get<ProductsApiConfiguration>()
+                            .Tee(_ => services.AddSingleton(_)))
+                .Tee(_ => _.AddSingleton<SearchService>())
+                .Tee(_ => _.AddSingleton(_ =>
+                                new CachedSearchService(_.GetRequiredService<SearchService>())))
+                .Tee(_ => _.AddSingleton<ISearchService>(_ =>
+                                new LoggedSearchService(_.GetRequiredService<CachedSearchService>())))
+                .Tee(_ => _.AddSingleton<IApiClient>(_ =>
+                            new ApiClient(() => _.GetRequiredService<IHttpClientFactory>().CreateClient())))
+                .Tee(_ => InitializeSerilog(_));
 
         private void InitializeSerilog(IServiceCollection services)
             => Configuration
@@ -68,9 +69,6 @@ namespace TinyFpTest.Complex
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
             => app
                 .UseRouting()
-                .UseEndpoints(_ =>
-                {
-                    _.MapControllers();
-                });
+                .UseEndpoints(_ => _.MapControllers());
     }
 }

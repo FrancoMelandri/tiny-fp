@@ -39,8 +39,8 @@ namespace TinyFpTest.Services.Api
         private Task<Either<ApiError, string>> SendRequest(HttpRequestMessage httpRequest, int apiRequestTimeout)
             => new CancellationTokenSource()
                 .Tee(_ => _.CancelAfter(FromMilliseconds(apiRequestTimeout)))
-                .Map(async _ => await _httpClientProvider().SendAsync(httpRequest, _.Token))
-                .MapAsync(async _ => await _.Content.ReadAsStringAsync())
+                .Map(_ => _httpClientProvider().SendAsync(httpRequest, _.Token))
+                .MapAsync( _ => _.Content.ReadAsStringAsync())
                 .Map(_ => _.ToEitherAsync(new ApiError()));
 
         private static HttpRequestMessage CreateRequest(HttpContent httpContent, ApiRequest apiRequest, HttpMethod method)
