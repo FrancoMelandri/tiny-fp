@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TinyFpTest.Services;
+using TinyFp;
 
 namespace TinyFpTest.Controllers
 {
@@ -17,6 +18,10 @@ namespace TinyFpTest.Controllers
 
         [HttpGet]
         public Task<IActionResult> Search([FromQuery]string forName)
-            => Task.FromResult((IActionResult)new NotFoundResult());        
+            => _searchService.SearchProductsAsync(forName)
+                .MatchAsync(
+                    _ => new JsonResult(_), 
+                    _ => (IActionResult)NotFound()
+                );
     }
 }
