@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static TinyFp.Extensions.FunctionalExtension;
+using static TinyFp.Extensions.Functional;
 
 namespace TinyFpTest.Extensions
 {

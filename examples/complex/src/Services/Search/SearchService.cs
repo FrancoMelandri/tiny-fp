@@ -5,7 +5,7 @@ using TinyFp.Extensions;
 using TinyFpTest.Configuration;
 using TinyFpTest.Models;
 using TinyFpTest.Services.Api;
-using static TinyFp.Extensions.FunctionalExtension;
+using static TinyFp.Extensions.Functional;
 using static TinyFpTest.Constants.Errors;
 
 namespace TinyFpTest.Services

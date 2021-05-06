@@ -2,7 +2,7 @@
 using FluentAssertions;
 using System;
 using Moq;
-using static TinyFp.Extensions.FunctionalExtension;
+using static TinyFp.Extensions.Functional;
 using System.Threading.Tasks;
 using TinyFp;
 

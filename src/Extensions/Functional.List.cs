@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace TinyFp.Extensions
 {
-    public static partial class FunctionalExtension
+    public static partial class Functional
     {
         [Pure]
         public static IEnumerable<T> Filter<T>(this IEnumerable<T> @this, Func<T, bool> predicate) 

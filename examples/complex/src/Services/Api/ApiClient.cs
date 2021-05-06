@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using TinyFp;
 using Newtonsoft.Json;
 using static TinyFp.Prelude;
-using static TinyFp.Extensions.FunctionalExtension;
+using static TinyFp.Extensions.Functional;
 using static System.TimeSpan;
 using static TinyFpTest.Constants.Errors;
 

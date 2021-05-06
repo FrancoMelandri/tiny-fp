@@ -2,7 +2,7 @@
 
 namespace TinyFp.Extensions
 {
-    public static partial class FunctionalExtension
+    public static partial class Functional
     {
         public static T TeeWhen<T>(this T @this, Func<T, T> tee, Func<bool> when)
             => when() ? tee(@this) : @this;

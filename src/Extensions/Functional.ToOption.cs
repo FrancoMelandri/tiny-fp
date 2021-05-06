@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace TinyFp.Extensions
 {
-    public static partial class FunctionalExtension
+    public static partial class Functional
     {
         public static Option<M> ToOption<A, M>(this A @this,
                                                Func<A, M> map,

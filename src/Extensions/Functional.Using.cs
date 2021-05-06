@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace TinyFp.Extensions
 {
-    public static partial class FunctionalExtension
+    public static partial class Functional
     {
         public static Unit Using(IDisposable disposable, Action action)
         {
@@ -65,6 +65,5 @@ namespace TinyFp.Extensions
             using (var disposable2 = createDisposable2(disposable1))
                 return await func(disposable1, disposable2);
         }
-
     }
 }

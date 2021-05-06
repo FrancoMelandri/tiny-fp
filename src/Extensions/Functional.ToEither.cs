@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace TinyFp.Extensions
 {
-    public static partial class FunctionalExtension
+    public static partial class Functional
     {
         public static Either<L, M> ToEither<A, M, L>(this A @this,
                                                      Func<A, M> map,

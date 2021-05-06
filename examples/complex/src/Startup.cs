@@ -11,7 +11,7 @@ using TinyFp.Extensions;
 using TinyFpTest.Configuration;
 using TinyFpTest.Services;
 using TinyFpTest.Services.Api;
-using static TinyFp.Extensions.FunctionalExtension;
+using static TinyFp.Extensions.Functional;
 
 namespace TinyFpTest.Complex
 {
