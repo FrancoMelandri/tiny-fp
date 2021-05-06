@@ -13,10 +13,6 @@ namespace TinyFp.Extensions
             => @this.Where(predicate);
 
         [Pure]
-        public static async Task<IEnumerable<T>> FilterAsync<T>(this Task<IEnumerable<T>> @this, Func<T, bool> predicate) 
-            => (await @this).Where(predicate);
-
-        [Pure]
         public static Unit ForEach<T>(this IEnumerable<T> @this, Action<T> action)
         {
             foreach (var item in @this)
