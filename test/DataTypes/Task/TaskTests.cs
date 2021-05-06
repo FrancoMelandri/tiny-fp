@@ -36,5 +36,27 @@ namespace TinyFpTest.DataTypes
                 .MapAsync(_ => Task.FromResult(Convert.ToInt32(_)))
                 .Result
                 .Should().Be(42);
+
+        [Test]
+        public void BindLeftAsync_WhenRight_CallTheRightFunc()
+        {
+            var either = Task.FromResult((Either<int, string>)"right");
+
+            var result = either.BindAsync(right => (Either<int, string>)right.ToUpper()).Result;
+
+            result.IsRight.Should().BeTrue();
+            result.OnRight(_ => _.Should().Be("RIGHT"));
+        }
+
+        [Test]
+        public void BindLeftAsync_WhenLeft_CallTheLeftFunc()
+        {
+            var either = Task.FromResult((Either<int, string>)10);
+
+            var result = either.BindLeftAsync(intLeft => (Either<int, string>)(intLeft * 10)).Result;
+
+            result.IsLeft.Should().BeTrue();
+            result.OnLeft(_ => _.Should().Be(100));
+        }
     }
 }

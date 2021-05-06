@@ -63,5 +63,20 @@ namespace TinyFpTest.Extensions
                 6,
                 8
             });
+
+        [Test]
+        public void ForEach_ApplyForEach()
+        {
+            var counter = 0;
+            new List<int>
+            {
+                1,
+                2,
+                3,
+                4
+            }
+            .ForEach(_ => counter += _);
+            counter.Should().Be(10);
+        }
     }       
 }

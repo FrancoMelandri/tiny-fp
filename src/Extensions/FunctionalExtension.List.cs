@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace TinyFp.Extensions
 {
@@ -12,12 +13,23 @@ namespace TinyFp.Extensions
             => @this.Where(predicate);
 
         [Pure]
-        public static S Fold<S, T>(this IEnumerable<T> @this, S state, Func<S, T, S> folder)
+        public static async Task<IEnumerable<T>> FilterAsync<T>(this Task<IEnumerable<T>> @this, Func<T, bool> predicate) 
+            => (await @this).Where(predicate);
+
+        [Pure]
+        public static Unit ForEach<T>(this IEnumerable<T> @this, Action<T> action)
         {
             foreach (var item in @this)
             {
-                state = folder(state, item);
+                action(item);
             }
+            return Unit.Default;
+        }
+
+        [Pure]
+        public static S Fold<S, T>(this IEnumerable<T> @this, S state, Func<S, T, S> folder)
+        {
+            @this.ForEach(_ => state = folder(state, _));
             return state;
         }
 

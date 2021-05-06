@@ -66,11 +66,11 @@ namespace TinyFp.Complex.Setup
             TestServer.Client.Dispose();            
         }
 
-        protected void StubProducts(string forName, int statusCode, string responseBody, int delayInMilliseconds = 1)
+        protected void StubProducts(int statusCode, string responseBody, int delayInMilliseconds = 1)
             => SearchServer
                 .Given(
                     Request.Create()
-                        .WithPath($"/products/{forName}")
+                        .WithPath($"/products")
                         .UsingGet()
                 )
                 .RespondWith(

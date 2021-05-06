@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using static TinyFp.Prelude;
 using static TinyFp.Extensions.FunctionalExtension;
 using static System.TimeSpan;
+using static TinyFpTest.Constants.Errors;
 
 namespace TinyFpTest.Services.Api
 {
@@ -34,14 +35,14 @@ namespace TinyFpTest.Services.Api
             HttpRequestMessage httpRequest,
             int apiRequestTimeout)
              => TryAsync(async () => await SendRequest(httpRequest, apiRequestTimeout))
-                .OnFail(_ => new ApiError());
+                .OnFail(_ => ExceptionCallingService);
 
         private Task<Either<ApiError, string>> SendRequest(HttpRequestMessage httpRequest, int apiRequestTimeout)
             => new CancellationTokenSource()
                 .Tee(_ => _.CancelAfter(FromMilliseconds(apiRequestTimeout)))
                 .Map(_ => _httpClientProvider().SendAsync(httpRequest, _.Token))
                 .MapAsync( _ => _.Content.ReadAsStringAsync())
-                .Map(_ => _.ToEitherAsync(new ApiError()));
+                .Map(_ => _.ToEitherAsync(EmptyServerError));
 
         private static HttpRequestMessage CreateRequest(HttpContent httpContent, ApiRequest apiRequest, HttpMethod method)
             => new HttpRequestMessage

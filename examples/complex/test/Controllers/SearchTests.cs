@@ -12,22 +12,18 @@ namespace TinyFp.Complex.Contorllers
     public class SearchTests : BaseIntegrationTest
     {
         [Test]
-        public void Search_Get_ReturnsEmptyProductList()
+        public void Search_Get_NotFound_WhenEmptyProducts()
         {
-            StubProducts("prd", 200, "[]");
+            StubProducts(200, "[]");
 
             var response = Client.GetAsync("/search?forName=prd").Result;
-            var responseContent = response.Content.ReadAsStringAsync().Result;
-            var products = JsonConvert.DeserializeObject<Product[]>(responseContent);
-
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            products.Should().BeEmpty();
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Test]
-        public void Search_Get_ReturnsProductList()
+        public void Search_Get_ReturnsProductListFiltered()
         {
-            StubProducts("prd", 200, ReadAllText(Combine("ApiStubs", "products.json")));
+            StubProducts(200, ReadAllText(Combine("ApiStubs", "products.json")));
 
             var response = Client.GetAsync("/search?forName=prd").Result;
             var responseContent = response.Content.ReadAsStringAsync().Result;
@@ -35,6 +31,16 @@ namespace TinyFp.Complex.Contorllers
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             products.Should().HaveCount(2);
+        }
+
+        [Test]
+        public void Search_Get_ReturnsNotFound()
+        {
+            StubProducts(200, ReadAllText(Combine("ApiStubs", "products.json")));
+
+            var response = Client.GetAsync("/search?forName=yyy").Result;
+
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
     }
 }

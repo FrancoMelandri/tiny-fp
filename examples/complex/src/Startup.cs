@@ -18,6 +18,9 @@ namespace TinyFpTest.Complex
     [ExcludeFromCodeCoverage]
     public class Startup
     {
+        const string Microsoft = "Microsoft";
+        const string System = "System";
+
         protected IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration) 
@@ -50,21 +53,21 @@ namespace TinyFpTest.Complex
                 .Map(_ => _.loggerConfig.CreateLogger())
                 .Tee(_ => services.AddSingleton<ILogger>(_));
 
-        private static (LoggerConfiguration, SerilogConfiguration) InitializeConfiguration(LoggerConfiguration loggerConfig, SerilogConfiguration serilogConfig)
-        {
-            const string Microsoft = "Microsoft";
-            const string System = "System";
-
-            loggerConfig.Enrich.WithProperty(nameof(serilogConfig.Environment), serilogConfig.Environment);
-            loggerConfig.Enrich.WithProperty(nameof(serilogConfig.System), serilogConfig.System);
-            loggerConfig.Enrich.WithProperty(nameof(serilogConfig.Customer), serilogConfig.Customer);
-            loggerConfig.Enrich.FromLogContext();
-            var parseSucceeded = Enum.TryParse(serilogConfig.LogEventLevel, true, out LogEventLevel logEventLevel);
-            loggerConfig.MinimumLevel.Is(parseSucceeded ? logEventLevel : LogEventLevel.Debug);
-            loggerConfig.MinimumLevel.Override(Microsoft, serilogConfig.MicrosoftLogEventLevel);
-            loggerConfig.MinimumLevel.Override(System, serilogConfig.SystemLogEventLevel);
-            return (loggerConfig, serilogConfig);
-        }
+        private static (LoggerConfiguration, SerilogConfiguration) InitializeConfiguration(LoggerConfiguration loggerConfig, 
+                                                                                           SerilogConfiguration serilogConfig)
+        => loggerConfig
+                .Tee(_ => _.Enrich.WithProperty(nameof(serilogConfig.Environment), serilogConfig.Environment))
+                .Tee(_ => _.Enrich.WithProperty(nameof(serilogConfig.System), serilogConfig.System))
+                .Tee(_ => _.Enrich.WithProperty(nameof(serilogConfig.Customer), serilogConfig.Customer))
+                .Tee(_ => _.Enrich.FromLogContext())
+                .Tee(_ => 
+                {
+                    var parseSucceeded = Enum.TryParse(serilogConfig.LogEventLevel, true, out LogEventLevel logEventLevel);
+                    _.MinimumLevel.Is(parseSucceeded ? logEventLevel : LogEventLevel.Debug);
+                })
+                .Tee(_ => _.MinimumLevel.Override(Microsoft, serilogConfig.MicrosoftLogEventLevel))
+                .Tee(_ => _.MinimumLevel.Override(System, serilogConfig.SystemLogEventLevel))
+                .Map(_ => (loggerConfig, serilogConfig));
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
             => app

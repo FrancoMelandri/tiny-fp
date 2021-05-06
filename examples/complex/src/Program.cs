@@ -9,15 +9,12 @@ namespace TinyFpTest.Complex
     public static class Program
     {
         public static void Main()
-            => CreateHostBuilder()
-                .Build()
-                .Run();
-
-        public static IHostBuilder CreateHostBuilder() =>
-            Host.CreateDefaultBuilder(Array.Empty<string>())
+            => Host.CreateDefaultBuilder(Array.Empty<string>())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+                .Build()
+                .Run();
     }
 }
