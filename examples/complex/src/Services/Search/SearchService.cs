@@ -24,10 +24,6 @@ namespace TinyFpTest.Services
             => ApiRequest
                 .Create()
                 .WithUrl($"{_productsApiConfiguration.Url}/{forName}")
-                .WithHeaders(new List<(string name, string value)> 
-                    {
-                        ("Accept", "application/json")
-                    })
                 .Map(_apiClient.GetAsync<Product[]>);
     }
 }

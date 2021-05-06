@@ -3,6 +3,8 @@ using FluentAssertions;
 using System;
 using Moq;
 using static TinyFp.Extensions.FunctionalExtension;
+using System.Threading.Tasks;
+using TinyFp;
 
 namespace TinyFpTest.Extensions
 {
@@ -29,6 +31,46 @@ namespace TinyFpTest.Extensions
             }
 
             public bool Mock { get; set; }
+
+            public bool GetTrue() => true;
+
+            public Task<bool> GetTrueAsync() => Task.FromResult(true);
+
+            public Task SetTrueAsync(ref bool value)
+            {
+                Task.Delay(100);
+                value = true;
+                return Task.CompletedTask;
+            }
+        }
+
+        public class CanBeDisposedAlt : IDisposable
+        {
+            private readonly CanBeDisposed _innerDisposable;
+            private readonly ILog _logger;
+
+            public CanBeDisposedAlt(CanBeDisposed innerDisposable, ILog logger)
+            {
+                _innerDisposable = innerDisposable;
+                _logger = logger;
+            }
+
+            public string GetTrue() => _innerDisposable.GetTrue().ToString();
+
+            public Task<string> GetTrueAsync() => Task.FromResult(_innerDisposable.GetTrue().ToString());
+
+            public Task SetTrueAsync(ref string value)
+            {
+                Task.Delay(1000);
+                value = _innerDisposable.GetTrue().ToString();
+                return Task.CompletedTask;
+            }
+
+            public void Dispose()
+            {
+                GC.SuppressFinalize(this);
+                _logger.Log("dispose-alt");
+            }
         }
 
         [Test]
@@ -92,5 +134,73 @@ namespace TinyFpTest.Extensions
             called.Should().BeTrue();
             log.Verify(m => m.Log("dispose"), Times.Once);
         }
+
+        [Test]
+        public void UsingAsync_WithActionDisposable_ShouldCallWithObject()
+        {
+            var log = new Mock<ILog>();
+            var called = false;
+
+            var result = UsingAsync(new CanBeDisposed(log.Object),
+                                    cbd => cbd.SetTrueAsync(ref called)).Result;
+
+            result.Should().Be(Unit.Default);
+            called.Should().BeTrue();
+            log.Verify(m => m.Log("dispose"), Times.Once);
+        }
+
+        [Test]
+        public void UsingAsync_WithFunctionDisposable_ShouldCallWithObject()
+        {
+            var log = new Mock<ILog>();
+
+            var result = UsingAsync(new CanBeDisposed(log.Object),
+                                    cbd => cbd.GetTrueAsync()).Result;
+
+            result.Should().BeTrue();
+            log.Verify(m => m.Log("dispose"), Times.Once);
+        }
+
+        [Test]
+        public void UsingAsync_WithActionWithTwoDisposable_ShouldCallWithObjects()
+        {
+            var log = new Mock<ILog>();
+            var called = false;
+            var calledAlt = "false";
+
+            var result = UsingAsync(new CanBeDisposed(log.Object),
+                                    cbd => new CanBeDisposedAlt(cbd, log.Object),
+                                    async (cbd, cbda) =>
+                                    {
+                                        await cbd.SetTrueAsync(ref called);
+                                        await cbda.SetTrueAsync(ref calledAlt);
+                                    }).Result;
+
+            result.Should().Be(Unit.Default);
+            called.Should().BeTrue();
+            calledAlt.Should().Be("True");
+            log.Verify(m => m.Log("dispose"), Times.Once);
+            log.Verify(m => m.Log("dispose-alt"), Times.Once);
+        }
+
+        [Test]
+        public void UsingAsync_WithFunctionWithTwoDisposable_ShouldCallWithObject()
+        {
+            var log = new Mock<ILog>();
+
+            var (result1, result2) = UsingAsync(new CanBeDisposed(log.Object),
+                                                cbd => new CanBeDisposedAlt(cbd, log.Object),
+                                                async (cbd, cbda) =>
+                                                (
+                                                    await cbd.GetTrueAsync(),
+                                                    await cbda.GetTrueAsync()
+                                                )).Result;
+
+            result1.Should().BeTrue();
+            result2.Should().Be("True");
+            log.Verify(m => m.Log("dispose"), Times.Once);
+            log.Verify(m => m.Log("dispose-alt"), Times.Once);
+        }
+
     }
 }

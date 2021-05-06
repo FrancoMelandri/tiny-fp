@@ -5,7 +5,6 @@ using Serilog;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
-using WireMock.Matchers;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
@@ -70,11 +69,6 @@ namespace TinyFp.Complex.Setup
         protected void StubProducts(string forName, int statusCode, string responseBody, int delayInMilliseconds = 1)
             => SearchServer
                 .Given(
-                //Request.Create()
-                //    .WithPath("/products")
-                //    .WithParam("forName", new ExactMatcher(forName))
-                //Request.Create()
-                //    .WithUrl("http://localhost:5001/products?forName=prd")
                     Request.Create()
                         .WithPath($"/products/{forName}")
                         .UsingGet()

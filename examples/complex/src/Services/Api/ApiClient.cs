@@ -20,8 +20,8 @@ namespace TinyFpTest.Services.Api
         }
 
         public Task<Either<ApiError, T>> GetAsync<T>(ApiRequest apiRequest)
-            => Using(CreateGetRequest(apiRequest),
-                     _ => SendAsync<T>(_, apiRequest.Timeout));        
+            => UsingAsync(CreateGetRequest(apiRequest),
+                          _ => SendAsync<T>(_, apiRequest.Timeout));
 
         private static HttpRequestMessage CreateGetRequest(ApiRequest apiRequest)
             => CreateRequest(new StringContent(string.Empty), apiRequest, HttpMethod.Get);
