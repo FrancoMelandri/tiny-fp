@@ -25,4 +25,10 @@
 		<ProjectReference Include="..\src\tiny-fp-complex.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Content Update="ApiStubs\products.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
 </Project>

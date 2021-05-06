@@ -4,6 +4,8 @@ using NUnit.Framework;
 using System.Net;
 using TinyFp.Complex.Setup;
 using TinyFpTest.Models;
+using static System.IO.File;
+using static System.IO.Path;
 
 namespace TinyFp.Complex.Contorllers
 {
@@ -20,6 +22,19 @@ namespace TinyFp.Complex.Contorllers
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             products.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Search_Get_ReturnsProductList()
+        {
+            StubProducts("prd", 200, ReadAllText(Combine("ApiStubs", "products.json")));
+
+            var response = Client.GetAsync("/search?forName=prd").Result;
+            var responseContent = response.Content.ReadAsStringAsync().Result;
+            var products = JsonConvert.DeserializeObject<Product[]>(responseContent);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            products.Should().HaveCount(2);
         }
     }
 }
