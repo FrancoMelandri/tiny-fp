@@ -76,6 +76,14 @@ namespace TinyFp
             => _isSome ? onSome(_value) : onNone();
 
         [Pure]
+        public Task<B> MatchAsync<B>(Func<A, B> onSome, Func<Task<B>> onNone)
+            => _isSome ? Task.FromResult(onSome(_value)) : onNone();
+
+        [Pure]
+        public Task<B> MatchAsync<B>(Func<A, Task<B>> onSome, Func<B> onNone)
+            => _isSome ? onSome(_value) : Task.FromResult(onNone());
+
+        [Pure]
         public Either<L, A> ToEither<L>(Func<L> onLeft)
             =>  _isSome ?
                     Either<L, A>.Right(_value) :

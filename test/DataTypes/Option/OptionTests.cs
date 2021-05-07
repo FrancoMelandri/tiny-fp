@@ -168,6 +168,42 @@ namespace TinyFpTest.DataTypes
                 .Should().BeTrue();
 
         [Test]
+        public void MatchAsync_1_IfSome_ToOutput()
+            => Option<string>
+                    .Some("not-empty")
+                    .MatchAsync(_ => _ == "not-empty",
+                           () => Task.FromResult(false))
+                    .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_1_IfNone_ToOutput()
+            => Option<string>
+                    .None()
+                    .MatchAsync(_ => false,
+                           () => Task.FromResult(true))
+                    .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_2_IfSome_ToOutput()
+            => Option<string>
+                    .Some("not-empty")
+                    .MatchAsync(_ => Task.FromResult(_ == "not-empty"),
+                           () => false)
+                    .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_2_IfNone_ToOutput()
+            => Option<string>
+                    .None()
+                    .MatchAsync(_ => Task.FromResult(false),
+                           () => true)
+                    .Result
+                .Should().BeTrue();
+
+        [Test]
         public void ToEither_Func_WhenSome_Right()
             => Option<string>
                     .Some("not-empty")

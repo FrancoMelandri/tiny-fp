@@ -69,6 +69,60 @@ namespace TinyFpTest.DataTypes
                 .Should().BeTrue();
 
         [Test]
+        public void MatchAsync_1_IfSome_ToOutput()
+            => Task.FromResult(Option<string>
+                    .Some("not-empty"))
+                    .MatchAsync(_ => _ == "not-empty",
+                           () => Task.FromResult(false))
+                    .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_1_IfNone_ToOutput()
+            => Task.FromResult(Option<string>
+                    .None())
+                    .MatchAsync(_ => false,
+                           () => Task.FromResult(true))
+                    .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_2_IfSome_ToOutput()
+            => Task.FromResult(Option<string>
+                    .Some("not-empty"))
+                    .MatchAsync(_ => Task.FromResult(_ == "not-empty"),
+                           () => false)
+                    .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_2_IfNone_ToOutput()
+            => Task.FromResult(Option<string>
+                    .None())
+                    .MatchAsync(_ => Task.FromResult(false),
+                           () => true)
+                    .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_3_IfSome_ToOutput()
+            => Task.FromResult(Option<string>
+                    .Some("not-empty"))
+                    .MatchAsync(_ => Task.FromResult(_ == "not-empty"),
+                           () => Task.FromResult(false))
+                    .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_3_IfNone_ToOutput()
+            => Task.FromResult(Option<string>
+                    .None())
+                    .MatchAsync(_ => Task.FromResult(false),
+                           () => Task.FromResult(true))
+                    .Result
+                .Should().BeTrue();
+
+        [Test]
         public void MatchAsync_IfNone_ToOutput()
             => Task.FromResult(Option<string>
                     .None())
@@ -78,7 +132,7 @@ namespace TinyFpTest.DataTypes
                 .Should().BeTrue();
 
         [Test]
-        public void BindaSYNC_MapInputInOutput()
+        public void BindAsync_MapInputInOutput()
             => Task.FromResult(Option<string>
                     .Some("not-empty"))
                     .BindAsync(_ => Option<bool>.Some(_ == "not-empty"))
@@ -87,7 +141,7 @@ namespace TinyFpTest.DataTypes
                 .Should().BeTrue();
 
         [Test]
-        public void BindaSYNC_MapNoneInOutput()
+        public void BindAsync_MapNoneInOutput()
             => Task.FromResult(Option<string>
                     .None())
                     .BindAsync(_ => Option<bool>.Some(true))
