@@ -35,13 +35,14 @@ namespace TinyFp.Complex.Setup
         public void GlobalTeardown()
         {
             SearchServer.Stop();
-            TestStartup.InMemoryRedisCache.ClearCache();
         }
 
         [TearDown]
         public void Teardown()
         {
             SearchServer.Reset();
+            TestStartup.InMemoryRedisCache.ClearCache();
+            IntegrationTestHttpRequestHandler.Reset();
         }
 
         protected BaseIntegrationTest()

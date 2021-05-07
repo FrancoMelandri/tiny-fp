@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using TinyFp.Extensions;
 
 namespace TinyFp.Complex.Setup
 {
@@ -11,10 +12,8 @@ namespace TinyFp.Complex.Setup
         public static IEnumerable<HttpRequestMessage> RequestsReceived => _requestsReceived;
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            _requestsReceived.Add(request);
-            return base.SendAsync(request, cancellationToken);
-        }
+            => base.SendAsync(request, cancellationToken)
+                .Tee(_ => _requestsReceived.Add(request));
 
         public static void Reset() => _requestsReceived.Clear();
     }

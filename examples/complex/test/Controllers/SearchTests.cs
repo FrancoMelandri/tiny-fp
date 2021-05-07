@@ -37,7 +37,6 @@ namespace TinyFp.Complex.Contorllers
                 .RequestsReceived
                 .Where(_ => _.RequestUri.ToString().Contains("/products"))
                 .Should().HaveCount(1);
-
         }
 
         [Test]
@@ -54,7 +53,6 @@ namespace TinyFp.Complex.Contorllers
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             products.Should().HaveCount(2);
 
-
             response = Client.GetAsync("/search?forName=prd").Result;
             responseContent = response.Content.ReadAsStringAsync().Result;
             products = JsonConvert.DeserializeObject<Product[]>(responseContent);
@@ -69,7 +67,7 @@ namespace TinyFp.Complex.Contorllers
 
             TestStartup
                 .InMemoryRedisCache
-                .ExistsAsync("products")
+                .ExistsAsync("products:prd")
                 .Result
                 .Should().BeTrue();
         }

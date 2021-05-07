@@ -21,14 +21,17 @@ namespace TinyFpTest.Services
         }
 
         public Task<Either<ApiError, Product[]>> SearchProductsAsync(string forName)
-            => _cache.GetAsync<Product[]>(PRODUCTS_KEY)
+            => _cache.GetAsync<Product[]>(GetKey(forName))
                 .MatchAsync(
                     _ => _,
                     () => _searchService
                             .SearchProductsAsync(forName)
-                            .BindAsync(_ => DoCache(_)));
+                            .BindAsync(_ => DoCache(_, forName)));
 
-        private Either<ApiError, Product[]> DoCache(Product[] products)
-            => products.Tee(_ => _cache.SetAsync(PRODUCTS_KEY, products));
+        private Either<ApiError, Product[]> DoCache(Product[] products, string forName)
+            => products.Tee(_ => _cache.SetAsync(GetKey(forName), products));
+
+        private static string GetKey(string forName)
+            => $"{PRODUCTS_KEY}:{forName}";
     }
 }
