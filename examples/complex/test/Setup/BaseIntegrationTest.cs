@@ -42,6 +42,7 @@ namespace TinyFp.Complex.Setup
         {
             SearchServer.Reset();
             TestStartup.InMemoryRedisCache.ClearCache();
+            TestStartup.Logger.Invocations.Clear();
             IntegrationTestHttpRequestHandler.Reset();
         }
 

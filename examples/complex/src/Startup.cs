@@ -42,7 +42,8 @@ namespace TinyFpTest.Complex
                                 new CachedSearchService(_.GetRequiredService<ICache>(),
                                                         _.GetRequiredService<SearchService>())))
                 .Tee(_ => _.AddSingleton<ISearchService>(_ =>
-                                new LoggedSearchService(_.GetRequiredService<CachedSearchService>())))
+                                new LoggedSearchService(_.GetRequiredService<CachedSearchService>(),
+                                                        _.GetRequiredService<ILogger>())))
                 .Tee(_ => _.AddSingleton<IApiClient>(_ =>
                             new ApiClient(() => _.GetRequiredService<IHttpClientFactory>().CreateClient())))
                 .Tee(_ => InitializeSerilog(_));

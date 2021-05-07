@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System.Linq;
@@ -13,12 +14,21 @@ namespace TinyFp.Complex.Contorllers
     public class SearchTests : BaseIntegrationTest
     {
         [Test]
-        public void Search_Get_NotFound_WhenEmptyProducts()
+        public void Search_Get_NotFound_WhenEmptyProducts_AndLog()
         {
             StubProducts(200, "[]");
 
             var response = Client.GetAsync("/search?forName=prd").Result;
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+            IntegrationTestHttpRequestHandler
+                .RequestsReceived
+                .Where(_ => _.RequestUri.ToString().Contains("/products"))
+                .Should().HaveCount(1);
+
+            TestStartup
+                .Logger
+                .Verify(_ => _.Error("NotFound, not_found, product not found"));
         }
 
         [Test]
@@ -37,6 +47,10 @@ namespace TinyFp.Complex.Contorllers
                 .RequestsReceived
                 .Where(_ => _.RequestUri.ToString().Contains("/products"))
                 .Should().HaveCount(1);
+
+            TestStartup
+                .Logger
+                .Verify(_ => _.Error(It.IsAny<string>()), Times.Never);
         }
 
         [Test]
@@ -70,16 +84,29 @@ namespace TinyFp.Complex.Contorllers
                 .ExistsAsync("products:prd")
                 .Result
                 .Should().BeTrue();
+
+            TestStartup
+                .Logger
+                .Verify(_ => _.Error(It.IsAny<string>()), Times.Never);
         }
 
         [Test]
-        public void Search_Get_ReturnsNotFound()
+        public void Search_Get_ReturnsNotFound_AndLog()
         {
             StubProducts(200, ReadAllText(Combine("ApiStubs", "products.json")));
 
             var response = Client.GetAsync("/search?forName=yyy").Result;
 
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+            IntegrationTestHttpRequestHandler
+                .RequestsReceived
+                .Where(_ => _.RequestUri.ToString().Contains("/products"))
+                .Should().HaveCount(1);
+
+            TestStartup
+                .Logger
+                .Verify(_ => _.Error("NotFound, not_found, product not found"));
         }
     }
 }
