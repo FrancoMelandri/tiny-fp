@@ -15,15 +15,15 @@ namespace TinyFp.Complex.Setup
 
         public Task<Option<T>> GetAsync<T>(string key)
             => _inMemoryCache.ContainsKey(key) ? 
-                    Task.FromResult(Option<T>.Some((T)_inMemoryCache[key])) : 
-                    Task.FromResult(Option<T>.None());
+                Task.FromResult(Option<T>.Some((T)_inMemoryCache[key])) : 
+                Task.FromResult(Option<T>.None());
 
         public Task<bool> RemoveAsync(string key)
             => Task.FromResult(
-                    _inMemoryCache.TryRemove(key, out var removed)
-                    .Map(_ => removed)
-                    .ToOption()
-                    .Match(ok => true, () => false));
+                _inMemoryCache.TryRemove(key, out var removed)
+                .Map(_ => removed)
+                .ToOption()
+                .Match(ok => true, () => false));
 
         public Task<bool> SetAsync<T>(string key, T value, TimeSpan? ttl = null)
             => Task.Run(() => true.Tee(_ => _inMemoryCache.TryAdd(key, value)));
