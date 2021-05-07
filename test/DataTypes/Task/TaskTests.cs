@@ -31,6 +31,47 @@ namespace TinyFpTest.DataTypes
                 .Wait();
 
         [Test]
+        public void MatchAsync_1_WhenRight_ToOuput()
+            => Task.FromResult(Either<int, string>.Right("either"))
+                .MatchAsync(_ => true, _ => Task.FromResult(false))
+                .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_1_WhenLeft_ToOuput()
+            => Task.FromResult(Either<int, string>.Left(42))
+                .MatchAsync(_ => false, _ => Task.FromResult(true))
+                .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_2_WhenRight_ToOuput()
+            => Task.FromResult(Either<int, string>.Right("either"))
+                .MatchAsync(_ => Task.FromResult(true), _ => false)
+                .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_2_WhenLeft_ToOuput()
+            => Task.FromResult(Either<int, string>.Left(42))
+                .MatchAsync(_ => Task.FromResult(false), _ => true)
+                .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_3_WhenRight_ToOuput()
+            => Task.FromResult(Either<int, string>.Right("either"))
+                .MatchAsync(_ => true, _ => false)
+                .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_3_WhenLeft_ToOuput()
+            => Task.FromResult(Either<int, string>.Left(42))
+                .MatchAsync(_ => false, _ => true)
+                .Result
+                .Should().BeTrue();
+        [Test]
         public void MapAsync_MapToOutput()
             => Task.FromResult("42")
                 .MapAsync(_ => Task.FromResult(Convert.ToInt32(_)))

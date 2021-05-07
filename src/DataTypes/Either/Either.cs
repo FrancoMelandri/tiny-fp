@@ -87,6 +87,18 @@ namespace TinyFp
         public Task<M> MatchAsync<M>(Func<R, Task<M>> onRightAsync, Func<L, Task<M>> onLeftAsync)
             => IsRight ? onRightAsync(_right) : onLeftAsync(_left);
 
+        [Pure]
+        public Task<M> MatchAsync<M>(Func<R, M> onRightAsync, Func<L, Task<M>> onLeftAsync)
+            => IsRight ? Task.FromResult(onRightAsync(_right)) : onLeftAsync(_left);
+
+        [Pure]
+        public Task<M> MatchAsync<M>(Func<R, Task<M>> onRightAsync, Func<L, M> onLeftAsync)
+            => IsRight ? onRightAsync(_right) : Task.FromResult(onLeftAsync(_left));
+
+        [Pure]
+        public Task<M> MatchAsync<M>(Func<R, M> onRightAsync, Func<L, M> onLeftAsync)
+            => IsRight ? Task.FromResult(onRightAsync(_right)) : Task.FromResult(onLeftAsync(_left));
+
         public static implicit operator Either<L, R> (R right) => Right(right);
         public static implicit operator Either<L, R> (L left) => Left(left);
     }

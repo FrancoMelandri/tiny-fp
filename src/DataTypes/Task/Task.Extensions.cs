@@ -22,6 +22,24 @@ namespace TinyFp
             => (await @this).Match(onRight, onLeft);
 
         [Pure]
+        public static async Task<M> MatchAsync<L, R, M>(this Task<Either<L, R>> @this,
+                                                        Func<R, Task<M>> onRight,
+                                                        Func<L, M> onLeft)
+            => await (await @this).MatchAsync(onRight, onLeft);
+
+        [Pure]
+        public static async Task<M> MatchAsync<L, R, M>(this Task<Either<L, R>> @this,
+                                                        Func<R, M> onRight,
+                                                        Func<L, Task<M>> onLeft)
+            => await (await @this).MatchAsync(onRight, onLeft);
+
+        [Pure]
+        public static async Task<M> MatchAsync<L, R, M>(this Task<Either<L, R>> @this,
+                                                        Func<R, Task<M>> onRight,
+                                                        Func<L, Task<M>> onLeft)
+            => await (await @this).MatchAsync(onRight, onLeft);
+
+        [Pure]
         public static async Task<Either<L, M>> BindAsync<L, R, M>(this Task<Either<L, R>> @this, 
                                                                   Func<R, Either<L, M>> onRight)
             => (await @this).Bind(onRight);
@@ -54,15 +72,15 @@ namespace TinyFp
             => await (await @this).MatchAsync(onSome, onNone);
 
         [Pure]
-        public static async Task<B> MatchAsync<A, B>(this Task<Option<A>> @this, 
-                                                     Func<A, Task<B>> onSome, 
-                                                     Func<Task<B>> onNone)
+        public static async Task<B> MatchAsync<A, B>(this Task<Option<A>> @this,
+                                                     Func<A, Task<B>> onSome,
+                                                     Func<B> onNone)
             => await (await @this).MatchAsync(onSome, onNone);
 
         [Pure]
         public static async Task<B> MatchAsync<A, B>(this Task<Option<A>> @this, 
                                                      Func<A, Task<B>> onSome, 
-                                                     Func<B> onNone)
+                                                     Func<Task<B>> onNone)
             => await (await @this).MatchAsync(onSome, onNone);
 
         [Pure]
