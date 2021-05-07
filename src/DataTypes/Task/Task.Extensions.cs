@@ -27,8 +27,19 @@ namespace TinyFp
             => (await @this).Bind(onRight);
 
         [Pure]
-        public static async Task<Either<M, R>> BindLeftAsync<L, R, M>(this Task<Either<L, R>> @this, Func<L, Either<M, R>> onLeft)
+        public static async Task<Either<M, R>> BindLeftAsync<L, R, M>(this Task<Either<L, R>> @this, 
+                                                                      Func<L, Either<M, R>> onLeft)
             => (await @this).BindLeft(onLeft);
 
+        [Pure]
+        public static async Task<B> MatchAsync<A, B>(this Task<Option<A>> @this,
+                                                     Func<A, B> onSome,
+                                                     Func<B> onNone)
+            => (await @this).Match(onSome, onNone);
+
+        [Pure]
+        public static async Task<Option<B>> BindAsync<A, B>(this Task<Option<A>> @this,
+                                                            Func<A, Option<B>> onBind)
+            => (await @this).Bind(onBind);
     }
 }

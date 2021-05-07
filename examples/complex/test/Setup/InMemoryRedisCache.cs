@@ -13,8 +13,10 @@ namespace TinyFp.Complex.Setup
         public Task<bool> ExistsAsync(string key)
             => Task.FromResult(_inMemoryCache.ContainsKey(key));
 
-        public Task<T> GetAsync<T>(string key)
-            => _inMemoryCache.ContainsKey(key) ? Task.FromResult((T)_inMemoryCache[key]) : Task.FromResult((T)default);
+        public Task<Option<T>> GetAsync<T>(string key)
+            => _inMemoryCache.ContainsKey(key) ? 
+                    Task.FromResult(Option<T>.Some((T)_inMemoryCache[key])) : 
+                    Task.FromResult(Option<T>.None());
 
         public Task<bool> RemoveAsync(string key)
             => Task.FromResult(

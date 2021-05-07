@@ -36,9 +36,11 @@ namespace TinyFpTest.Complex
                             .GetSection(typeof(ProductsApiConfiguration).Name)
                             .Get<ProductsApiConfiguration>()
                             .Tee(_ => services.AddSingleton(_)))
+                .Tee(_ => _.AddSingleton<ICache, Cache>())
                 .Tee(_ => _.AddSingleton<SearchService>())
                 .Tee(_ => _.AddSingleton(_ =>
-                                new CachedSearchService(_.GetRequiredService<SearchService>())))
+                                new CachedSearchService(_.GetRequiredService<ICache>(),
+                                                        _.GetRequiredService<SearchService>())))
                 .Tee(_ => _.AddSingleton<ISearchService>(_ =>
                                 new LoggedSearchService(_.GetRequiredService<CachedSearchService>())))
                 .Tee(_ => _.AddSingleton<IApiClient>(_ =>

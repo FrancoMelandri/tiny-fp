@@ -7,10 +7,14 @@ namespace TinyFpTest.Services
 {
     public class CachedSearchService : ISearchService
     {
+        private const string PRODUCTS_KEY = "products";
+        private readonly ICache _cache;
         private readonly ISearchService _searchService;
 
-        public CachedSearchService(ISearchService searchService)
+        public CachedSearchService(ICache cache,
+                                   ISearchService searchService)
         {
+            _cache = cache;
             _searchService = searchService;
         }
 

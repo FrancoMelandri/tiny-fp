@@ -58,5 +58,41 @@ namespace TinyFpTest.DataTypes
             result.IsLeft.Should().BeTrue();
             result.OnLeft(_ => _.Should().Be(100));
         }
+
+        [Test]
+        public void MatchAsync_IfSome_ToOutput()
+            => Task.FromResult(Option<string>
+                    .Some("not-empty"))
+                    .MatchAsync(_ => _ == "not-empty",
+                           () => false)
+                    .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_IfNone_ToOutput()
+            => Task.FromResult(Option<string>
+                    .None())
+                    .MatchAsync(_ => false,
+                           () => true)
+                    .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void BindaSYNC_MapInputInOutput()
+            => Task.FromResult(Option<string>
+                    .Some("not-empty"))
+                    .BindAsync(_ => Option<bool>.Some(_ == "not-empty"))
+                    .Result
+                    .OnNone(false)
+                .Should().BeTrue();
+
+        [Test]
+        public void BindaSYNC_MapNoneInOutput()
+            => Task.FromResult(Option<string>
+                    .None())
+                    .BindAsync(_ => Option<bool>.Some(true))
+                    .Result
+                    .IsNone
+                .Should().BeTrue();
     }
 }
