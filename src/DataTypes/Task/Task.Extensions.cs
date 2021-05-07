@@ -32,6 +32,16 @@ namespace TinyFp
             => (await @this).BindLeft(onLeft);
 
         [Pure]
+        public static async Task<Either<L, M>> MapAsync<L, R, M>(this Task<Either<L, R>> @this, 
+                                                                 Func<R, M> onRight)
+            => (await @this).Map(onRight);
+
+        [Pure]
+        public static async Task<Either<M, R>> MapLeftAsync<L, R, M>(this Task<Either<L, R>> @this, 
+                                                                      Func<L, M> onLeft)
+            => (await @this).MapLeft(onLeft);
+
+        [Pure]
         public static async Task<B> MatchAsync<A, B>(this Task<Option<A>> @this,
                                                      Func<A, B> onSome,
                                                      Func<B> onNone)
@@ -59,5 +69,10 @@ namespace TinyFp
         public static async Task<Option<B>> BindAsync<A, B>(this Task<Option<A>> @this,
                                                             Func<A, Option<B>> onBind)
             => (await @this).Bind(onBind);
+
+        [Pure]
+        public static async Task<Option<B>> MapAsync<A, B>(this Task<Option<A>> @this,
+                                                            Func<A, B> onBind)
+            => (await @this).Map(onBind);
     }
 }

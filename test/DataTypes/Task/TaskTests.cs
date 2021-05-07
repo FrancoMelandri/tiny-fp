@@ -60,6 +60,42 @@ namespace TinyFpTest.DataTypes
         }
 
         [Test]
+        public void MapAsync_WhenRight_MapToOutput()
+            => Task.FromResult(Either<int, string>.Right("either"))
+                .MapAsync(_ => _ == "either")
+                .Result
+                .IsRight
+                .Should().BeTrue();
+
+        [Test]
+        public void MapAsync_WhenLeft_DontMapToOutput()
+            => Task.FromResult(Either<int, string>.Left(0))
+                .MapAsync(_ => _ == "either")
+                .Result
+                .IsLeft
+                .Should().BeTrue();
+
+        [Test]
+        public void MapLeftAsync_WhenRight_DontMapToOutput()
+        {
+            var called = false;
+            Task.FromResult(Either<int, string>.Right("either"))
+                .MapLeftAsync(_ => called = true).Wait();
+
+            called.Should().BeFalse();
+        }
+
+        [Test]
+        public void MapLeftAsync_WhenLeft_MapToOutput()
+        {
+            var called = false;
+            Task.FromResult(Either<int, string>.Left(0))
+                .MapLeftAsync(_ => called = true).Wait();
+
+            called.Should().BeTrue();
+        }
+
+        [Test]
         public void MatchAsync_IfSome_ToOutput()
             => Task.FromResult(Option<string>
                     .Some("not-empty"))
@@ -145,6 +181,24 @@ namespace TinyFpTest.DataTypes
             => Task.FromResult(Option<string>
                     .None())
                     .BindAsync(_ => Option<bool>.Some(true))
+                    .Result
+                    .IsNone
+                .Should().BeTrue();
+
+        [Test]
+        public void MapAsync_MapInputInOutput()
+            => Task.FromResult(Option<string>
+                    .Some("not-empty"))
+                    .MapAsync(_ => _ == "not-empty")
+                    .Result
+                    .OnNone(false)
+                .Should().BeTrue();
+
+        [Test]
+        public void MapAsync_MapNoneInOutput()
+            => Task.FromResult(Option<string>
+                    .None())
+                    .MapAsync(_ => true)
                     .Result
                     .IsNone
                 .Should().BeTrue();
