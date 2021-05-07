@@ -71,6 +71,21 @@ namespace TinyFpTest.DataTypes
                 .MatchAsync(_ => false, _ => true)
                 .Result
                 .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_4_WhenRight_ToOuput()
+            => Task.FromResult(Either<int, string>.Right("either"))
+                .MatchAsync(_ => Task.FromResult(true), _ => Task.FromResult(false))
+                .Result
+                .Should().BeTrue();
+
+        [Test]
+        public void MatchAsync_4_WhenLeft_ToOuput()
+            => Task.FromResult(Either<int, string>.Left(42))
+                .MatchAsync(_ => Task.FromResult(false), _ => Task.FromResult(true))
+                .Result
+                .Should().BeTrue();
+
         [Test]
         public void MapAsync_MapToOutput()
             => Task.FromResult("42")
