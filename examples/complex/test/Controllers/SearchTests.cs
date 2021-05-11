@@ -35,6 +35,7 @@ namespace TinyFp.Complex.Contorllers
         [TestCase("")]
         [TestCase(" ")]
         [TestCase("prf prd")]
+        [TestCase("01234567890123456789xxx")]
         public void Search_Get_ReturnBadRequest_DueToValidation(string forName)
         {
             StubProducts(200, ReadAllText(Combine("ApiStubs", "products.json")));
