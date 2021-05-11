@@ -21,9 +21,15 @@ namespace TinyFpTest.Services
 
 
         public Task<Either<ApiError, Product[]>> SearchProductsAsync(string forName)
-            => ValidateSpaces(forName)
+            => ValidateEmptyBlankOrNull(forName)
+                .Bind(_ => ValidateSpaces(forName))
                 .MatchAsync(_ => _searchService.SearchProductsAsync(forName),
                             _ => Task.FromResult((Either<ApiError, Product[]>)_));
+
+        private Validation<ApiError, Unit> ValidateEmptyBlankOrNull(string forName)
+            => string.IsNullOrWhiteSpace(forName) ?
+                Fail<ApiError, Unit>(InvalidInput) :
+                Success<ApiError, Unit>(Unit.Default);
 
         private Validation<ApiError, Unit> ValidateSpaces(string forName)
             => forName.Contains(BLANK_SPACE) ?

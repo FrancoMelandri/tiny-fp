@@ -31,12 +31,15 @@ namespace TinyFp.Complex.Contorllers
                 .Verify(_ => _.Error("NotFound, not_found, product not found"));
         }
 
-        [Test]
-        public void Search_Get_ReturnBadRequest_DueToValidation()
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        [TestCase("prf prd")]
+        public void Search_Get_ReturnBadRequest_DueToValidation(string forName)
         {
             StubProducts(200, ReadAllText(Combine("ApiStubs", "products.json")));
 
-            var response = Client.GetAsync("/search?forName=prd prd").Result;
+            var response = Client.GetAsync($"/search?forName={forName}").Result;
             var responseContent = response.Content.ReadAsStringAsync().Result;
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
