@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using TinyFpTest.Services;
 using TinyFp;
+using TinyFpTest.Services.Api;
+using System;
 
 namespace TinyFpTest.Controllers
 {
@@ -22,7 +24,14 @@ namespace TinyFpTest.Controllers
                 .SearchProductsAsync(forName)
                 .MatchAsync(
                     _ => new JsonResult(_), 
-                    _ => (IActionResult)NotFound()
+                    FromApiError
                 );
+
+        private static IActionResult FromApiError(ApiError _)
+            => new ContentResult 
+            {
+                StatusCode = (int)_.StatusCode,
+                Content = _.Code
+            };
     }
 }

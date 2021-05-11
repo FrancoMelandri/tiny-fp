@@ -32,6 +32,26 @@ namespace TinyFp.Complex.Contorllers
         }
 
         [Test]
+        public void Search_Get_ReturnBadRequest_DueToValidation()
+        {
+            StubProducts(200, ReadAllText(Combine("ApiStubs", "products.json")));
+
+            var response = Client.GetAsync("/search?forName=prd prd").Result;
+            var responseContent = response.Content.ReadAsStringAsync().Result;
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+            IntegrationTestHttpRequestHandler
+                .RequestsReceived
+                .Where(_ => _.RequestUri.ToString().Contains("/products"))
+                .Should().HaveCount(0);
+
+            TestStartup
+                .Logger
+                .Verify(_ => _.Error("BadRequest, bad_request, input is not valid"));
+        }
+
+        [Test]
         public void Search_Get_ReturnsProductListFiltered()
         {
             StubProducts(200, ReadAllText(Combine("ApiStubs", "products.json")));

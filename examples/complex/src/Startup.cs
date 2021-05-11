@@ -41,8 +41,10 @@ namespace TinyFpTest.Complex
                 .Tee(_ => _.AddSingleton(_ =>
                                 new CachedSearchService(_.GetRequiredService<ICache>(),
                                                         _.GetRequiredService<SearchService>())))
+                .Tee(_ => _.AddSingleton(_ =>
+                                new ValidationSearchService(_.GetRequiredService<CachedSearchService>())))
                 .Tee(_ => _.AddSingleton<ISearchService>(_ =>
-                                new LoggedSearchService(_.GetRequiredService<CachedSearchService>(),
+                                new LoggedSearchService(_.GetRequiredService<ValidationSearchService>(),
                                                         _.GetRequiredService<ILogger>())))
                 .Tee(_ => _.AddSingleton<IApiClient>(_ =>
                             new ApiClient(() => _.GetRequiredService<IHttpClientFactory>().CreateClient())))
