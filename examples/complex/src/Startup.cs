@@ -12,6 +12,7 @@ using TinyFpTest.Configuration;
 using TinyFpTest.Services;
 using TinyFpTest.Services.Api;
 using TinyFpTest.Services.Details;
+using TinyFpTest.Services.DetailsDrivenPorts;
 using static TinyFp.Extensions.Functional;
 
 namespace TinyFpTest.Complex
@@ -24,7 +25,7 @@ namespace TinyFpTest.Complex
 
         protected IConfiguration Configuration { get; }
 
-        public Startup(IConfiguration configuration) 
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -47,7 +48,7 @@ namespace TinyFpTest.Complex
                 .Tee(_ => _.AddSingleton<ISearchService>(_ =>
                                 new LoggedSearchService(_.GetRequiredService<ValidationSearchService>(),
                                                         _.GetRequiredService<ILogger>())))
-                .Tee(_ => _.AddSingleton<IDetailsService, DetailsService>())
+                .Tee(_ => InitializeDetailsDrivenPort(_))
                 .Tee(_ => _.AddSingleton<IApiClient>(_ =>
                             new ApiClient(() => _.GetRequiredService<IHttpClientFactory>().CreateClient())))
                 .Tee(_ => InitializeSerilog(_));
@@ -59,6 +60,16 @@ namespace TinyFpTest.Complex
                 .Tee(_ => InitializeConfiguration(_.loggerConfig, _.serilogConfig))
                 .Map(_ => _.loggerConfig.CreateLogger())
                 .Tee(_ => services.AddSingleton<ILogger>(_));
+
+        private void InitializeDetailsDrivenPort(IServiceCollection services)
+            => Configuration
+                .GetSection(typeof(DetailsDrivenPortConfiguration).Name).Get<DetailsDrivenPortConfiguration>()
+                .Map(_ => _.Adapter switch
+                            {
+                                DetailsDrivenPorts.DetailsDrivenPortApi => services.AddSingleton<IDetailsDrivenPort, DetailsDrivenPortAdapterApi>(),                               
+                                DetailsDrivenPorts.DetailDrivenPortDb => services.AddSingleton<IDetailsDrivenPort, DetailsDrivenPortAdapterDb>(),
+                                _ => throw new DetailsDrivenPortNotImplemented(_)
+                            });
 
         private static (LoggerConfiguration, SerilogConfiguration) InitializeConfiguration(LoggerConfiguration loggerConfig, 
                                                                                            SerilogConfiguration serilogConfig)

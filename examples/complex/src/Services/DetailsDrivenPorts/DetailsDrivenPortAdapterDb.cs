@@ -5,9 +5,9 @@ using TinyFpTest.Services.Api;
 
 namespace TinyFpTest.Services.Details
 {
-    public class DetailsService : IDetailsService
+    public class DetailsDrivenPortAdapterDb : IDetailsDrivenPort
     {
         public Task<Either<ApiError, ProductDetails>> GetDetailsAsync(string productName)
-            => Task.FromResult(Either<ApiError, ProductDetails>.Right(new ProductDetails()));
-    }
+            => throw new System.Exception("error");
+    }    
 }

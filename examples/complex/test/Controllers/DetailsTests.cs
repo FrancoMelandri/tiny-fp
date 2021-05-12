@@ -13,6 +13,7 @@ namespace TinyFp.Complex.Contorllers
         {
             StubProducts(200, "[]");
 
+
             var response = Client.GetAsync("/details?productName=prd").Result;
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }

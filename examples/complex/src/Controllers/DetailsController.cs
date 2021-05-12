@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using TinyFp;
 using TinyFpTest.Services.Details;
 
 namespace TinyFpTest.Controllers
@@ -8,15 +9,20 @@ namespace TinyFpTest.Controllers
     [Route("[controller]")]
     public class DetailsController : BaseController
     {
-        private readonly IDetailsService _detailsService;
+        private readonly IDetailsDrivenPort _detailsService;
 
-        public DetailsController(IDetailsService detailsService)
+        public DetailsController(IDetailsDrivenPort detailsService)
         {
             _detailsService = detailsService;
         }
 
         [HttpGet]
         public Task<IActionResult> Details([FromQuery] string productName)
-            => Task.FromResult((IActionResult)new OkResult());
+            => _detailsService
+                .GetDetailsAsync(productName)
+                .MatchAsync(
+                    _ => new JsonResult(_),
+                    FromApiError
+                );
     }
 }
