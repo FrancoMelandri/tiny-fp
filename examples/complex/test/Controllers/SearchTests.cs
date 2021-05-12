@@ -11,6 +11,8 @@ using static System.IO.Path;
 
 namespace TinyFp.Complex.Contorllers
 {
+
+    [TestFixture]
     public class SearchTests : BaseIntegrationTest
     {
         [Test]

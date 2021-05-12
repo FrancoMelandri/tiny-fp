@@ -2,14 +2,13 @@
 using System.Threading.Tasks;
 using TinyFpTest.Services;
 using TinyFp;
-using TinyFpTest.Services.Api;
-using System;
 
 namespace TinyFpTest.Controllers
 {
+
     [ApiController]
     [Route("[controller]")]
-    public class SearchController : ControllerBase
+    public class SearchController : BaseController
     {
         private readonly ISearchService _searchService;
 
@@ -26,12 +25,5 @@ namespace TinyFpTest.Controllers
                     _ => new JsonResult(_), 
                     FromApiError
                 );
-
-        private static IActionResult FromApiError(ApiError _)
-            => new ContentResult 
-            {
-                StatusCode = (int)_.StatusCode,
-                Content = _.Code
-            };
     }
 }

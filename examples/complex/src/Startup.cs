@@ -11,6 +11,7 @@ using TinyFp.Extensions;
 using TinyFpTest.Configuration;
 using TinyFpTest.Services;
 using TinyFpTest.Services.Api;
+using TinyFpTest.Services.Details;
 using static TinyFp.Extensions.Functional;
 
 namespace TinyFpTest.Complex
@@ -46,6 +47,7 @@ namespace TinyFpTest.Complex
                 .Tee(_ => _.AddSingleton<ISearchService>(_ =>
                                 new LoggedSearchService(_.GetRequiredService<ValidationSearchService>(),
                                                         _.GetRequiredService<ILogger>())))
+                .Tee(_ => _.AddSingleton<IDetailsService, DetailsService>())
                 .Tee(_ => _.AddSingleton<IApiClient>(_ =>
                             new ApiClient(() => _.GetRequiredService<IHttpClientFactory>().CreateClient())))
                 .Tee(_ => InitializeSerilog(_));
