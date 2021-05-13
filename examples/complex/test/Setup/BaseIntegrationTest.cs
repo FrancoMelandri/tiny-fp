@@ -5,6 +5,7 @@ using Serilog;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
+using TinyFpTest.Complex;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
@@ -18,12 +19,11 @@ namespace TinyFp.Complex.Setup
 
         protected IntegrationTestServer TestServer;
         protected HttpClient Client => TestServer.Client;
+        protected Func<string> AppSettings = GetAppSettings;
 
-        public IWebHostBuilder GetWebHostBuilder()
-            => WebHost.CreateDefaultBuilder(Array.Empty<string>())
-                .ConfigureKestrel(options => options.AddServerHeader = false)
-                .UseStartup<TestStartup>()
-                .UseSerilog();
+        public IWebHostBuilder GetWebHostBuilder(string jsonFile)
+            => new HostBuilder<TestStartup>()
+                .CreateDefaultBuilder(new[] { jsonFile } );
 
         [OneTimeSetUp]
         public void GlobalSetup()
@@ -37,6 +37,12 @@ namespace TinyFp.Complex.Setup
             SearchServer.Stop();
         }
 
+        [SetUp]
+        public void SeuUp()
+        {
+            InitTestServer();
+        }
+
         [TearDown]
         public void Teardown()
         {
@@ -46,14 +52,12 @@ namespace TinyFp.Complex.Setup
             IntegrationTestHttpRequestHandler.Reset();
         }
 
-        protected BaseIntegrationTest()
-        {
-            InitTestServer();
-        }
+        public static string GetAppSettings()
+            => "appsettings.json";
 
         public void InitTestServer()
         {
-            TestServer = new IntegrationTestServer(GetWebHostBuilder());
+            TestServer = new IntegrationTestServer(GetWebHostBuilder(AppSettings()));
         }
 
         public void Dispose()

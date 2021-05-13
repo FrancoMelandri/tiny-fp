@@ -68,7 +68,7 @@ namespace TinyFpTest.Complex
                             {
                                 DetailsDrivenPorts.DetailsDrivenPortApi => services.AddSingleton<IDetailsDrivenPort, DetailsDrivenPortAdapterApi>(),                               
                                 DetailsDrivenPorts.DetailDrivenPortDb => services.AddSingleton<IDetailsDrivenPort, DetailsDrivenPortAdapterDb>(),
-                                _ => throw new DetailsDrivenPortNotImplemented(_)
+                                _ => throw new DetailsDrivenPortNotImplementedException(_)
                             });
 
         private static (LoggerConfiguration, SerilogConfiguration) InitializeConfiguration(LoggerConfiguration loggerConfig, 

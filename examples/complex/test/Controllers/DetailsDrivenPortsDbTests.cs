@@ -6,14 +6,16 @@ using TinyFp.Complex.Setup;
 namespace TinyFp.Complex.Contorllers
 {
     [TestFixture]
-    public class DetailsTests : BaseIntegrationTest
+    public class DetailsDrivenPortsDbTests : BaseIntegrationTest
     {
-        [Test]
-        public void Search_Get_NotFound_WhenEmptyProducts_AndLog()
+        public DetailsDrivenPortsDbTests()
         {
-            StubProducts(200, "[]");
+            AppSettings = () => "appsettings.override.db.json";
+        }
 
-
+        [Test]
+        public void Search_Get_ReturnDetailsFromDb()
+        {
             var response = Client.GetAsync("/details?productName=prd").Result;
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }

@@ -8,6 +8,6 @@ namespace TinyFpTest.Services.Details
     public class DetailsDrivenPortAdapterDb : IDetailsDrivenPort
     {
         public Task<Either<ApiError, ProductDetails>> GetDetailsAsync(string productName)
-            => throw new System.Exception("error");
-    }    
+            => Task.FromResult(Either<ApiError, ProductDetails>.Right(new ProductDetails()));
+    }
 }

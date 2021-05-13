@@ -3,9 +3,9 @@ using TinyFpTest.Configuration;
 
 namespace TinyFpTest.Services.DetailsDrivenPorts
 {
-    public class DetailsDrivenPortNotImplemented : Exception
+    public class DetailsDrivenPortNotImplementedException : Exception
     {
-        public DetailsDrivenPortNotImplemented(DetailsDrivenPortConfiguration detailsDrivenPortConfiguration)
+        public DetailsDrivenPortNotImplementedException(DetailsDrivenPortConfiguration detailsDrivenPortConfiguration)
             : base(detailsDrivenPortConfiguration.Adapter.ToString())
         {
         }
