@@ -17,13 +17,13 @@ namespace TinyFpTest.Services.Details
             _detailsDrivenPort = detailsDrivenPort;
         }
 
-        private Validation<ApiError, Unit> ValidateSpaces(string productName)
+        private static Validation<ApiError, Unit> ValidateSpaces(string productName)
             => productName
                 .Contains(BLANK_SPACE) ?
                     Fail<ApiError, Unit>(InvalidInput) :
                     Success<ApiError, Unit>(Unit.Default);
 
-        private Validation<ApiError, Unit> ValidateEmptyBlankOrNull(string forName)
+        private static Validation<ApiError, Unit> ValidateEmptyBlankOrNull(string forName)
             => string.IsNullOrWhiteSpace(forName) ?
                 Fail<ApiError, Unit>(InvalidInput) :
                 Success<ApiError, Unit>(Unit.Default);

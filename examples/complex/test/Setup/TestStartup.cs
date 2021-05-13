@@ -6,6 +6,7 @@ using Serilog;
 using System.Diagnostics.CodeAnalysis;
 using TinyFpTest.Complex;
 using TinyFpTest.Services;
+using TinyFpTest.Services.Details;
 
 namespace TinyFp.Complex.Setup
 {
@@ -14,6 +15,7 @@ namespace TinyFp.Complex.Setup
     {
         public static InMemoryRedisCache InMemoryRedisCache { get; } = new InMemoryRedisCache();
         public static Mock<ILogger> Logger { get; } = new Mock<ILogger>();
+        public static Mock<IDetailsRepository> DetailsRepository { get; } = new Mock<IDetailsRepository>();
 
         public TestStartup(IConfiguration configuration)
                 : base(configuration)
@@ -26,6 +28,7 @@ namespace TinyFp.Complex.Setup
 
             services.AddSingleton<ICache>(InMemoryRedisCache);
             services.AddSingleton(Logger.Object);
+            services.AddSingleton(DetailsRepository.Object);
 
             services.ConfigureAll<HttpClientFactoryOptions>(options =>
             {

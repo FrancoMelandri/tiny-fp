@@ -86,6 +86,7 @@ namespace TinyFpTest.Complex
 
         private IServiceCollection RegisterDetailsDrivenPortsAdapterDb(IServiceCollection services)
             => services
+                .Tee(_ => _.AddSingleton<IDetailsRepository, DetailsRepository>())
                 .Tee(_ => _.AddSingleton<DetailsDrivenPortAdapterDb>())
                 .Tee(_ => _.AddSingleton(_ =>
                             new ValidationDetailsDrivenPort(_.GetRequiredService<DetailsDrivenPortAdapterDb>())));
