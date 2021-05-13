@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
+using TinyFp.Extensions;
 
 namespace TinyFp
 {
@@ -35,17 +36,13 @@ namespace TinyFp
 
         [Pure]
         public Either<L, R> OnRight(Action<R> action)
-        {
-            if (_isRight) action(_right);
-            return this;
-        }
+            => this
+                .Tee(@this => { if (@this._isRight) action(@this._right); });
 
         [Pure]
         public Either<L, R> OnLeft(Action<L> action)
-        {
-            if (!_isRight) action(_left);
-            return this;
-        }
+            => this
+                .Tee(@this => { if (!@this._isRight) action(@this._left); });
 
         [Pure]
         public Either<L, M> Map<M>(Func<R, M> map)
@@ -69,7 +66,7 @@ namespace TinyFp
 
         [Pure]
         public Task<Either<L, M>> BindAsync<M>(Func<R, Task<Either<L, M>>> bindAsync)
-            => _isRight ? bindAsync(_right) : Task.FromResult(Either<L, M>.Left(_left));
+            => _isRight ? bindAsync(_right) : Either<L, M>.Left(_left).AsTask();
 
         [Pure]
         public Either<B, R> BindLeft<B>(Func<L, Either<B, R>> bind)
@@ -77,7 +74,7 @@ namespace TinyFp
 
         [Pure]
         public Task<Either<B, R>> BindLeftAsync<B>(Func<L, Task<Either<B, R>>> bindAsync)
-            => !_isRight ? bindAsync(_left) : Task.FromResult(Either<B, R>.Right(_right));
+            => !_isRight ? bindAsync(_left) : Either<B, R>.Right(_right).AsTask();
 
         [Pure]
         public M Match<M>(Func<R, M> onRight, Func<L, M> onLeft)
@@ -89,15 +86,15 @@ namespace TinyFp
 
         [Pure]
         public Task<M> MatchAsync<M>(Func<R, M> onRightAsync, Func<L, Task<M>> onLeftAsync)
-            => IsRight ? Task.FromResult(onRightAsync(_right)) : onLeftAsync(_left);
+            => IsRight ? onRightAsync(_right).AsTask() : onLeftAsync(_left);
 
         [Pure]
         public Task<M> MatchAsync<M>(Func<R, Task<M>> onRightAsync, Func<L, M> onLeftAsync)
-            => IsRight ? onRightAsync(_right) : Task.FromResult(onLeftAsync(_left));
+            => IsRight ? onRightAsync(_right) : onLeftAsync(_left).AsTask();
 
         [Pure]
         public Task<M> MatchAsync<M>(Func<R, M> onRightAsync, Func<L, M> onLeftAsync)
-            => IsRight ? Task.FromResult(onRightAsync(_right)) : Task.FromResult(onLeftAsync(_left));
+            => IsRight ? onRightAsync(_right).AsTask() : onLeftAsync(_left).AsTask();
 
         public static implicit operator Either<L, R> (R right) => Right(right);
         public static implicit operator Either<L, R> (L left) => Left(left);

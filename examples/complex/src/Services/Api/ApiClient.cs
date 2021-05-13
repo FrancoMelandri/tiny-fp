@@ -4,11 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using TinyFp;
 using Newtonsoft.Json;
+using System.Net;
 using static TinyFp.Prelude;
 using static TinyFp.Extensions.Functional;
 using static System.TimeSpan;
 using static TinyFpTest.Constants.Errors;
-using System.Net;
 
 namespace TinyFpTest.Services.Api
 {
@@ -35,7 +35,7 @@ namespace TinyFpTest.Services.Api
         private Task<Either<ApiError, string>> SendAsyncWithStringResponse(
             HttpRequestMessage httpRequest,
             int apiRequestTimeout)
-             => TryAsync(async () => await SendRequest(httpRequest, apiRequestTimeout))
+             => TryAsync(() => SendRequest(httpRequest, apiRequestTimeout))
                 .OnFail(_ => ExceptionCallingService);
 
         private Task<Either<ApiError, string>> SendRequest(HttpRequestMessage httpRequest, int apiRequestTimeout)
@@ -47,8 +47,8 @@ namespace TinyFpTest.Services.Api
 
         private Task<Either<ApiError, HttpResponseMessage>> IsValidResponse(HttpResponseMessage response)
             => response.StatusCode == HttpStatusCode.OK ?
-                    Task.FromResult(Either<ApiError, HttpResponseMessage>.Right(response)) :
-                    Task.FromResult(Either<ApiError, HttpResponseMessage>.Left(ApiError.Create(response.StatusCode, "", response.ReasonPhrase)));
+                    Either<ApiError, HttpResponseMessage>.Right(response).AsTask() :
+                    Either<ApiError, HttpResponseMessage>.Left(ApiError.Create(response.StatusCode, string.Empty, response.ReasonPhrase)).AsTask();
 
         private async Task<Either<ApiError, string>> GetResponseContent(HttpResponseMessage response)
             => Either<ApiError, string>.Right(await response.Content.ReadAsStringAsync());
