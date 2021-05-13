@@ -16,7 +16,6 @@ namespace TinyFp.Complex.Contorllers
         [Test]
         public void Search_Get_ReturnDetailsFromApi()
         {
-
             var response = Client.GetAsync("/details?productName=prd").Result;
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }

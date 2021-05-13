@@ -39,6 +39,14 @@ namespace TinyFpTest.Complex
                             .Get<ProductsApiConfiguration>()
                             .Tee(_ => services.AddSingleton(_)))
                 .Tee(_ => _.AddSingleton<ICache, Cache>())
+                .Tee(_ => InitializeSerachService(_))
+                .Tee(_ => InitializeDetailsDrivenPort(_))
+                .Tee(_ => _.AddSingleton<IApiClient>(_ =>
+                            new ApiClient(() => _.GetRequiredService<IHttpClientFactory>().CreateClient())))
+                .Tee(_ => InitializeSerilog(_));
+
+        private static void InitializeSerachService(IServiceCollection services)
+            => services
                 .Tee(_ => _.AddSingleton<SearchService>())
                 .Tee(_ => _.AddSingleton(_ =>
                                 new CachedSearchService(_.GetRequiredService<ICache>(),
@@ -47,11 +55,7 @@ namespace TinyFpTest.Complex
                                 new ValidationSearchService(_.GetRequiredService<CachedSearchService>())))
                 .Tee(_ => _.AddSingleton<ISearchService>(_ =>
                                 new LoggedSearchService(_.GetRequiredService<ValidationSearchService>(),
-                                                        _.GetRequiredService<ILogger>())))
-                .Tee(_ => InitializeDetailsDrivenPort(_))
-                .Tee(_ => _.AddSingleton<IApiClient>(_ =>
-                            new ApiClient(() => _.GetRequiredService<IHttpClientFactory>().CreateClient())))
-                .Tee(_ => InitializeSerilog(_));
+                                                        _.GetRequiredService<ILogger>())));
 
         private void InitializeSerilog(IServiceCollection services)
             => Configuration
@@ -66,10 +70,25 @@ namespace TinyFpTest.Complex
                 .GetSection(typeof(DetailsDrivenPortConfiguration).Name).Get<DetailsDrivenPortConfiguration>()
                 .Map(_ => _.Adapter switch
                             {
-                                DetailsDrivenPorts.DetailsDrivenPortApi => services.AddSingleton<IDetailsDrivenPort, DetailsDrivenPortAdapterApi>(),                               
-                                DetailsDrivenPorts.DetailDrivenPortDb => services.AddSingleton<IDetailsDrivenPort, DetailsDrivenPortAdapterDb>(),
+                                DetailsDrivenPorts.DetailsDrivenPortApi => RegisterDetailsDrivenPortsAdapterApi(services),
+                                DetailsDrivenPorts.DetailDrivenPortDb => RegisterDetailsDrivenPortsAdapterDb(services),
                                 _ => throw new DetailsDrivenPortNotImplementedException(_)
-                            });
+                            })
+                .Tee(_ => _.AddSingleton<IDetailsDrivenPort>(_ =>
+                                new LoggedDetailsDrivenPort(_.GetRequiredService<ValidationDetailsDrivenPort>(),
+                                                            _.GetRequiredService<ILogger>())));
+
+        private IServiceCollection RegisterDetailsDrivenPortsAdapterApi(IServiceCollection services)
+            => services
+                .Tee(_ => _.AddSingleton<DetailsDrivenPortAdapterApi>())
+                .Tee(_ => _.AddSingleton(_ =>
+                            new ValidationDetailsDrivenPort(_.GetRequiredService<DetailsDrivenPortAdapterApi>())));
+
+        private IServiceCollection RegisterDetailsDrivenPortsAdapterDb(IServiceCollection services)
+            => services
+                .Tee(_ => _.AddSingleton<DetailsDrivenPortAdapterDb>())
+                .Tee(_ => _.AddSingleton(_ =>
+                            new ValidationDetailsDrivenPort(_.GetRequiredService<DetailsDrivenPortAdapterDb>())));
 
         private static (LoggerConfiguration, SerilogConfiguration) InitializeConfiguration(LoggerConfiguration loggerConfig, 
                                                                                            SerilogConfiguration serilogConfig)

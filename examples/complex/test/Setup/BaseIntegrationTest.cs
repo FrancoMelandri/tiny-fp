@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using NUnit.Framework;
-using Serilog;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
