@@ -14,6 +14,7 @@ namespace TinyFp.Complex.Setup
     public class BaseIntegrationTest : IDisposable
     {
         protected WireMockServer SearchServer { get; private set; }
+        protected WireMockServer DetailsServer { get; private set; }
 
         protected IntegrationTestServer TestServer;
         protected HttpClient Client => TestServer.Client;
@@ -27,12 +28,14 @@ namespace TinyFp.Complex.Setup
         public void GlobalSetup()
         {
             SearchServer = WireMockServer.Start(port: 5001);
+            DetailsServer = WireMockServer.Start(port: 5002);
         }
 
         [OneTimeTearDown]
         public void GlobalTeardown()
         {
             SearchServer.Stop();
+            DetailsServer.Stop();
         }
 
         [SetUp]
@@ -45,6 +48,7 @@ namespace TinyFp.Complex.Setup
         public void Teardown()
         {
             SearchServer.Reset();
+            DetailsServer.Reset();
             TestStartup.InMemoryRedisCache.ClearCache();
             TestStartup.Logger.Invocations.Clear();
             IntegrationTestHttpRequestHandler.Reset();
@@ -75,6 +79,20 @@ namespace TinyFp.Complex.Setup
                 .Given(
                     Request.Create()
                         .WithPath($"/products")
+                        .UsingGet()
+                )
+                .RespondWith(
+                    Response.Create()
+                        .WithStatusCode(statusCode)
+                        .WithBody(responseBody)
+                        .WithDelay(TimeSpan.FromMilliseconds(delayInMilliseconds))
+                );
+
+         protected void StubDetailsOk(string productName, int statusCode, string responseBody, int delayInMilliseconds = 1)
+            => DetailsServer
+                .Given(
+                    Request.Create()
+                        .WithPath($"/details/{productName}")
                         .UsingGet()
                 )
                 .RespondWith(

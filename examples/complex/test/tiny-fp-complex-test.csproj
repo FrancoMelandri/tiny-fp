@@ -26,6 +26,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Content Update="ApiStubs\details-prd.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	  <Content Update="ApiStubs\products.json">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>

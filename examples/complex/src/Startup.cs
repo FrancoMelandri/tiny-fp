@@ -33,17 +33,18 @@ namespace TinyFpTest.Complex
         public virtual void ConfigureServices(IServiceCollection services)
             => services
                 .Tee(_ => _.AddControllers())
-                .Tee(_ => _.AddHttpClient())
-                .Tee(_ => Configuration
-                            .GetSection(typeof(ProductsApiConfiguration).Name)
-                            .Get<ProductsApiConfiguration>()
-                            .Tee(_ => services.AddSingleton(_)))
+                .Tee(_ => InitializeConfigurations(_))
                 .Tee(_ => _.AddSingleton<ICache, Cache>())
+                .Tee(_ => InitializeApiClinet(_))
                 .Tee(_ => InitializeSerachService(_))
                 .Tee(_ => InitializeDetailsDrivenPort(_))
-                .Tee(_ => _.AddSingleton<IApiClient>(_ =>
-                            new ApiClient(() => _.GetRequiredService<IHttpClientFactory>().CreateClient())))
                 .Tee(_ => InitializeSerilog(_));
+
+        private IServiceCollection InitializeApiClinet(IServiceCollection services)
+            => services
+                .Tee(_ => _.AddHttpClient())
+                .Tee(_ => _.AddSingleton<IApiClient>(_ =>
+                            new ApiClient(() => _.GetRequiredService<IHttpClientFactory>().CreateClient())));
 
         private static void InitializeSerachService(IServiceCollection services)
             => services
@@ -56,6 +57,17 @@ namespace TinyFpTest.Complex
                 .Tee(_ => _.AddSingleton<ISearchService>(_ =>
                                 new LoggedSearchService(_.GetRequiredService<ValidationSearchService>(),
                                                         _.GetRequiredService<ILogger>())));
+
+        private IServiceCollection InitializeConfigurations(IServiceCollection services)
+            => Configuration
+                .GetSection(typeof(ProductsApiConfiguration).Name)
+                .Get<ProductsApiConfiguration>()
+                .Map(services.AddSingleton)
+                .Tee(_ => Configuration
+                            .GetSection(typeof(ProductDetailsApiConfiguration).Name)
+                            .Get<ProductDetailsApiConfiguration>()
+                            .Map(services.AddSingleton));
+
 
         private void InitializeSerilog(IServiceCollection services)
             => Configuration
@@ -93,7 +105,7 @@ namespace TinyFpTest.Complex
 
         private static (LoggerConfiguration, SerilogConfiguration) InitializeConfiguration(LoggerConfiguration loggerConfig, 
                                                                                            SerilogConfiguration serilogConfig)
-        => loggerConfig
+            => loggerConfig
                 .Tee(_ => _.Enrich.WithProperty(nameof(serilogConfig.Environment), serilogConfig.Environment))
                 .Tee(_ => _.Enrich.WithProperty(nameof(serilogConfig.System), serilogConfig.System))
                 .Tee(_ => _.Enrich.WithProperty(nameof(serilogConfig.Customer), serilogConfig.Customer))

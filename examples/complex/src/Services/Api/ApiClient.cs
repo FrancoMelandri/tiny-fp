@@ -8,6 +8,7 @@ using static TinyFp.Prelude;
 using static TinyFp.Extensions.Functional;
 using static System.TimeSpan;
 using static TinyFpTest.Constants.Errors;
+using System.Net;
 
 namespace TinyFpTest.Services.Api
 {
@@ -29,7 +30,7 @@ namespace TinyFpTest.Services.Api
 
         private async Task<Either<ApiError, T>> SendAsync<T>(HttpRequestMessage httpRequest, int apiRequestTimeout)
             => (await SendAsyncWithStringResponse(httpRequest, apiRequestTimeout))
-                .Map(_ => JsonConvert.DeserializeObject<T>(_));
+                .Map(JsonConvert.DeserializeObject<T>);
 
         private Task<Either<ApiError, string>> SendAsyncWithStringResponse(
             HttpRequestMessage httpRequest,
@@ -41,8 +42,18 @@ namespace TinyFpTest.Services.Api
             => new CancellationTokenSource()
                 .Tee(_ => _.CancelAfter(FromMilliseconds(apiRequestTimeout)))
                 .Map(_ => _httpClientProvider().SendAsync(httpRequest, _.Token))
-                .MapAsync( _ => _.Content.ReadAsStringAsync())
-                .Map(_ => _.ToEitherAsync(EmptyServerError));
+                .MapAsync(IsValidResponse)
+                .MatchAsync(
+                    _ => GetResponseContent(_),
+                    _ => _);
+
+        private Task<Either<ApiError, HttpResponseMessage>> IsValidResponse(HttpResponseMessage response)
+            => response.StatusCode == HttpStatusCode.OK ?
+                    Task.FromResult(Either<ApiError, HttpResponseMessage>.Right(response)) :
+                    Task.FromResult(Either<ApiError, HttpResponseMessage>.Left(ApiError.Create(response.StatusCode, "", response.ReasonPhrase)));
+
+        private async Task<Either<ApiError, string>> GetResponseContent(HttpResponseMessage response)
+            => Either<ApiError, string>.Right(await response.Content.ReadAsStringAsync());
 
         private static HttpRequestMessage CreateRequest(HttpContent httpContent, ApiRequest apiRequest, HttpMethod method)
             => new HttpRequestMessage
