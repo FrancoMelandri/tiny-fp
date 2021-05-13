@@ -2,6 +2,9 @@
 using TinyFp;
 using TinyFpTest.Models;
 using TinyFpTest.Services.Api;
+using static TinyFp.Prelude;
+using static TinyFpTest.Constants.Errors;
+using static TinyFpTest.Constants.Validation;
 
 namespace TinyFpTest.Services.Details
 {
@@ -14,7 +17,21 @@ namespace TinyFpTest.Services.Details
             _detailsDrivenPort = detailsDrivenPort;
         }
 
+        private Validation<ApiError, Unit> ValidateSpaces(string productName)
+            => productName
+                .Contains(BLANK_SPACE) ?
+                    Fail<ApiError, Unit>(InvalidInput) :
+                    Success<ApiError, Unit>(Unit.Default);
+
+        private Validation<ApiError, Unit> ValidateEmptyBlankOrNull(string forName)
+            => string.IsNullOrWhiteSpace(forName) ?
+                Fail<ApiError, Unit>(InvalidInput) :
+                Success<ApiError, Unit>(Unit.Default);
+
         public Task<Either<ApiError, ProductDetails>> GetDetailsAsync(string productName)
-           => _detailsDrivenPort.GetDetailsAsync(productName);
+           => ValidateEmptyBlankOrNull(productName)
+                .Bind(_ => ValidateSpaces(productName))
+                .MatchAsync(_ => _detailsDrivenPort.GetDetailsAsync(productName),
+                            _ => Task.FromResult((Either<ApiError, ProductDetails>)_));
     }
 }

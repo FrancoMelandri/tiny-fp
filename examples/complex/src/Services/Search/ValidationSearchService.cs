@@ -4,13 +4,12 @@ using TinyFpTest.Models;
 using TinyFpTest.Services.Api;
 using static TinyFp.Prelude;
 using static TinyFpTest.Constants.Errors;
+using static TinyFpTest.Constants.Validation;
 
 namespace TinyFpTest.Services
 {
     public class ValidationSearchService : ISearchService
     {
-        private const string BLANK_SPACE = " ";
-        private const int MAX_LENGTH = 20;
         private readonly ISearchService _searchService;
 
         public ValidationSearchService(ISearchService searchService)

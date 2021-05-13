@@ -1,12 +1,11 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
 using System.Net;
-using TinyFp.Complex.Setup;
 
 namespace TinyFp.Complex.Contorllers
 {
     [TestFixture]
-    public class DetailsDrivenPortsApiTests : BaseIntegrationTest
+    public class DetailsDrivenPortsApiTests : DetailsDrivenPortsbaseTests
     {
         public DetailsDrivenPortsApiTests()
         {

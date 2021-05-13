@@ -3,6 +3,7 @@ using TinyFpTest.Services.Api;
 
 namespace TinyFpTest.Constants
 {
+
     public static class Errors
     {
         public static readonly ApiError NotFoundError = ApiError.Create(HttpStatusCode.NotFound, "not_found", "product not found");

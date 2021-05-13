@@ -6,7 +6,7 @@ using TinyFp.Complex.Setup;
 namespace TinyFp.Complex.Contorllers
 {
     [TestFixture]
-    public class DetailsDrivenPortsDbTests : BaseIntegrationTest
+    public class DetailsDrivenPortsDbTests : DetailsDrivenPortsbaseTests
     {
         public DetailsDrivenPortsDbTests()
         {
