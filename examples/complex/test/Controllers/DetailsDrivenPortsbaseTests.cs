@@ -20,6 +20,10 @@ namespace TinyFp.Complex.Contorllers
         {
             var response = Client.GetAsync($"/details?productName={productName}").Result;
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+            TestStartup
+                .Logger
+                .Verify(_ => _.Error("BadRequest, bad_request, input is not valid"));
         }
     }
 }

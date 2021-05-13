@@ -22,7 +22,7 @@ namespace TinyFpTest.Services
         public Task<Either<ApiError, Product[]>> SearchProductsAsync(string forName)
             => _searchService
                 .SearchProductsAsync(forName)
-                .BindLeftAsync(_ => LogError(_));
+                .BindLeftAsync(LogError);
 
         private Either<ApiError, Product[]> LogError(ApiError error)
             => error.Tee(_ => _logger.Error($"{_.StatusCode}, {_.Code}, {_.Description}"));

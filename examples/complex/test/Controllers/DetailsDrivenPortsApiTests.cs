@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
 using System.Net;
+using Moq;
+using TinyFp.Complex.Setup;
 
 namespace TinyFp.Complex.Contorllers
 {
@@ -17,6 +19,10 @@ namespace TinyFp.Complex.Contorllers
         {
             var response = Client.GetAsync("/details?productName=prd").Result;
             response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            TestStartup
+                .Logger
+                .Verify(_ => _.Error(It.IsAny<string>()), Times.Never);
         }
     }
 }
