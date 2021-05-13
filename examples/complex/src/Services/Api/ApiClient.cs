@@ -43,9 +43,7 @@ namespace TinyFpTest.Services.Api
                 .Tee(_ => _.CancelAfter(FromMilliseconds(apiRequestTimeout)))
                 .Map(_ => _httpClientProvider().SendAsync(httpRequest, _.Token))
                 .MapAsync(IsValidResponse)
-                .MatchAsync(
-                    _ => GetResponseContent(_),
-                    _ => _);
+                .BindAsync(GetResponseContent);
 
         private Task<Either<ApiError, HttpResponseMessage>> IsValidResponse(HttpResponseMessage response)
             => response.StatusCode == HttpStatusCode.OK ?

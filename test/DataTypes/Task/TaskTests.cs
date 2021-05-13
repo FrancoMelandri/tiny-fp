@@ -94,7 +94,7 @@ namespace TinyFpTest.DataTypes
                 .Should().Be(42);
 
         [Test]
-        public void BindLeftAsync_WhenRight_CallTheRightFunc()
+        public void BindAsync_WhenRight_CallTheRightFunc()
         {
             var either = Task.FromResult((Either<int, string>)"right");
 
@@ -102,6 +102,37 @@ namespace TinyFpTest.DataTypes
 
             result.IsRight.Should().BeTrue();
             result.OnRight(_ => _.Should().Be("RIGHT"));
+        }
+
+        [Test]
+        public void BindAsync_WhenLeft_DontCallTheRightFunc()
+        {
+            var either = Task.FromResult((Either<int, string>)42);
+
+            var result = either.BindAsync(right => (Either<int, string>)right.ToUpper()).Result;
+
+            result.IsLeft.Should().BeTrue();
+        }
+
+        [Test]
+        public void BindAsync_Task_WhenRight_CallTheRightFunc()
+        {
+            var either = Task.FromResult((Either<int, string>)"right");
+
+            var result = either.BindAsync(right => Task.FromResult((Either<int, string>)right.ToUpper())).Result;
+
+            result.IsRight.Should().BeTrue();
+            result.OnRight(_ => _.Should().Be("RIGHT"));
+        }
+
+        [Test]
+        public void BindAsync_Task_WhenLeft_DontCallTheRightFunc()
+        {
+            var either = Task.FromResult((Either<int, string>)42);
+
+            var result = either.BindAsync(right => Task.FromResult((Either<int, string>)right.ToUpper())).Result;
+
+            result.IsLeft.Should().BeTrue();
         }
 
         [Test]
@@ -127,6 +158,22 @@ namespace TinyFpTest.DataTypes
         public void MapAsync_WhenLeft_DontMapToOutput()
             => Task.FromResult(Either<int, string>.Left(0))
                 .MapAsync(_ => _ == "either")
+                .Result
+                .IsLeft
+                .Should().BeTrue();
+
+        [Test]
+        public void MapAsync_Task_WhenRight_MapToOutput()
+            => Task.FromResult(Either<int, string>.Right("either"))
+                .MapAsync(_ => Task.FromResult(_ == "either"))
+                .Result
+                .IsRight
+                .Should().BeTrue();
+
+        [Test]
+        public void MapAsync_Task_WhenLeft_DontMapToOutput()
+            => Task.FromResult(Either<int, string>.Left(0))
+                .MapAsync(_ => Task.FromResult(_ == "either"))
                 .Result
                 .IsLeft
                 .Should().BeTrue();
