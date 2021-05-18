@@ -252,5 +252,23 @@ namespace TinyFpTest.DataTypes
             else
                 Assert.Pass();
         }
+
+        [Test]
+        public void OperatorNot_WhenSome_IsFalse()
+        {
+            if (!Option<string>.Some("some"))
+                Assert.Fail();
+            else
+                Assert.Pass();
+        }
+
+        [Test]
+        public void OperatorNot_WhenNone_IsTrue()
+        {
+            if (!Option<string>.None())
+                Assert.Pass();
+            else
+                Assert.Fail();
+        }
     }
 }

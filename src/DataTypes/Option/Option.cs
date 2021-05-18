@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 
@@ -34,7 +35,13 @@ namespace TinyFp
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ExcludeFromCodeCoverage]
         public static bool operator false(Option<A> value)
+            => value.IsNone;
+
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator !(Option<A> value)
             => value.IsNone;
 
         [Pure]

@@ -365,5 +365,22 @@ namespace TinyFpTest.DataTypes
                 Assert.Pass();
         }
 
+        [Test]
+        public void OperatorNot_WhenRight_IsFalse()
+        {
+            if (!Either<string, int>.Right(42))
+                Assert.Fail();
+            else
+                Assert.Pass();
+        }
+
+        [Test]
+        public void OperatorNot_WhenLeft_IsTrue()
+        {
+            if (!Either<string, int>.Left("left"))
+                Assert.Pass();
+            else
+                Assert.Fail();
+        }
     }
 }

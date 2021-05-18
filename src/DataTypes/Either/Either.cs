@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using TinyFp.Extensions;
@@ -44,8 +45,8 @@ namespace TinyFp
             => this
                 .Tee(@this => { if (!@this._isRight) action(@this._left); });
 
-        public static implicit operator Either<L, R> (R right) => Right(right);
-        public static implicit operator Either<L, R> (L left) => Left(left);
+        public static implicit operator Either<L, R>(R right) => Right(right);
+        public static implicit operator Either<L, R>(L left) => Left(left);
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -54,7 +55,14 @@ namespace TinyFp
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ExcludeFromCodeCoverage]
         public static bool operator false(Either<L, R> value)
+            => value.IsLeft;
+
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ExcludeFromCodeCoverage]
+        public static bool operator !(Either<L, R> value)
             => value.IsLeft;
     }
 }
