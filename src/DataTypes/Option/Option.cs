@@ -1,11 +1,10 @@
 using System;
 using System.Diagnostics.Contracts;
-using System.Threading.Tasks;
-using TinyFp.Extensions;
+using System.Runtime.CompilerServices;
 
 namespace TinyFp
 {
-    public struct Option<A>
+    public partial struct Option<A>
     {
         private readonly bool _isSome;
         private readonly A _value;
@@ -29,56 +28,14 @@ namespace TinyFp
             => new(true, value);
 
         [Pure]
-        public Option<A> OnSome(Action<A> action)
-            => this
-                .Tee(@this => { if (@this._isSome) action(@this._value); });
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator true(Option<A> value)
+            => value.IsSome;
 
         [Pure]
-        public Option<A> OnNone(Action action)
-            => this
-                .Tee(@this => { if (!@this._isSome) action(); });
-
-        [Pure]
-        public A OnNone(Func<A> func)
-            => _isSome ? _value : func();
-
-        [Pure]
-        public A OnNone(A val)
-            => _isSome ? _value : val;
-
-        [Pure]
-        public Option<B> Map<B>(Func<A, B> map)
-            => _isSome ? Option<B>.Some(map(_value)) : 
-                         Option<B>.None();
-
-        [Pure]
-        public async Task<Option<B>> MapAsync<B>(Func<A, Task<B>> mapAsync)
-            => _isSome ? Option<B>.Some(await mapAsync(_value)) : 
-                         Option<B>.None();
-
-        [Pure]
-        public Option<B> Bind<B>(Func<A, Option<B>> bind)
-            => _isSome ? bind(_value) : Option<B>.None();
-
-        [Pure]
-        public async Task<Option<B>> BindAsync<B>(Func<A, Task<Option<B>>> bindAsync)
-            => _isSome ? await bindAsync(_value) : Option<B>.None();
-
-        [Pure]
-        public B Match<B>(Func<A, B> onSome, Func<B> onNone)
-            => _isSome ? onSome(_value) : onNone();
-
-        [Pure]
-        public Task<B> MatchAsync<B>(Func<A, Task<B>> onSome, Func<Task<B>> onNone)
-            => _isSome ? onSome(_value) : onNone();
-
-        [Pure]
-        public Task<B> MatchAsync<B>(Func<A, B> onSome, Func<Task<B>> onNone)
-            => _isSome ? onSome(_value).AsTask() : onNone();
-
-        [Pure]
-        public Task<B> MatchAsync<B>(Func<A, Task<B>> onSome, Func<B> onNone)
-            => _isSome ? onSome(_value) : onNone().AsTask();
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator false(Option<A> value)
+            => value.IsNone;
 
         [Pure]
         public Either<L, A> ToEither<L>(Func<L> onLeft)

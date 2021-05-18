@@ -234,5 +234,23 @@ namespace TinyFpTest.DataTypes
                     .ToEither(0)
                 .IsLeft
                 .Should().BeTrue();
+
+        [Test]
+        public void OperatorTrue_WhenSome_IsTrue()
+        {
+            if (Option<string>.Some("some"))
+                Assert.Pass();
+            else
+                Assert.Fail();
+        }
+
+        [Test]
+        public void OperatorTrue_WhenNone_IsFalse()
+        {
+            if (Option<string>.None())
+                Assert.Fail();
+            else
+                Assert.Pass();
+        }
     }
 }

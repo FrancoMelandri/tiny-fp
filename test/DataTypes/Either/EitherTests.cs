@@ -346,5 +346,24 @@ namespace TinyFpTest.DataTypes
             result.IsLeft.Should().BeTrue();
             result.IsRight.Should().BeFalse();
         }
+
+        [Test]
+        public void OperatorTrue_WhenRight_IsTrue()
+        {
+            if (Either<string, int>.Right(42))
+                Assert.Pass();
+            else
+                Assert.Fail();
+        }
+
+        [Test]
+        public void OperatorTrue_WhenLeft_IsFalse()
+        {
+            if (Either<string, int>.Left("left"))
+                Assert.Fail();
+            else
+                Assert.Pass();
+        }
+
     }
 }
