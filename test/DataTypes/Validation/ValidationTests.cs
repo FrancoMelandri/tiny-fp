@@ -237,5 +237,41 @@ namespace TinyFpTest.DataTypes
                 .Match(
                     _ => { Assert.Fail(); return 0; },
                     _ => { _.Should().Be(42); return 0; });
+
+        [Test]
+        public void OperatorTrue_WhenSuccess_IsTrue()
+        {
+            if (Validation<string, int>.Success(42))
+                Assert.Pass();
+            else
+                Assert.Fail();
+        }
+
+        [Test]
+        public void OperatorTrue_WhenFail_IsFalse()
+        {
+            if (Validation<string, int>.Fail("fail"))
+                Assert.Fail();
+            else
+                Assert.Pass();
+        }
+
+        [Test]
+        public void OperatorNot_WhenSuccess_IsFalse()
+        {
+            if (!Validation<string, int>.Success(42))
+                Assert.Fail();
+            else
+                Assert.Pass();
+        }
+
+        [Test]
+        public void OperatorNot_WhenSuccess_IsTrue()
+        {
+            if (!Validation<string, int>.Fail("left"))
+                Assert.Pass();
+            else
+                Assert.Fail();
+        }
     }
 }

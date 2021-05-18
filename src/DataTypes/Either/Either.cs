@@ -61,7 +61,6 @@ namespace TinyFp
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ExcludeFromCodeCoverage]
         public static bool operator !(Either<L, R> value)
             => value.IsLeft;
     }

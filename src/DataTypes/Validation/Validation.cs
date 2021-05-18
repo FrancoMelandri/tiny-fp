@@ -1,11 +1,11 @@
-﻿using System;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using TinyFp.Exceptions;
 
 namespace TinyFp
 {
-    public struct Validation<FAIL, SUCCESS>        
+    public partial struct Validation<FAIL, SUCCESS>
     {
         private readonly FAIL _fail;
         private readonly SUCCESS _success;
@@ -42,71 +42,33 @@ namespace TinyFp
             => _state == ValidationStateType.Success;
 
         [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator Validation<FAIL, SUCCESS>(SUCCESS value)
             => value == null
                 ? throw new ValueIsNullException()
                 : Success(value);
 
         [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator Validation<FAIL, SUCCESS>(FAIL value)
             => value == null
                 ? throw new ValueIsNullException()
                 : Fail(value);
 
         [Pure]
-        public R Match<R>(Func<SUCCESS, R> onSucc, Func<FAIL, R> onFail) 
-            => IsSuccess ? onSucc(_success) : onFail(_fail);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator true(Validation<FAIL, SUCCESS> value)
+            => value.IsSuccess;
 
         [Pure]
-        public R Match<R>(R Succ, Func<FAIL, R> onFail) 
-            => IsSuccess ? Succ : onFail(_fail);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ExcludeFromCodeCoverage]
+        public static bool operator false(Validation<FAIL, SUCCESS> value)
+            => value.IsFail;
 
         [Pure]
-        public R Match<R>(Func<SUCCESS, R> onSucc, R Fail)
-            => IsSuccess ? onSucc(_success) : Fail;
-
-        [Pure]
-        public R Match<R>(R Succ, R Fail) 
-            => IsSuccess ? Succ : Fail;
-
-        [Pure]
-        public Task<R> MatchAsync<R>(Func<SUCCESS, Task<R>> onSucc, Func<FAIL, Task<R>> onFail)
-            => IsSuccess ? onSucc(_success) : onFail(_fail);
-
-        [Pure]
-        public Task<R> MatchAsync<R>(Func<SUCCESS, Task<R>> onSucc, Task<R> Fail)
-            => IsSuccess ? onSucc(_success) : Fail;
-
-        [Pure]
-        public Task<R> MatchAsync<R>(Task<R> Succ, Func<FAIL, Task<R>> onFail)
-            => IsSuccess ? Succ : onFail(_fail);
-
-        [Pure]
-        public Task<R> MatchAsync<R>(Task<R> Succ, Task<R> Fail)
-            => IsSuccess ? Succ : Fail;
-
-        [Pure]
-        public Validation<FAIL, U> Bind<U>(Func<SUCCESS, Validation<FAIL, U>> f) 
-            => IsSuccess
-                ? f(_success)
-                : Validation<FAIL, U>.Fail(_fail);
-
-        [Pure]
-        public Validation<U, SUCCESS> BindFail<U>(Func<FAIL, Validation<U, SUCCESS>> f) 
-            => IsFail
-                ? f(_fail)
-                : Validation<U, SUCCESS>.Success(_success);
-
-        [Pure]
-        public Validation<FAIL, M> Map<M>(Func<SUCCESS, M> map) 
-            => IsSuccess
-                ? Validation<FAIL, M>.Success(map(_success))
-                : Validation<FAIL, M>.Fail(_fail);
-
-        [Pure]
-        public Validation<M, SUCCESS> MapFail<M>(Func<FAIL, M> map) 
-            => IsFail
-                ? Validation<M, SUCCESS>.Fail(map(_fail))
-                : Validation<M, SUCCESS>.Success(_success);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator !(Validation<FAIL, SUCCESS> value)
+            => value.IsFail;
     }
 }
