@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout
       uses: actions/checkout@main
@@ -40,5 +41,5 @@ jobs:
 
     - name: Publish the package to GitHub Package Registry
       run: |
-        dotnet nuget push *.nupkg --no-symbols --skip-duplicate 
+        dotnet nuget push *.nupkg --skip-duplicate
 
