@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
 		<RootNamespace>TinyFp</RootNamespace>
+		<IsPackable>true</IsPackable>
 		<PackageDescription>Tiny functional programming library</PackageDescription>
 		<RepositoryUrl>https://github.com/FrancoMelandri/tiny-fp.git</RepositoryUrl>
 	</PropertyGroup>
