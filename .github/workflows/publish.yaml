@@ -1,9 +1,11 @@
-name: CI
+name: Push
 
 on:
   push:
     tags:
       - 'v*.*.*'
+env:
+  VERSION: 1.0.0
 
 jobs:
 
@@ -23,9 +25,13 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{ github.token }}
 
+    - name: Setup version
+      run: |
+        echo ${GITHUB_REF:11} >> ${{ env.VERSION }}
+
     - name: Create package
       run: |
-        dotnet pack -p:PackageVersion=${{GITHUB_REF:11}} --output .
+        dotnet pack -p:PackageVersion=${{ env.VERSION }} --output .
 
     - name: Publish the package to GitHub Package Registry
       run: |
