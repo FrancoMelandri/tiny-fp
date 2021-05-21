@@ -1,13 +1,14 @@
 name: CI
 
-on: push
-
-env:
-  SEM_VERSION: 1.0.2
+on:
+  push:
+    branches:
+      - main 
 
 jobs:
 
   build:
+
     runs-on: ubuntu-latest
 
     steps:
@@ -32,29 +33,4 @@ jobs:
       with:
         github-token: ${{github.token}} 
         path-to-lcov: test/TestResults/coverage.info
-
-  push:
-    if: ${{ github.ref == 'refs/heads/main' }}
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@main
-
-    - name: Setup .NET 5
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '5.0.103'
-        source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
-      env:
-        NUGET_AUTH_TOKEN: ${{ github.token }}
-
-    - name: Create package
-      run: |
-        dotnet pack -p:PackageVersion=${{env.SEM_VERSION}} --output .
-
-    - name: Publish the package to GitHub Package Registry
-      run: |
-        dotnet nuget push *.nupkg --skip-duplicate
 

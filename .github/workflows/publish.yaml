@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+
+  push: 
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Setup .NET 5
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.103'
+        source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{ github.token }}
+
+    - name: Create package
+      run: |
+        dotnet pack -p:PackageVersion=${{GITHUB_REF:11}} --output .
+
+    - name: Publish the package to GitHub Package Registry
+      run: |
+        dotnet nuget push *.nupkg --skip-duplicate
+
