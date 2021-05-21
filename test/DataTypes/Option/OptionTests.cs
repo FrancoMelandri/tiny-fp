@@ -26,11 +26,22 @@ namespace TinyFpTest.DataTypes
         public void OnNone_CallTheAction()
         {
             var called = false;
-            Option<string>
+            _ = Option<string>
                 .None()
                 .OnNone(() => called = true);
 
            called.Should().BeTrue();
+        }
+
+        [Test]
+        public void OnNone_WhenSome_DontCallTheAction()
+        {
+            var called = false;
+            _ = Option<string>
+                .Some("not-empty")
+                .OnNone(() => called = true);
+
+           called.Should().BeFalse();
         }
 
         [Test]
@@ -39,6 +50,13 @@ namespace TinyFpTest.DataTypes
                     .None()
                     .OnNone(() => "empty")
                 .Should().Be("empty");
+
+        [Test]
+        public void OnNone_WhenSome_DontCallTheFunction()
+            => Option<string>
+                    .Some("not-empty")
+                    .OnNone(() => "empty")
+                .Should().Be("not-empty");
 
         [Test]
         public void OnNone_ReturnSomeObject()
@@ -58,7 +76,7 @@ namespace TinyFpTest.DataTypes
         public void OnSome_CallTheAction()
         {
             var called = false;
-            Option<string>
+            _ = Option<string>
                 .Some("not-empty")
                 .OnSome(_ => called = _ == "not-empty");
 
