@@ -27,7 +27,7 @@ jobs:
 
     - name: Setup version
       run: |
-        echo ${GITHUB_REF:11} >> ${{ env.VERSION }}
+        echo ${GITHUB_REF:11} >> env.VERSION
 
     - name: Create package
       run: |
