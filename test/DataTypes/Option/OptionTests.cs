@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using TinyFp;
 using System.Threading.Tasks;
+using TinyFp.Extensions;
 
 namespace TinyFpTest.DataTypes
 {
@@ -30,7 +31,7 @@ namespace TinyFpTest.DataTypes
                 .None()
                 .OnNone(() => called = true);
 
-           called.Should().BeTrue();
+            called.Should().BeTrue();
         }
 
         [Test]
@@ -41,7 +42,7 @@ namespace TinyFpTest.DataTypes
                 .Some("not-empty")
                 .OnNone(() => called = true);
 
-           called.Should().BeFalse();
+            called.Should().BeFalse();
         }
 
         [Test]
@@ -80,7 +81,7 @@ namespace TinyFpTest.DataTypes
                 .Some("not-empty")
                 .OnSome(_ => called = _ == "not-empty");
 
-           called.Should().BeTrue();
+            called.Should().BeTrue();
         }
 
         [Test]
@@ -121,8 +122,8 @@ namespace TinyFpTest.DataTypes
         public void Bind_MapInputInOutput()
             => Option<string>
                     .Some("not-empty")
-                    .Bind(_ => Option<bool>.Some(_ == "not-empty"))
-                    .OnNone(false)
+                    .Bind(_ => (_ == "not-empty").ToOption(__ => !__))
+                    .IsSome
                 .Should().BeTrue();
 
         [Test]

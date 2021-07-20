@@ -15,14 +15,16 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void TryMatch_Func_WhenNoException_Success()
             => Try(() => GetValue(10))
-                .Match(_ => { _.Should().Be(10); return Unit.Default; },
-                       _ => { Assert.Fail(); return Unit.Default; });
+                .Match(_ => 10 ,
+                       _ => 0)
+                 .Should().Be(10);
 
         [Test]
         public void TryMatch_Func_WhenException_Fail()
             => Try(() => GetValue(0))
-                .Match(_ => { Assert.Fail(); return Unit.Default; },
-                       _ => { Assert.Pass(); return Unit.Default; });
+                .Match(_ => 0,
+                       _ => 10)
+                .Should().Be(10);
 
         [Test]
         public void TryMatch_WhenNoException_Success()
@@ -89,12 +91,25 @@ namespace TinyFpTest.DataTypes
                 .Should().BeTrue();
 
         [Test]
+        public void TryMap_WhenNoException_Call()
+            => Try(() => GetValue(10))
+                .Map(_ => GetValue(_ * 10))
+                .OnFail(0)
+                .Should().Be(1);
+
+        [Test]
+        public void TryMap_WhenException_DontcallMap()
+            => Try(() => GetValue(0))
+                .Map(_ => GetValue(_ * 10))
+                .OnFail(0)
+                .Should().Be(0);
+
+        [Test]
         public void TryBind_WhenNoException_Call()
             => Try(() => GetValue(10))
                 .Bind(_ => Try(() => GetValue(5)))
                 .OnFail(0)
                 .Should().Be(20);
-
         [Test]
         public void TryBind_WhenFirstException_DontCall()
             => Try(() => GetValue(0))

@@ -9,7 +9,7 @@ namespace TinyFp.Common
     {
         internal readonly ResultState State;
         internal readonly A Value;
-        private Exception exception;
+        private readonly Exception exception;
 
         internal Exception Exception => exception ?? BottomException.Default;
 

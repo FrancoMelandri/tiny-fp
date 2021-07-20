@@ -7,7 +7,7 @@ namespace TinyFp
     public static class TryExtensions
     {
         [Pure]
-        public static Result<T> Try<T>(this Try<T> @this)
+        private static Result<T> EncapsulateTry<T>(this Try<T> @this)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace TinyFp
             {
                 if (isMemoized) return memoized;
 
-                var @try = @this.Try();
+                var @try = @this.EncapsulateTry();
                 if (@try.IsSuccess)
                 {
                     isMemoized = true;
@@ -41,7 +41,7 @@ namespace TinyFp
         [Pure]
         public static R Match<A, R>(this Try<A> @this, Func<A, R> Succ, Func<Exception, R> Fail)
         {
-            var res = @this.Try();
+            var res = @this.EncapsulateTry();
             return res.IsSuccess ?
                 Succ(res.Value) :
                 Fail(res.Exception);
@@ -50,7 +50,7 @@ namespace TinyFp
         [Pure]
         public static R Match<A, R>(this Try<A> @this, Func<A, R> Succ, R Fail)
         {
-            var res = @this.Try();
+            var res = @this.EncapsulateTry();
             return res.IsFaulted ?
                 Fail :
                 Succ(res.Value);
@@ -67,7 +67,7 @@ namespace TinyFp
         [Pure]
         public static A OnFail<A>(this Try<A> @this, Func<Exception, A> Fail)
         {
-            var res = @this.Try();
+            var res = @this.EncapsulateTry();
             return res.IsSuccess ?
                 res.Value :
                 Fail(res.Exception);
@@ -76,7 +76,7 @@ namespace TinyFp
         [Pure]
         public static Either<Exception, A> ToEither<A>(this Try<A> @this)
         {
-            var res = @this.Try();
+            var res = @this.EncapsulateTry();
             return res.IsFaulted ?
                 Either<Exception, A>.Left(res.Exception) :
                 Either<Exception, A>.Right(res.Value);
@@ -88,7 +88,7 @@ namespace TinyFp
                 {
                     try
                     {
-                        var ra = @this.Try();
+                        var ra = @this.EncapsulateTry();
                         return ra.IsSuccess ?
                             f(ra.Value)() :
                             new Result<B>(ra.Exception);
@@ -99,9 +99,26 @@ namespace TinyFp
                     }
                 });
 
+        [Pure]
+        public static Try<B> Map<A, B>(this Try<A> @this, Func<A, B> f)
+            => Memo(() =>
+                {
+                    try
+                    {
+                        var ra = @this.EncapsulateTry();
+                        return ra.IsSuccess ?
+                            f(ra.Value) :
+                            new Result<B>(ra.Exception);
+                    }
+                    catch (Exception e)
+                    {
+                        return new Result<B>(e);
+                    }
+                });
+
         public static Try<A> Do<A>(this Try<A> @this, Action<A> f) => () =>
         {
-            var r = @this.Try();
+            var r = @this.EncapsulateTry();
             if (!r.IsFaulted)
             {
                 f(r.Value);

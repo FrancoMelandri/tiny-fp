@@ -32,15 +32,23 @@ namespace TinyFpTest.Complex
 
         public virtual void ConfigureServices(IServiceCollection services)
             => services
-                .Tee(_ => _.AddControllers())
-                .Tee(_ => InitializeConfigurations(_))
-                .Tee(_ => _.AddSingleton<ICache, Cache>())
-                .Tee(_ => InitializeApiClinet(_))
-                .Tee(_ => InitializeSerachService(_))
-                .Tee(_ => InitializeDetailsDrivenPort(_))
-                .Tee(_ => InitializeSerilog(_));
+                .Tee(InitializeControllers)
+                .Tee(InitializeConfigurations)
+                .Tee(InitializeCache)
+                .Tee(InitializeApiClient)
+                .Tee(InitializeSerachService)
+                .Tee(InitializeDetailsDrivenPort)
+                .Tee(InitializeSerilog);
 
-        private IServiceCollection InitializeApiClinet(IServiceCollection services)
+        private void InitializeControllers(IServiceCollection services)
+            => services
+                .Tee(_ => _.AddControllers());
+
+        private void InitializeCache(IServiceCollection services)
+            => services
+                .Tee(_ => _.AddSingleton<ICache, Cache>());
+
+        private IServiceCollection InitializeApiClient(IServiceCollection services)
             => services
                 .Tee(_ => _.AddHttpClient())
                 .Tee(_ => _.AddSingleton<IApiClient>(_ =>

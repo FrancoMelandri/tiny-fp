@@ -46,12 +46,12 @@ namespace TinyFp
 
         [Pure]
         public Either<L, A> ToEither<L>(Func<L> onLeft)
-            =>  _isSome ?
+            => _isSome ?
                     Either<L, A>.Right(_value) :
                     Either<L, A>.Left(onLeft());
 
         [Pure]
         public Either<L, A> ToEither<L>(L left)
-            =>  ToEither(() => left);
+            => ToEither(() => left);
     }
 }
