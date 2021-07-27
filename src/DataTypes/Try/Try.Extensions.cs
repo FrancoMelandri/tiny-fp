@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using TinyFp.Common;
+using TinyFp.Extensions;
 
 namespace TinyFp
 {
@@ -40,21 +41,17 @@ namespace TinyFp
 
         [Pure]
         public static R Match<A, R>(this Try<A> @this, Func<A, R> Succ, Func<Exception, R> Fail)
-        {
-            var res = @this.EncapsulateTry();
-            return res.IsSuccess ?
-                Succ(res.Value) :
-                Fail(res.Exception);
-        }
+            => @this.EncapsulateTry()
+                .Map(res => res.IsSuccess ?
+                            Succ(res.Value) :
+                            Fail(res.Exception));
 
         [Pure]
         public static R Match<A, R>(this Try<A> @this, Func<A, R> Succ, R Fail)
-        {
-            var res = @this.EncapsulateTry();
-            return res.IsFaulted ?
-                Fail :
-                Succ(res.Value);
-        }
+            => @this.EncapsulateTry()
+                .Map(res => res.IsFaulted ?
+                            Fail :
+                            Succ(res.Value));
 
         [Pure]
         public static A OnFail<A>(this Try<A> @this, A failValue)
@@ -66,21 +63,17 @@ namespace TinyFp
 
         [Pure]
         public static A OnFail<A>(this Try<A> @this, Func<Exception, A> Fail)
-        {
-            var res = @this.EncapsulateTry();
-            return res.IsSuccess ?
-                res.Value :
-                Fail(res.Exception);
-        }
+            => @this.EncapsulateTry()
+                .Map(res => res.IsSuccess ?
+                            res.Value :
+                            Fail(res.Exception));
 
         [Pure]
         public static Either<Exception, A> ToEither<A>(this Try<A> @this)
-        {
-            var res = @this.EncapsulateTry();
-            return res.IsFaulted ?
-                Either<Exception, A>.Left(res.Exception) :
-                Either<Exception, A>.Right(res.Value);
-        }
+            => @this.EncapsulateTry()
+                .Map(res => res.IsFaulted ?
+                            Either<Exception, A>.Left(res.Exception) :
+                            Either<Exception, A>.Right(res.Value));
 
         [Pure]
         public static Try<B> Bind<A, B>(this Try<A> @this, Func<A, Try<B>> f)
@@ -88,6 +81,7 @@ namespace TinyFp
                 {
                     try
                     {
+
                         var ra = @this.EncapsulateTry();
                         return ra.IsSuccess ?
                             f(ra.Value)() :
@@ -101,29 +95,9 @@ namespace TinyFp
 
         [Pure]
         public static Try<B> Map<A, B>(this Try<A> @this, Func<A, B> f)
-            => Memo(() =>
-                {
-                    try
-                    {
-                        var ra = @this.EncapsulateTry();
-                        return ra.IsSuccess ?
-                            f(ra.Value) :
-                            new Result<B>(ra.Exception);
-                    }
-                    catch (Exception e)
-                    {
-                        return new Result<B>(e);
-                    }
-                });
-
-        public static Try<A> Do<A>(this Try<A> @this, Action<A> f) => () =>
-        {
-            var r = @this.EncapsulateTry();
-            if (!r.IsFaulted)
-            {
-                f(r.Value);
-            }
-            return r;
-        };
+            => Memo(() => @this.EncapsulateTry()
+                            .Map(_ => _.IsSuccess ?
+                                        f(_.Value) :
+                                        new Result<B>(_.Exception)));
     }
 }

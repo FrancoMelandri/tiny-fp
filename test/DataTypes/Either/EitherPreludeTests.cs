@@ -5,7 +5,7 @@ using static TinyFp.Prelude;
 namespace TinyFpTest.DataTypes
 {
     [TestFixture]
-    public class EotherPreludeTests
+    public class EitherPreludeTests
     {
         [Test]
         public void Right_CreaateRight()
@@ -14,7 +14,7 @@ namespace TinyFpTest.DataTypes
                 .Should().BeTrue();
 
         [Test]
-        public void Fail_CreateFailValidation()
+        public void Left_CreateLeft()
             => Left<string, int>("failed")
                 .IsLeft
                 .Should().BeTrue();

@@ -125,20 +125,6 @@ namespace TinyFpTest.DataTypes
                 .Should().Be(-1);
 
         [Test]
-        public void TryDo_WhenNoException_Call()
-            => Try(() => GetValue(10))
-                .Do(_ => { } )
-                .OnFail(0)
-                .Should().Be(10);
-
-        [Test]
-        public void TryDo_WhenException_DontCall()
-            => Try(() => GetValue(0))
-                .Do(_ => { } )
-                .OnFail(0)
-                .Should().Be(0);
-
-        [Test]
         public void Memo_WhenNoExcpetion_MemoizeTheTryCall()
         {
             var counter = 0;
