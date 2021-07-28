@@ -7,7 +7,7 @@ using System;
 namespace TinyFpTest.DataTypes
 {
     [TestFixture]
-    public class UnionTests
+    public class Union2Tests
     {
         [Test]
         public void FromT1_CreateT1Object()
