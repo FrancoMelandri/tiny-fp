@@ -22,6 +22,11 @@ namespace TinyFp
                          Option<B>.None();
 
         [Pure]
+        public async Task<Option<A>> MapNoneAsync(Func<Task<A>> mapAsync)
+            => _isSome ? Some(_value) :
+                         Some(await mapAsync());
+
+        [Pure]
         public Option<B> Bind<B>(Func<A, Option<B>> bind)
             => _isSome ? bind(_value) : Option<B>.None();
 

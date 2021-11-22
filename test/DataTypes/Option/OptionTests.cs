@@ -329,5 +329,26 @@ namespace TinyFpTest.DataTypes
                 .Match(
                     _ => _.Should().Be("empty"),
                     () => Assert.Fail());
+
+        [Test]
+        public void MapNoneAsync_MapInputInOutput()
+            => Option<string>
+                    .Some("not-empty")
+                    .MapNoneAsync(() => Task.FromResult("empty"))
+                .Result
+                .Match(
+                    _ => _.Should().Be("not-empty"),
+                    () => Assert.Fail());
+
+        [Test]
+        public void MapNoneAsync_MapNoneInOutput()
+            => Option<string>
+                    .None()
+                    .MapNoneAsync(() => Task.FromResult("empty"))
+                .Result
+                .Match(
+                    _ => _.Should().Be("empty"),
+                    () => Assert.Fail());
+
     }
 }
