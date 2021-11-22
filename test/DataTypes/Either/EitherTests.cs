@@ -447,6 +447,57 @@ namespace TinyFpTest.DataTypes
 
         }
 
+        [Test]
+        public void Guard_MapAsync_Default()
+        {
+            Either<int, Option<int>>.Right(Option<int>.Some(42))
+                .GuardMapAsync(
+                        age => Task.FromResult("NONE"),
+                        (age => age.IsSome, age => Task.FromResult($"{age.Match(_ => _, () => 0)}"))
+                    )
+                .Result
+                .OnRight(l => l.Should().Be("42"));
+
+            Either<int, Option<int>>.Right(Option<int>.None())
+                .GuardMapAsync(
+                        age => Task.FromResult("NONE"),
+                        (age => age.IsSome, age => Task.FromResult($"{age.Match(_ => _, () => 0)}"))
+                    )
+                .Result
+                .OnRight(l => l.Should().Be("NONE"));
+        }
+
+        [Test]
+        public void Guard_BindAsync_DrinkLicenseExample()
+        {
+            Either<string, Option<int>>.Right(Option<int>.Some(18))
+                .GuardBindAsync(
+                    age => Task.FromResult(Either<string, string>.Right("Do you need some milk?")),
+                    (age => age.IsNone, age => Task.FromResult(Either<string, string>.Left("Error, age not specified"))),
+                    (age => age.Match(_ => _, () => 0) >= 21, age => Task.FromResult(Either<string, string>.Right("OK")))
+                )
+                .Result
+                .OnRight(verification => verification.Should().Be("Do you need some milk?"));
+
+            Either<string, Option<int>>.Right(Option<int>.Some(22))
+                .GuardBindAsync(
+                    age => Task.FromResult(Either<string, string>.Right("Do you need some milk?")),
+                    (age => age.IsNone, age => Task.FromResult(Either<string, string>.Left("Error, age not specified"))),
+                    (age => age.Match(_ => _, () => 0) >= 21, age => Task.FromResult(Either<string, string>.Right("OK")))
+                )
+                .Result
+                .OnRight(verification => verification.Should().Be("OK"));
+
+            Either<string, Option<int>>.Right(Option<int>.None())
+                .GuardBindAsync(
+                    age => Task.FromResult(Either<string, string>.Right("Do you need some milk?")),
+                    (age => age.IsNone, age => Task.FromResult(Either<string, string>.Left("Error, age not specified"))),
+                    (age => age.Match(_ => _, () => 0) >= 21, age => Task.FromResult(Either<string, string>.Right("OK")))
+                )
+                .Result
+                .OnRight(verification => Assert.Fail("Didn't catch option.none"))
+                .OnLeft(verification => verification.Should().Be("Error, age not specified"));
+        }
         public Func<int, string> DefaultDelegate() { return AgeStage.MilkTime; }
         public (Func<int, bool> evalExpressions, Func<int, string> delegateIfTrue)[] Guards() =>
             new (Func<int, bool> evalExpressions, Func<int, string> delegateIfTrue)[] {
