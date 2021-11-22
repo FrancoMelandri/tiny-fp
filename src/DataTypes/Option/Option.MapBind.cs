@@ -31,6 +31,11 @@ namespace TinyFp
             => _isSome ? bind(_value) : Option<B>.None();
 
         [Pure]
+        public Option<A> BindNone(Func<Option<A>> bind)
+            => _isSome ? Some(_value) :
+                         bind();
+
+        [Pure]
         public async Task<Option<B>> BindAsync<B>(Func<A, Task<Option<B>>> bindAsync)
             => _isSome ? await bindAsync(_value) : Option<B>.None();
     }

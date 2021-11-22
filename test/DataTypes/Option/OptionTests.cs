@@ -350,5 +350,22 @@ namespace TinyFpTest.DataTypes
                     _ => _.Should().Be("empty"),
                     () => Assert.Fail());
 
+        [Test]
+        public void BindNone_MapInputInOutput()
+            => Option<string>
+                    .Some("not-empty")
+                    .BindNone(() => Option<string>.Some("empty"))
+                .Match(
+                    _ => _.Should().Be("not-empty"),
+                    () => Assert.Fail());
+
+        [Test]
+        public void BindNone_MapNoneInOutput()
+            => Option<string>
+                    .None()
+                    .BindNone(() => Option<string>.Some("empty"))
+                .Match(
+                    _ => _.Should().Be("empty"),
+                    () => Assert.Fail());
     }
 }
