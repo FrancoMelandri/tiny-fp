@@ -312,5 +312,22 @@ namespace TinyFpTest.DataTypes
             sideEffect.Should().Be(1);
         }
 
+        [Test]
+        public void MapNone_MapInputInOutput()
+            => Option<string>
+                    .Some("not-empty")
+                    .MapNone(() => "empty")
+                .Match(
+                    _ => _.Should().Be("not-empty"),
+                    () => Assert.Fail());
+
+        [Test]
+        public void MapNone_MapNoneInOutput()
+            => Option<string>
+                    .None()
+                    .MapNone(() => "empty")
+                .Match(
+                    _ => _.Should().Be("empty"),
+                    () => Assert.Fail());
     }
 }
