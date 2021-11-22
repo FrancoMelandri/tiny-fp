@@ -289,5 +289,28 @@ namespace TinyFpTest.DataTypes
             else
                 Assert.Fail();
         }
+
+        [Test]
+        public void Match_IfSome_CallActionSome()
+        {
+            var sideEffect = 0;
+            Option<string>
+                    .Some("not-empty")
+                    .Match(_ => sideEffect = 1,
+                           () => { });
+            sideEffect.Should().Be(1);
+        }
+
+        [Test]
+        public void Match_IfNone_CallActionNone()
+        {
+            var sideEffect = 0;
+            Option<string>
+                    .None()
+                    .Match(_ => { },
+                           () => sideEffect = 1);
+            sideEffect.Should().Be(1);
+        }
+
     }
 }
