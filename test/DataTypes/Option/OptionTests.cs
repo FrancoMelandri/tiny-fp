@@ -367,5 +367,25 @@ namespace TinyFpTest.DataTypes
                 .Match(
                     _ => _.Should().Be("empty"),
                     () => Assert.Fail());
+
+        [Test]
+        public void BindNoneAsync_MapInputInOutput()
+            => Option<string>
+                    .Some("not-empty")
+                    .BindNoneAsync(() => Task.FromResult(Option<string>.Some("empty")))
+                .Result
+                .Match(
+                    _ => _.Should().Be("not-empty"),
+                    () => Assert.Fail());
+
+        [Test]
+        public void BindNoneAsync_MapNoneInOutput()
+            => Option<string>
+                    .None()
+                    .BindNoneAsync(() => Task.FromResult(Option<string>.Some("empty")))
+                .Result
+                .Match(
+                    _ => _.Should().Be("empty"),
+                    () => Assert.Fail());
     }
 }
