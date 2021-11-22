@@ -49,28 +49,28 @@ namespace TinyFpTest.DataTypes
         public void OnNone_CallTheFunction()
             => Option<string>
                     .None()
-                    .OnNone(() => "empty")
+                    .OrElse(() => "empty")
                 .Should().Be("empty");
 
         [Test]
         public void OnNone_WhenSome_DontCallTheFunction()
             => Option<string>
                     .Some("not-empty")
-                    .OnNone(() => "empty")
+                    .OrElse(() => "empty")
                 .Should().Be("not-empty");
 
         [Test]
         public void OnNone_ReturnSomeObject()
             => Option<string>
                     .None()
-                    .OnNone("empty")
+                    .OrElse("empty")
                 .Should().Be("empty");
 
         [Test]
         public void OnNone_WhenSome_ReturnSome()
             => Option<string>
                     .Some("not-empty")
-                    .OnNone("empty")
+                    .OrElse("empty")
                 .Should().Be("not-empty");
 
         [Test]
@@ -89,7 +89,7 @@ namespace TinyFpTest.DataTypes
             => Option<string>
                     .Some("not-empty")
                     .Map(_ => _ == "not-empty")
-                    .OnNone(false)
+                    .OrElse(false)
                 .Should().BeTrue();
 
         [Test]
@@ -106,7 +106,7 @@ namespace TinyFpTest.DataTypes
                     .Some("not-empty")
                     .MapAsync(_ => Task.FromResult(_ == "not-empty"))
                     .Result
-                    .OnNone(false)
+                    .OrElse(false)
                 .Should().BeTrue();
 
         [Test]
@@ -140,7 +140,7 @@ namespace TinyFpTest.DataTypes
                     .Some("not-empty")
                     .BindAsync(_ => Task.FromResult(Option<bool>.Some(_ == "not-empty")))
                     .Result
-                    .OnNone(false)
+                    .OrElse(false)
                 .Should().BeTrue();
 
         [Test]
