@@ -17,11 +17,11 @@ namespace TinyFp
                 .Tee(@this => { if (!@this._isSome) action(); });
 
         [Pure]
-        public A OnNone(Func<A> func)
+        public A OrElse(Func<A> func)
             => _isSome ? _value : func();
 
         [Pure]
-        public A OnNone(A val)
+        public A OrElse(A val)
             => _isSome ? _value : val;
     }
 }

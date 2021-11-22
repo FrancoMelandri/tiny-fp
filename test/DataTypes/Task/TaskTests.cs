@@ -276,7 +276,7 @@ namespace TinyFpTest.DataTypes
                     .Some("not-empty"))
                     .BindAsync(_ => Option<bool>.Some(_ == "not-empty"))
                     .Result
-                    .OnNone(false)
+                    .OrElse(false)
                 .Should().BeTrue();
 
         [Test]
@@ -294,7 +294,7 @@ namespace TinyFpTest.DataTypes
                     .Some("not-empty"))
                     .MapAsync(_ => _ == "not-empty")
                     .Result
-                    .OnNone(false)
+                    .OrElse(false)
                 .Should().BeTrue();
 
         [Test]
