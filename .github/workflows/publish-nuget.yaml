@@ -25,7 +25,8 @@ jobs:
 
     - name: Setup version
       run: |
-        echo "VERSION=${GITHUB_REF:11}" >> $GITHUB_ENV
+        #echo "VERSION=${GITHUB_REF:11}" >> $GITHUB_ENV
+        echo "VERSION=1.0.0" >> $GITHUB_ENV
 
     - name: Create package  
       run: |
