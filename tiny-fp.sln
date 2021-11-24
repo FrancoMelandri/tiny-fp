@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29102.190
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tiny-fp", "src\tiny-fp.csproj", "{1FABEADD-6DCC-4973-B67C-6A6DC441FA25}"
 EndProject
@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{90C167D1-B83A-4216-B158-56136A604FA3}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\ci.yaml = .github\workflows\ci.yaml
+		.github\workflows\publish-nuget.yaml = .github\workflows\publish-nuget.yaml
 		.github\workflows\publish.yaml = .github\workflows\publish.yaml
 	EndProjectSection
 EndProject

@@ -6,6 +6,8 @@
 		<IsPackable>true</IsPackable>
 		<PackageDescription>Tiny functional programming library</PackageDescription>
 		<RepositoryUrl>https://github.com/FrancoMelandri/tiny-fp.git</RepositoryUrl>
+		<PackageReleaseNotes>First release of tiny-fp</PackageReleaseNotes>
+		<PackageTags>Functional Programming</PackageTags>
 	</PropertyGroup>
 
 </Project>
