@@ -1,12 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Serilog;
+﻿using Serilog;
 using Serilog.Events;
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Net.Http;
 using TinyFp.Extensions;
 using TinyFpTest.Configuration;
 using TinyFpTest.Services;
@@ -64,7 +58,7 @@ namespace TinyFpTest.Complex
                                 new ValidationSearchService(_.GetRequiredService<CachedSearchService>())))
                 .Tee(_ => _.AddSingleton<ISearchService>(_ =>
                                 new LoggedSearchService(_.GetRequiredService<ValidationSearchService>(),
-                                                        _.GetRequiredService<ILogger>())));
+                                                        _.GetRequiredService<Serilog.ILogger>())));
 
         private IServiceCollection InitializeConfigurations(IServiceCollection services)
             => Configuration
@@ -83,7 +77,7 @@ namespace TinyFpTest.Complex
                 .Map(_ => (serilogConfig: _, loggerConfig: new LoggerConfiguration()))
                 .Tee(_ => InitializeConfiguration(_.loggerConfig, _.serilogConfig))
                 .Map(_ => _.loggerConfig.CreateLogger())
-                .Tee(_ => services.AddSingleton<ILogger>(_));
+                .Tee(_ => services.AddSingleton<Serilog.ILogger>(_));
 
         private void InitializeDetailsDrivenPort(IServiceCollection services)
             => Configuration
@@ -96,7 +90,7 @@ namespace TinyFpTest.Complex
                             })
                 .Tee(_ => _.AddSingleton<IDetailsDrivenPort>(_ =>
                                 new LoggedDetailsDrivenPort(_.GetRequiredService<ValidationDetailsDrivenPort>(),
-                                                            _.GetRequiredService<ILogger>())));
+                                                            _.GetRequiredService<Serilog.ILogger>())));
 
         private IServiceCollection RegisterDetailsDrivenPortsAdapterApi(IServiceCollection services)
             => services

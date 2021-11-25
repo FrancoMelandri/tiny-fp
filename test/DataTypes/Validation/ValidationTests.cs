@@ -1,7 +1,5 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 using TinyFp;
 using TinyFp.Exceptions;
 

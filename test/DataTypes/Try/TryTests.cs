@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using System;
 using TinyFp;
 using static TinyFp.Prelude;
 

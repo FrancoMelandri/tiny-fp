@@ -1,8 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Http;
+﻿using Microsoft.Extensions.Http;
 using Moq;
-using Serilog;
 using System.Diagnostics.CodeAnalysis;
 using TinyFpTest.Complex;
 using TinyFpTest.Services;
@@ -14,7 +11,7 @@ namespace TinyFp.Complex.Setup
     public class TestStartup : Startup
     {
         public static InMemoryRedisCache InMemoryRedisCache { get; } = new InMemoryRedisCache();
-        public static Mock<ILogger> Logger { get; } = new Mock<ILogger>();
+        public static Mock<Serilog.ILogger> Logger { get; } = new Mock<Serilog.ILogger>();
         public static Mock<IDetailsRepository> DetailsRepository { get; } = new Mock<IDetailsRepository>();
 
         public TestStartup(IConfiguration configuration)

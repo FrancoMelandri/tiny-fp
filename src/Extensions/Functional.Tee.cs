@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TinyFp.Extensions
+﻿namespace TinyFp.Extensions
 {
     public static partial class Functional
     {

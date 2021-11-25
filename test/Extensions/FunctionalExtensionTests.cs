@@ -1,7 +1,6 @@
 ﻿using TinyFp.Extensions;
 using NUnit.Framework;
 using FluentAssertions;
-using System;
 
 namespace TinyFpTest.Extensions
 {

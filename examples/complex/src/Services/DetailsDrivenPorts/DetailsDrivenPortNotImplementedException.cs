@@ -1,5 +1,4 @@
-﻿using System;
-using TinyFpTest.Configuration;
+﻿using TinyFpTest.Configuration;
 
 namespace TinyFpTest.Services.DetailsDrivenPorts
 {

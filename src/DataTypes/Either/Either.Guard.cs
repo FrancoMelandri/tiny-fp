@@ -1,9 +1,6 @@
 ﻿using TinyFp.Extensions;
-using System;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using static TinyFp.Prelude;
-using System.Threading.Tasks;
 
 namespace TinyFp
 {

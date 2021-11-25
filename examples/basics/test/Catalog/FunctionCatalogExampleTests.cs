@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using System;
 
 namespace TinyFpTest.Examples.Basics.Catalog
 {

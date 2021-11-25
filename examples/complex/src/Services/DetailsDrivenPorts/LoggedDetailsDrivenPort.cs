@@ -1,6 +1,4 @@
-﻿using Serilog;
-using System.Threading.Tasks;
-using TinyFp;
+﻿using TinyFp;
 using TinyFp.Extensions;
 using TinyFpTest.Models;
 using TinyFpTest.Services.Api;
@@ -10,10 +8,10 @@ namespace TinyFpTest.Services.Details
     public class LoggedDetailsDrivenPort : IDetailsDrivenPort
     {
         private readonly IDetailsDrivenPort _detailsDrivenPort;
-        private readonly ILogger _logger;
+        private readonly Serilog.ILogger _logger;
 
         public LoggedDetailsDrivenPort(IDetailsDrivenPort detailsDrivenPort,
-                                       ILogger logger)
+                                       Serilog.ILogger logger)
         {
             _detailsDrivenPort = detailsDrivenPort;
             _logger = logger;

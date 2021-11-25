@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TinyFpTest.Examples.Basics.Catalog
+﻿namespace TinyFpTest.Examples.Basics.Catalog
 {
     public class ImperativeCatalogService
     {
