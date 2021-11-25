@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace TinyFpTest.Services.Api
+﻿namespace TinyFpTest.Services.Api
 {
     public struct ApiRequest
     {

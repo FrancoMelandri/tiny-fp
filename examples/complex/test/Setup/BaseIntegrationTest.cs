@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using NUnit.Framework;
-using System;
+﻿using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
-using System.Net.Http;
 using TinyFpTest.Complex;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;

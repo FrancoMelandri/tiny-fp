@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using TinyFp;
+﻿using TinyFp;
 using TinyFp.Extensions;
 using TinyFpTest.Models;
 using TinyFpTest.Services.Api;

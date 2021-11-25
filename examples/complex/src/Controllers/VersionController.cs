@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Serilog;
-using System.Threading.Tasks;
 using TinyFp.Extensions;
 
 namespace TinyFpTest.Controllers
@@ -9,9 +7,9 @@ namespace TinyFpTest.Controllers
     [Route("[controller]")]
     public class VersionController : ControllerBase
     {
-        private readonly ILogger _logger;
+        private readonly Serilog.ILogger _logger;
 
-        public VersionController(ILogger logger)
+        public VersionController(Serilog.ILogger logger)
         {
             _logger = logger;
         }

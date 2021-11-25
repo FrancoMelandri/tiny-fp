@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics.Contracts;
 
 namespace TinyFp
 {

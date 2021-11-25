@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Serilog;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace TinyFpTest.Complex

@@ -2,7 +2,6 @@
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using System.Linq;
 using System.Net;
 using TinyFp.Complex.Setup;
 using TinyFpTest.Models;

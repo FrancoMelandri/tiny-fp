@@ -1,6 +1,4 @@
-﻿using Serilog;
-using System.Threading.Tasks;
-using TinyFp;
+﻿using TinyFp;
 using TinyFpTest.Models;
 using TinyFpTest.Services.Api;
 using static TinyFp.Extensions.Functional;
@@ -10,10 +8,10 @@ namespace TinyFpTest.Services
     public class LoggedSearchService : ISearchService
     {
         private readonly ISearchService _searchService;
-        private readonly ILogger _logger;
+        private readonly Serilog.ILogger _logger;
 
         public LoggedSearchService(ISearchService searchService,
-                                   ILogger logger)
+                                   Serilog.ILogger logger)
         {
             _searchService = searchService;
             _logger = logger;

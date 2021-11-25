@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using System.Diagnostics.CodeAnalysis;
-using System;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace TinyFpTest.Complex
 {

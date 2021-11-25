@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using System.Net.Http;
+﻿using Microsoft.AspNetCore.TestHost;
 
 namespace TinyFp.Complex.Setup
 {
