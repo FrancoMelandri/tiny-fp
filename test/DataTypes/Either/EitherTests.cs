@@ -8,7 +8,7 @@ namespace TinyFpTest.DataTypes
     public class EitherTests
     {
         [Test]
-        public void Right_CreaateRight()
+        public void Right_CreateRight()
             => Either<int, string>.Right("either")
                 .IsRight
                 .Should().BeTrue();
@@ -24,7 +24,7 @@ namespace TinyFpTest.DataTypes
         }
 
         [Test]
-        public void Left_CreaateLeft()
+        public void Left_CreateLeft()
             => Either<int, string>.Left(0)
                 .IsLeft
                 .Should().BeTrue();

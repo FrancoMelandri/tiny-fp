@@ -8,7 +8,7 @@ namespace TinyFpTest.DataTypes
     public class EitherPreludeTests
     {
         [Test]
-        public void Right_CreaateRight()
+        public void Right_CreateRight()
             => Right<string, int>(10)
                 .IsRight
                 .Should().BeTrue();
