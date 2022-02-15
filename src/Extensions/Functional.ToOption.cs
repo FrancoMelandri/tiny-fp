@@ -6,7 +6,7 @@
                                                Func<A, M> map,
                                                Predicate<A> noneWhen)
             => @this == null || noneWhen(@this) ?
-                Option<M>.None() :
+                Option<M>.None :
                 Option<M>.Some(map(@this));
 
         public static Option<A> ToOption<A>(this A @this, Predicate<A> noneWhen)
@@ -21,7 +21,7 @@
         {
             var value = await @this;
             return value == null || noneWhen(value) ?
-                    Option<M>.None() :
+                    Option<M>.None :
                     Option<M>.Some(map(value));
         }
 

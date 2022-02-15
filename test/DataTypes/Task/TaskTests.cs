@@ -217,7 +217,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void MatchAsync_1_IfNone_ToOutput()
             => Task.FromResult(Option<string>
-                    .None())
+                    .None)
                     .MatchAsync(_ => false,
                            () => Task.FromResult(true))
                     .Result
@@ -235,7 +235,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void MatchAsync_2_IfNone_ToOutput()
             => Task.FromResult(Option<string>
-                    .None())
+                    .None)
                     .MatchAsync(_ => Task.FromResult(false),
                            () => true)
                     .Result
@@ -253,7 +253,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void MatchAsync_3_IfNone_ToOutput()
             => Task.FromResult(Option<string>
-                    .None())
+                    .None)
                     .MatchAsync(_ => Task.FromResult(false),
                            () => Task.FromResult(true))
                     .Result
@@ -262,7 +262,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void MatchAsync_IfNone_ToOutput()
             => Task.FromResult(Option<string>
-                    .None())
+                    .None)
                     .MatchAsync(_ => false,
                            () => true)
                     .Result
@@ -280,7 +280,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void BindAsync_MapNoneInOutput()
             => Task.FromResult(Option<string>
-                    .None())
+                    .None)
                     .BindAsync(_ => Option<bool>.Some(true))
                     .Result
                     .IsNone
@@ -298,7 +298,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void MapAsync_MapNoneInOutput()
             => Task.FromResult(Option<string>
-                    .None())
+                    .None)
                     .MapAsync(_ => true)
                     .Result
                     .IsNone

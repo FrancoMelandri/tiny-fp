@@ -97,7 +97,7 @@ namespace TinyFpTest.Examples.Basics.Catalog
         [Test]
         public void Get_WhenErrorInGetFromCache_ReturnError()
         {
-            var empty = Option<Catalog>.None();
+            var empty = Option<Catalog>.None;
             _catalogCache
                 .Setup(m => m.Get())
                 .Throws(new Exception("error"));

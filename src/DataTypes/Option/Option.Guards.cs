@@ -12,7 +12,7 @@ namespace TinyFp
                             .DefaultIfEmpty((_ => true, delegateIfDefault))
                             .FirstOrDefault()
                             .delegateIfExpressionTrue(_)) :
-                Option<B>.None();
+                Option<B>.None;
 
         [Pure]
         public async Task<Option<B>> GuardMapAsync<B>(Func<A, Task<B>> delegateIfDefault, params (Func<A, bool> evaluateExpression, Func<A, Task<B>> delegateIfExpressionTrue)[] guards)
@@ -22,7 +22,7 @@ namespace TinyFp
                             .DefaultIfEmpty((_ => true, delegateIfDefault))
                             .FirstOrDefault()
                             .delegateIfExpressionTrue(_))
-            : Option<B>.None();
+            : Option<B>.None;
 
         [Pure]
         public Option<B> GuardBind<B>(Func<A, Option<B>> delegateIfDefault, params (Func<A, bool> evaluateExpression, Func<A, Option<B>> delegateIfExpressionTrue)[] guards)
@@ -32,7 +32,7 @@ namespace TinyFp
                             .DefaultIfEmpty((_ => true, delegateIfDefault))
                             .FirstOrDefault()
                             .delegateIfExpressionTrue(_)) :
-                Option<B>.None();
+                Option<B>.None;
 
         [Pure]
         public async Task<Option<B>> GuardBindAsync<B>(Func<A, Task<Option<B>>> delegateIfDefault, params (Func<A, bool> evaluateExpression, Func<A, Task<Option<B>>> delegateIfExpressionTrue)[] guards)
@@ -42,6 +42,6 @@ namespace TinyFp
                             .DefaultIfEmpty((_ => true, delegateIfDefault))
                             .FirstOrDefault()
                             .delegateIfExpressionTrue(_)) :
-                Option<B>.None();
+                Option<B>.None;
     }
 }

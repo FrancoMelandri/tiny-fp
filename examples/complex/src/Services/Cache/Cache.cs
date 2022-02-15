@@ -10,7 +10,7 @@ namespace TinyFpTest.Services
         }
 
         public Task<Option<T>> GetAsync<T>(string key)
-            => Task.FromResult(Option<T>.None());
+            => Task.FromResult(Option<T>.None);
 
         public Task<bool> RemoveAsync(string key)
         {

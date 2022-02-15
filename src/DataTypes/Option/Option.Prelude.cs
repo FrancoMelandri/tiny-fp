@@ -6,6 +6,6 @@
             => Option<A>.Some(some);
 
         public static Option<A> None<A>()
-            => Option<A>.None();
+            => Option<A>.None;
     }
 }

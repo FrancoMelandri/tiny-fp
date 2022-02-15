@@ -58,7 +58,7 @@ namespace TinyFp.Complex.Contorllers
             TestStartup
                 .DetailsRepository
                 .Setup(_ => _.GetByProductName("prd"))
-                .ReturnsAsync(Option<ProductDetails>.None());
+                .ReturnsAsync(Option<ProductDetails>.None);
 
             var response = Client.GetAsync("/details?productName=prd").Result;
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
