@@ -8,8 +8,8 @@ namespace TinyFp
     public partial struct Either<L, R>
     {
         private readonly bool _isRight;
-        private readonly R _right;
-        private readonly L _left;
+        internal readonly R _right;
+        internal readonly L _left;
 
         public bool IsRight => _isRight;
         public bool IsLeft => !_isRight;
