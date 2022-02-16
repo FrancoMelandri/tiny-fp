@@ -10,14 +10,14 @@ namespace TinyFpTest.Extensions
     {
         [Test]
         public void Filter_ReturnsOnlySomeElements()
-            => new[] { Option<int>.Some(1), Option<int>.None, Option<int>.Some(3) }
+            => new[] { Option<int>.Some(1), Option<int>.None(), Option<int>.Some(3) }
                .Filter()
                .Should()
                .BeEquivalentTo(new[] { 1, 3 });
 
         [Test]
         public void Filter_ReturnsOnlySomeElementsMatchingPredicate()
-            => new[] { Option<int>.Some(1), Option<int>.None, Option<int>.Some(3) }
+            => new[] { Option<int>.Some(1), Option<int>.None(), Option<int>.Some(3) }
                .Filter(_ => _ > 1)
                .Should()
                .BeEquivalentTo(new[] { 3 });
@@ -77,7 +77,7 @@ namespace TinyFpTest.Extensions
 
         [Test]
         public void Map_ApplyMapOnlyToSomeElements()
-           => new[] { Option<int>.Some(1), Option<int>.None, Option<int>.Some(3) }
+           => new[] { Option<int>.Some(1), Option<int>.None(), Option<int>.Some(3) }
                .Map(_ => _ * 2)
                .Should()
                .BeEquivalentTo(new[] { 2, 6 });
