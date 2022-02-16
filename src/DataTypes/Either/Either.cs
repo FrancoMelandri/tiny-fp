@@ -8,8 +8,8 @@ namespace TinyFp
     public partial struct Either<L, R>
     {
         private readonly bool _isRight;
-        internal readonly R _right;
-        internal readonly L _left;
+        private readonly R _right;
+        private readonly L _left;
 
         public bool IsRight => _isRight;
         public bool IsLeft => !_isRight;
@@ -62,5 +62,13 @@ namespace TinyFp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !(Either<L, R> value)
             => value.IsLeft;
+
+        [Pure]
+        public R Unwrap()
+            => _isRight ? _right : throw new InvalidOperationException();
+
+        [Pure]
+        public L UnwrapLeft()
+            => _isRight ? throw new InvalidOperationException() : _left;
     }
 }

@@ -6,19 +6,19 @@ namespace TinyFp.Extensions
     {
         [Pure]
         public static IEnumerable<R> Filter<L, R>(this IEnumerable<Either<L, R>> @this)
-            => @this.Where(_ => _.IsRight).Select(_ => _._right);
+            => @this.Where(_ => _.IsRight).Select(_ => _.Unwrap());
 
         [Pure]
         public static IEnumerable<T> Filter<T>(this IEnumerable<Option<T>> @this)
-            => @this.Where(_ => _.IsSome).Select(_ => _._value);
+            => @this.Where(_ => _.IsSome).Select(_ => _.Unwrap());
 
         [Pure]
         public static IEnumerable<R> Filter<L, R>(this IEnumerable<Either<L, R>> @this, Func<R, bool> predicate)
-            => @this.Where(_ => _.IsRight && predicate(_._right)).Select(_ => _._right);
+            => @this.Where(_ => _.IsRight && predicate(_.Unwrap())).Select(_ => _.Unwrap());
 
         [Pure]
         public static IEnumerable<T> Filter<T>(this IEnumerable<Option<T>> @this, Func<T, bool> predicate)
-            => @this.Where(_ => _.IsSome && predicate(_._value)).Select(_ => _._value);
+            => @this.Where(_ => _.IsSome && predicate(_.Unwrap())).Select(_ => _.Unwrap());
 
         [Pure]
         public static IEnumerable<T> Filter<T>(this IEnumerable<T> @this, Func<T, bool> predicate)
@@ -26,11 +26,11 @@ namespace TinyFp.Extensions
 
         [Pure]
         public static IEnumerable<L> FilterLeft<L, R>(this IEnumerable<Either<L, R>> @this)
-            => @this.Where(_ => _.IsLeft).Select(_ => _._left);
+            => @this.Where(_ => _.IsLeft).Select(_ => _.UnwrapLeft());
 
         [Pure]
         public static IEnumerable<L> FilterLeft<L, R>(this IEnumerable<Either<L, R>> @this, Func<L, bool> predicate)
-            => @this.Where(_ => _.IsLeft && predicate(_._left)).Select(_ => _._left);
+            => @this.Where(_ => _.IsLeft && predicate(_.UnwrapLeft())).Select(_ => _.UnwrapLeft());
 
         [Pure]
         public static Unit ForEach<T>(this IEnumerable<T> @this, Action<T> action)
@@ -59,14 +59,14 @@ namespace TinyFp.Extensions
 
         [Pure]
         public static IEnumerable<M> Map<T, M>(this IEnumerable<Option<T>> values, Func<T, M> map)
-            => values.Where(_ => _.IsSome).Select(_ => map(_._value));
+            => values.Where(_ => _.IsSome).Select(_ => map(_.Unwrap()));
 
         [Pure]
         public static IEnumerable<M> Map<L, R, M>(this IEnumerable<Either<L, R>> @this, Func<R, M> map)
-            => @this.Where(_ => _.IsRight).Select(_ => map(_._right));
+            => @this.Where(_ => _.IsRight).Select(_ => map(_.Unwrap()));
 
         [Pure]
         public static IEnumerable<M> MapLeft<L, R, M>(this IEnumerable<Either<L, R>> @this, Func<L, M> map)
-            => @this.Where(_ => _.IsLeft).Select(_ => map(_._left));
+            => @this.Where(_ => _.IsLeft).Select(_ => map(_.UnwrapLeft()));
     }
 }

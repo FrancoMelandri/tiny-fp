@@ -496,6 +496,29 @@ namespace TinyFpTest.DataTypes
                 .OnRight(verification => Assert.Fail("Didn't catch option.none"))
                 .OnLeft(verification => verification.Should().Be("Error, age not specified"));
         }
+
+        [Test]
+        public void Unwrap_GivenRight_ReturnsRight()
+            => Either<int, string>.Right("right").Unwrap().Should().Be("right");
+
+        [Test]
+        public void Unwrap_GivenLeft_ThrowsInvalidOperationException()
+        {
+            var _ = () => Either<int, string>.Left(3).Unwrap();
+            _.Should().Throw<InvalidOperationException>();
+        }
+
+        [Test]
+        public void UnwrapLeft_GivenLeft_ReturnsLeft()
+            => Either<int, string>.Left(3).UnwrapLeft().Should().Be(3);
+
+        [Test]
+        public void UnwrapLeft_GivenRight_ThrowsInvalidOperationException()
+        {
+            var _ = () => Either<int, string>.Right("right").UnwrapLeft();
+            _.Should().Throw<InvalidOperationException>();
+        }
+
         public Func<int, string> DefaultDelegate() { return AgeStage.MilkTime; }
         public (Func<int, bool> evalExpressions, Func<int, string> delegateIfTrue)[] Guards() =>
             new (Func<int, bool> evalExpressions, Func<int, string> delegateIfTrue)[] {

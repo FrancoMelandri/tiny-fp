@@ -22,5 +22,9 @@ namespace TinyFp
         [Pure]
         public A OrElse(A val)
             => _isSome ? _value : val;
+
+        [Pure]
+        public A Unwrap()
+           => _isSome ? _value : throw new InvalidOperationException();
     }
 }

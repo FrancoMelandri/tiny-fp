@@ -7,7 +7,7 @@ namespace TinyFp
     public partial struct Option<A>
     {
         private readonly bool _isSome;
-        internal readonly A _value;
+        private readonly A _value;
 
         public bool IsSome 
             => _isSome;
