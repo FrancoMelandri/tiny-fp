@@ -21,7 +21,7 @@ namespace TinyFp
             _value = value;
         }
 
-        public static Option<A> None
+        public static Option<A> None()
             => new(false, default);
 
         public static Option<A> Some(A value) 

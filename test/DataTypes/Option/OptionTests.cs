@@ -11,7 +11,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void None_CreateNoneObject()
             => Option<string>
-                    .None
+                    .None()
                     .IsNone
                 .Should().BeTrue();
 
@@ -27,7 +27,7 @@ namespace TinyFpTest.DataTypes
         {
             var called = false;
             _ = Option<string>
-                .None
+                .None()
                 .OnNone(() => called = true);
 
             called.Should().BeTrue();
@@ -47,7 +47,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void OnNone_CallTheFunction()
             => Option<string>
-                    .None
+                    .None()
                     .OrElse(() => "empty")
                 .Should().Be("empty");
 
@@ -61,7 +61,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void OnNone_ReturnSomeObject()
             => Option<string>
-                    .None
+                    .None()
                     .OrElse("empty")
                 .Should().Be("empty");
 
@@ -94,7 +94,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void Map_MapNoneInOutput()
             => Option<string>
-                    .None
+                    .None()
                     .Map(_ => true)
                     .IsNone
                 .Should().BeTrue();
@@ -111,7 +111,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void MapAsync_MapNoneInOutput()
             => Option<string>
-                    .None
+                    .None()
                     .MapAsync(_ => Task.FromResult(true))
                     .Result
                     .IsNone
@@ -128,7 +128,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void Bind_MapNoneInOutput()
             => Option<string>
-                    .None
+                    .None()
                     .Bind(_ => Option<bool>.Some(true))
                     .IsNone
                 .Should().BeTrue();
@@ -145,7 +145,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void BindAsync_MapNoneInOutput()
             => Option<string>
-                    .None
+                    .None()
                     .BindAsync(_ => Task.FromResult(Option<bool>.Some(true)))
                     .Result
                     .IsNone
@@ -162,7 +162,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void Match_IfNone_ToOutput()
             => Option<string>
-                    .None
+                    .None()
                     .Match(_ => false,
                            () => true)
                 .Should().BeTrue();
@@ -179,7 +179,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void MatchAsync_IfNone_ToOutput()
             => Option<string>
-                    .None
+                    .None()
                     .MatchAsync(_ => Task.FromResult(false),
                            () => Task.FromResult(true))
                     .Result
@@ -197,7 +197,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void MatchAsync_1_IfNone_ToOutput()
             => Option<string>
-                    .None
+                    .None()
                     .MatchAsync(_ => false,
                            () => Task.FromResult(true))
                     .Result
@@ -215,7 +215,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void MatchAsync_2_IfNone_ToOutput()
             => Option<string>
-                    .None
+                    .None()
                     .MatchAsync(_ => Task.FromResult(false),
                            () => true)
                     .Result
@@ -232,7 +232,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void ToEither_Func_WhenNone_Left()
             => Option<string>
-                    .None
+                    .None()
                     .ToEither(() => 0)
                 .IsLeft
                 .Should().BeTrue();
@@ -248,7 +248,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void ToEither_WhenNone_Left()
             => Option<string>
-                    .None
+                    .None()
                     .ToEither(0)
                 .IsLeft
                 .Should().BeTrue();
@@ -265,7 +265,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void OperatorTrue_WhenNone_IsFalse()
         {
-            if (Option<string>.None)
+            if (Option<string>.None())
                 Assert.Fail();
             else
                 Assert.Pass();
@@ -283,7 +283,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void OperatorNot_WhenNone_IsTrue()
         {
-            if (!Option<string>.None)
+            if (!Option<string>.None())
                 Assert.Pass();
             else
                 Assert.Fail();
@@ -305,7 +305,7 @@ namespace TinyFpTest.DataTypes
         {
             var sideEffect = 0;
             Option<string>
-                    .None
+                    .None()
                     .Match(_ => { },
                            () => sideEffect = 1);
             sideEffect.Should().Be(1);
@@ -323,7 +323,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void MapNone_MapNoneInOutput()
             => Option<string>
-                    .None
+                    .None()
                     .MapNone(() => "empty")
                 .Match(
                     _ => _.Should().Be("empty"),
@@ -342,7 +342,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void MapNoneAsync_MapNoneInOutput()
             => Option<string>
-                    .None
+                    .None()
                     .MapNoneAsync(() => Task.FromResult("empty"))
                 .Result
                 .Match(
@@ -361,7 +361,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void BindNone_MapNoneInOutput()
             => Option<string>
-                    .None
+                    .None()
                     .BindNone(() => Option<string>.Some("empty"))
                 .Match(
                     _ => _.Should().Be("empty"),
@@ -380,7 +380,7 @@ namespace TinyFpTest.DataTypes
         [Test]
         public void BindNoneAsync_MapNoneInOutput()
             => Option<string>
-                    .None
+                    .None()
                     .BindNoneAsync(() => Task.FromResult(Option<string>.Some("empty")))
                 .Result
                 .Match(
@@ -417,7 +417,7 @@ namespace TinyFpTest.DataTypes
             Option<int>.Some(4)
                 .GuardBind(
                     _ => Option<int>.Some(_ / 2),
-                    (_ => _ % 2 == 1, _ => Option<int>.None))
+                    (_ => _ % 2 == 1, _ => Option<int>.None()))
                 .Match(_ => _, () => int.MinValue)
                 .Should()
                 .Be(2);
@@ -429,7 +429,7 @@ namespace TinyFpTest.DataTypes
             Option<int>.Some(5)
                 .GuardBind(
                     _ => Option<int>.Some(_ / 2),
-                    (_ => _ % 2 == 1, _ => Option<int>.None))
+                    (_ => _ % 2 == 1, _ => Option<int>.None()))
                 .Match(_ => _, () => int.MinValue)
                 .Should()
                 .Be(int.MinValue);

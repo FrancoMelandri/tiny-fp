@@ -14,7 +14,7 @@ namespace TinyFp.Complex.Setup
         public Task<Option<T>> GetAsync<T>(string key)
             => _inMemoryCache.ContainsKey(key) ? 
                 Task.FromResult(Option<T>.Some((T)_inMemoryCache[key])) : 
-                Task.FromResult(Option<T>.None);
+                Task.FromResult(Option<T>.None());
 
         public Task<bool> RemoveAsync(string key)
             => Task.FromResult(

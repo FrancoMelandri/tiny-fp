@@ -391,7 +391,7 @@ namespace TinyFpTest.DataTypes
                     )
                 .OnRight(l => l.Should().Be("42"));
 
-            Either<int, Option<int>>.Right(Option<int>.None)
+            Either<int, Option<int>>.Right(Option<int>.None())
                 .GuardMap(
                         age => "NONE",
                         (age => age.IsSome, age => $"{age.Match(_ => _, () => 0)}")
@@ -434,7 +434,7 @@ namespace TinyFpTest.DataTypes
                 )
                 .OnRight(verification => verification.Should().Be("OK"));
 
-            Either<string, Option<int>>.Right(Option<int>.None)
+            Either<string, Option<int>>.Right(Option<int>.None())
                 .GuardBind(
                     age => Either<string, string>.Right("Do you need some milk?"),
                     (age => age.IsNone, age => Either<string, string>.Left("Error, age not specified")),
@@ -456,7 +456,7 @@ namespace TinyFpTest.DataTypes
                 .Result
                 .OnRight(l => l.Should().Be("42"));
 
-            Either<int, Option<int>>.Right(Option<int>.None)
+            Either<int, Option<int>>.Right(Option<int>.None())
                 .GuardMapAsync(
                         age => Task.FromResult("NONE"),
                         (age => age.IsSome, age => Task.FromResult($"{age.Match(_ => _, () => 0)}"))
@@ -486,7 +486,7 @@ namespace TinyFpTest.DataTypes
                 .Result
                 .OnRight(verification => verification.Should().Be("OK"));
 
-            Either<string, Option<int>>.Right(Option<int>.None)
+            Either<string, Option<int>>.Right(Option<int>.None())
                 .GuardBindAsync(
                     age => Task.FromResult(Either<string, string>.Right("Do you need some milk?")),
                     (age => age.IsNone, age => Task.FromResult(Either<string, string>.Left("Error, age not specified"))),
