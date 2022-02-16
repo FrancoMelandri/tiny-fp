@@ -92,6 +92,22 @@ namespace TinyFpTest.DataTypes
                 .Should().BeTrue();
 
         [Test]
+        public void UnWrap_WhenIsSome_ShouldReturnValue()
+            => Option<string>
+                .Some("not-empty")
+                .Unwrap()
+                .Should()
+                .Be("not-empty");
+
+        [Test]
+        public void UnWrap_WhenIsNone_ShouldThrow()
+            => Option<string>
+                .None()
+                .Invoking(_ => _.Unwrap())
+                .Should()
+                .Throw<InvalidOperationException>();
+
+        [Test]
         public void Map_MapNoneInOutput()
             => Option<string>
                     .None()
