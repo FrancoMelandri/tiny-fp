@@ -346,6 +346,38 @@ namespace TinyFpTest.DataTypes
         }
 
         [Test]
+        public void WhenRight_UnwrapRightReturnsValue() 
+            => Either<string, int>
+                .Right(12)
+                .UnwrapRight()
+                .Should()
+                .Be(12);
+
+        [Test]
+        public void WhenLeft_UnwrapLeftReturnsValue()
+            => Either<string, int>
+                .Left("something")
+                .UnwrapLeft()
+                .Should()
+                .Be("something");
+
+        [Test]
+        public void WhenRight_UnwrapLeftShouldThrow()
+            => Either<string, int>
+                .Right(12)
+                .Invoking(_ => _.UnwrapLeft())
+                .Should()
+                .Throw<InvalidOperationException>();
+
+        [Test]
+        public void WhenLeft_UnwrapRightShouldThrow()
+            => Either<string, int>
+                .Left("something")
+                .Invoking(_ => _.UnwrapRight())
+                .Should()
+                .Throw<InvalidOperationException>();
+
+        [Test]
         public void OperatorTrue_WhenRight_IsTrue()
         {
             if (Either<string, int>.Right(42))
