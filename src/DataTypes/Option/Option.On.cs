@@ -24,9 +24,7 @@ namespace TinyFp
             => _isSome ? _value : val;
 
         [Pure]
-        public A Unwrap() 
-            => _isSome
-                ? _value
-                : throw new InvalidOperationException();
+        public A Unwrap()
+           => _isSome ? _value : throw new InvalidOperationException();
     }
 }

@@ -8,7 +8,7 @@ namespace TinyFpTest.DataTypes
     public class OptionPreludeTests
     {
         [Test]
-        public void Some_CreaateSome()
+        public void Some_CreateSome()
             => Some("not-empty")
                 .IsSome
                 .Should().BeTrue();

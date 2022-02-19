@@ -62,5 +62,13 @@ namespace TinyFp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !(Either<L, R> value)
             => value.IsLeft;
+
+        [Pure]
+        public R Unwrap()
+            => _isRight ? _right : throw new InvalidOperationException();
+
+        [Pure]
+        public L UnwrapLeft()
+            => _isRight ? throw new InvalidOperationException() : _left;
     }
 }
