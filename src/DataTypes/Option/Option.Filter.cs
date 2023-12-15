@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics.Contracts;
+using System.Runtime.InteropServices;
+using TinyFp.Extensions;
 
 namespace TinyFp
 {
@@ -7,9 +9,10 @@ namespace TinyFp
 
         [Pure]
         public Option<A> Filter(Predicate<A> predicate)
-            => predicate == null ? this :
-                                    IsNone ? this : 
-                                            predicate(_value) ? this : None();
+            => (predicate, this) switch {
+                ( Predicate<A> p, Option<A> { IsSome: true } t ) => p(t._value) ? t : None(),
+                _ => this
+            };
                                                 
     }
 }
