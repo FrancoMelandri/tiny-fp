@@ -483,5 +483,67 @@ namespace TinyFpTest.DataTypes
                 .OnNone(() => Assert.Fail())
                 .OnSome(_ => _.Should().Be("12"));
         }
+
+        [Test]
+        public void Filter()
+        {
+            Predicate<int> IsEven = _ => _ % 2 == 0;
+            Predicate<int> IsOdd = _ => _ % 2 != 0;
+            
+            Option<int>.Some(5)
+                .Filter(_ => _ == 5)
+                .IsSome
+                .Should().BeTrue();
+
+            Option<int>.Some(5)
+                .Filter(IsOdd)
+                .IsSome
+                .Should().BeTrue();
+
+
+            Option<int>.Some(5)
+                .Filter(IsEven)
+                .IsNone
+                .Should().BeTrue();
+
+            Option<int>.Some(5)
+                .Filter(IsOdd)
+                .Filter(IsEven)
+                .IsNone
+                .Should().BeTrue();
+
+
+            Option<int>.Some(5)
+                .Filter(null)
+                .OrElse(0)
+                .Should().Be(5);
+
+            Option<int>.Some(5)
+                .Filter(null)
+                .MapNone(() => 8)
+                .Filter(IsEven)
+                .MapNone(() => 10)
+                .Map(_ => _ * 2)
+                .Filter(null)
+                .Filter(IsEven)
+                .OrElse(0)
+                .Should().Be(20);
+        }
+
+        [Test]
+        public void Filter_OnEmpty()
+        {
+            Option<string>.None()
+                .Filter(_ => string.IsNullOrEmpty(_))
+                .Filter(_ => string.IsNullOrEmpty(_))
+                .IsNone.Should().BeTrue();
+
+            Option<string>.None()
+                .Filter(_ => string.IsNullOrEmpty(_))
+                .Filter(_ => string.IsNullOrEmpty(_))
+                .MapNone(() => "test")
+                .Filter("test".Equals)
+                .IsSome.Should().BeTrue();
+        }
     }
 }
