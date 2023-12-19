@@ -1,37 +1,26 @@
-﻿namespace TinyFpTest.Examples.Basics.Catalog
+﻿namespace TinyFpTest.Examples.Basics.Catalog;
+
+public class ImperativeCatalogService(
+    IApiClient apiClient,
+    ICache cache,
+    ILogger logger)
 {
-    public class ImperativeCatalogService
+    public Catalog Get()
     {
-        private readonly IApiClient _apiClient;
-        private readonly ICache _cache;
-        private readonly ILogger _logger;
-
-        public ImperativeCatalogService(IApiClient apiClient,
-                                        ICache cache,
-                                        ILogger logger)
+        try
         {
-            _apiClient = apiClient;
-            _cache = cache;
-            _logger = logger;
+            var catalog = cache.Get();
+            if (catalog == null)
+            {
+                catalog = apiClient.Get();
+                cache.Set(catalog);
+            }
+            return catalog;
         }
-
-        public Catalog Get()
+        catch (Exception ex)
         {
-            try
-            {
-                var catalog = _cache.Get();
-                if (catalog == null)
-                {
-                    catalog = _apiClient.Get();
-                    _cache.Set(catalog);
-                }
-                return catalog;
-            }
-            catch (Exception ex)
-            {
-                _logger.Log(ex.Message);
-                return null;
-            }
+            logger.Log(ex.Message);
+            return null;
         }
     }
 }

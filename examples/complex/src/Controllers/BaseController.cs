@@ -1,15 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TinyFpTest.Services.Api;
 
-namespace TinyFpTest.Controllers
+namespace TinyFpTest.Controllers;
+
+public class BaseController : ControllerBase
 {
-    public class BaseController : ControllerBase
-    {
-        public static IActionResult FromApiError(ApiError _)
-            => new ContentResult
-            {
-                StatusCode = (int)_.StatusCode,
-                Content = _.Code
-            };
-    }
+    protected static IActionResult FromApiError(ApiError error)
+        => new ContentResult
+        {
+            StatusCode = (int)error.StatusCode,
+            Content = error.Code
+        };
+
+    protected static IActionResult FromResult(object result)
+        => new JsonResult(result);
 }

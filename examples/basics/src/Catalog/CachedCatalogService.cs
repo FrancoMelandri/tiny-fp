@@ -2,27 +2,18 @@
 using TinyFp.Extensions;
 using static TinyFp.Prelude;
 
-namespace TinyFpTest.Examples.Basics.Catalog
+namespace TinyFpTest.Examples.Basics.Catalog;
+
+public class CachedCatalogService(
+    ICatalogService catalog,
+    ICatalogCache cache) : ICatalogService
 {
-    public class CachedCatalogService : ICatalogService
-    {
-        private readonly ICatalogCache _cache;
-        private readonly ICatalogService _catalog;
-
-        public CachedCatalogService(ICatalogService catalog,
-                                    ICatalogCache cache)
-        {
-            _catalog = catalog;
-            _cache = cache;
-        }
-
-        public Either<string, Catalog> Get()
-            => Try(() => _cache
-                            .Get()
-                            .BindLeft(
-                                _ => _catalog
-                                        .Get()
-                                        .Map(_ => _.Tee(__ => _cache.Set(__)))))
-                .OnFail(_ => _.Message);
-    }
+    public Either<string, Catalog> Get()
+        => Try(() => cache
+                .Get()
+                .BindLeft(
+                    _ => catalog
+                        .Get()
+                        .Map(_ => _.Tee(cache.Set))))
+            .OnFail(_ => _.Message);
 }

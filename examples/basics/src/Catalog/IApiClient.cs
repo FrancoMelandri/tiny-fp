@@ -1,7 +1,6 @@
-﻿namespace TinyFpTest.Examples.Basics.Catalog
+﻿namespace TinyFpTest.Examples.Basics.Catalog;
+
+public interface IApiClient
 {
-    public interface IApiClient
-    {
-        Catalog Get();
-    }
+    Catalog Get();
 }

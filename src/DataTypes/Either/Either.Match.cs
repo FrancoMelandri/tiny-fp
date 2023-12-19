@@ -1,28 +1,26 @@
 using System.Diagnostics.Contracts;
 
-namespace TinyFp
+namespace TinyFp;
+
+public readonly partial struct Either<L, R>
 {
-    public partial struct Either<L, R>
-    {
-        [Pure]
-        public M Match<M>(Func<R, M> onRight, Func<L, M> onLeft)
-            => IsRight ? onRight(_right) : onLeft(_left);
+    [Pure]
+    public M Match<M>(Func<R, M> onRight, Func<L, M> onLeft)
+        => IsRight ? onRight(_right) : onLeft(_left);
 
-        [Pure]
-        public Task<M> MatchAsync<M>(Func<R, Task<M>> onRightAsync, Func<L, Task<M>> onLeftAsync)
-            => IsRight ? onRightAsync(_right) : onLeftAsync(_left);
+    [Pure]
+    public Task<M> MatchAsync<M>(Func<R, Task<M>> onRightAsync, Func<L, Task<M>> onLeftAsync)
+        => IsRight ? onRightAsync(_right) : onLeftAsync(_left);
 
-        [Pure]
-        public Task<M> MatchAsync<M>(Func<R, M> onRightAsync, Func<L, Task<M>> onLeftAsync)
-            => IsRight ? onRightAsync(_right).AsTask() : onLeftAsync(_left);
+    [Pure]
+    public Task<M> MatchAsync<M>(Func<R, M> onRightAsync, Func<L, Task<M>> onLeftAsync)
+        => IsRight ? onRightAsync(_right).AsTask() : onLeftAsync(_left);
 
-        [Pure]
-        public Task<M> MatchAsync<M>(Func<R, Task<M>> onRightAsync, Func<L, M> onLeftAsync)
-            => IsRight ? onRightAsync(_right) : onLeftAsync(_left).AsTask();
+    [Pure]
+    public Task<M> MatchAsync<M>(Func<R, Task<M>> onRightAsync, Func<L, M> onLeftAsync)
+        => IsRight ? onRightAsync(_right) : onLeftAsync(_left).AsTask();
 
-        [Pure]
-        public Task<M> MatchAsync<M>(Func<R, M> onRightAsync, Func<L, M> onLeftAsync)
-            => IsRight ? onRightAsync(_right).AsTask() : onLeftAsync(_left).AsTask();
-    }
-
+    [Pure]
+    public Task<M> MatchAsync<M>(Func<R, M> onRightAsync, Func<L, M> onLeftAsync)
+        => IsRight ? onRightAsync(_right).AsTask() : onLeftAsync(_left).AsTask();
 }

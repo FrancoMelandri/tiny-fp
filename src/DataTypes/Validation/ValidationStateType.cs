@@ -1,8 +1,7 @@
-﻿namespace TinyFp
+﻿namespace TinyFp;
+
+public enum ValidationStateType : byte
 {
-    public enum ValidationStateType : byte
-    {
-        Fail,
-        Success
-    }
+    Fail,
+    Success
 }

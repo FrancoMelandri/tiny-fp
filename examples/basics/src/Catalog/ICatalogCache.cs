@@ -1,10 +1,9 @@
 ﻿using TinyFp;
 
-namespace TinyFpTest.Examples.Basics.Catalog
+namespace TinyFpTest.Examples.Basics.Catalog;
+
+public interface ICatalogCache
 {
-    public interface ICatalogCache
-    {
-        Either<string, Catalog> Get();
-        void Set(Catalog catalog);
-    }
+    Either<string, Catalog> Get();
+    void Set(Catalog catalog);
 }

@@ -1,9 +1,8 @@
 ﻿using TinyFp;
 
-namespace TinyFpTest.Services.Api
+namespace TinyFpTest.Services.Api;
+
+public interface IApiClient
 {
-    public interface IApiClient
-    {
-        Task<Either<ApiError, T>> GetAsync<T>(ApiRequest apiRequest);
-    }
+    Task<Either<ApiError, T>> GetAsync<T>(ApiRequest apiRequest);
 }

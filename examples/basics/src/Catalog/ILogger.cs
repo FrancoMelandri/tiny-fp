@@ -1,7 +1,6 @@
-﻿namespace TinyFpTest.Examples.Basics.Catalog
+﻿namespace TinyFpTest.Examples.Basics.Catalog;
+
+public interface ILogger
 {
-    public interface ILogger
-    {
-        void Log(string message);
-    }
+    void Log(string message);
 }

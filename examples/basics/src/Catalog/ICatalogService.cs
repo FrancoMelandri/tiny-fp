@@ -1,9 +1,8 @@
 ﻿using TinyFp;
 
-namespace TinyFpTest.Examples.Basics.Catalog
+namespace TinyFpTest.Examples.Basics.Catalog;
+
+public interface ICatalogService
 {
-    public interface ICatalogService
-    {
-        Either<string, Catalog> Get();
-    }
+    Either<string, Catalog> Get();
 }

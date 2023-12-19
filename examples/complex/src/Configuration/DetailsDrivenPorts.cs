@@ -1,8 +1,7 @@
-﻿namespace TinyFpTest.Configuration
+﻿namespace TinyFpTest.Configuration;
+
+public enum DetailsDrivenPorts
 {
-    public enum DetailsDrivenPorts
-    {
-        DetailsDrivenPortApi,
-        DetailDrivenPortDb
-    }
+    DetailsDrivenPortApi,
+    DetailDrivenPortDb
 }

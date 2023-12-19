@@ -2,10 +2,9 @@
 using TinyFpTest.Models;
 using TinyFpTest.Services.Api;
 
-namespace TinyFpTest.Services
+namespace TinyFpTest.Services;
+
+public interface ISearchService
 {
-    public interface ISearchService
-    {
-        Task<Either<ApiError, Product[]>> SearchProductsAsync(string forName);
-    }
+    Task<Either<ApiError, Product[]>> SearchProductsAsync(string forName);
 }

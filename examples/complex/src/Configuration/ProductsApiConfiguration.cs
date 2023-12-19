@@ -1,7 +1,6 @@
-﻿namespace TinyFpTest.Configuration
+﻿namespace TinyFpTest.Configuration;
+
+public class ProductsApiConfiguration
 {
-    public class ProductsApiConfiguration
-    {
-        public string Url { get; set; }
-    }
+    public string Url { get; set; }
 }
