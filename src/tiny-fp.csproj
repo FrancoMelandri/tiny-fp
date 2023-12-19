@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<RootNamespace>TinyFp</RootNamespace>
 		<IsPackable>true</IsPackable>
 		<PackageDescription>Tiny functional programming library</PackageDescription>
 		<RepositoryUrl>https://github.com/FrancoMelandri/tiny-fp.git</RepositoryUrl>
-		<PackageReleaseNotes>First release of tiny-fp</PackageReleaseNotes>
+		<PackageReleaseNotes>tiny-fp to net8</PackageReleaseNotes>
 		<PackageTags>Functional Programming</PackageTags>
 	</PropertyGroup>
 

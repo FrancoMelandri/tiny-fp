@@ -1,9 +1,0 @@
-- Try
-	Add Retry
-	Add Map
-	Add ToOption
-
-- TryAsync
-	Add Retry
-	Add Map
-	Add ToOption
