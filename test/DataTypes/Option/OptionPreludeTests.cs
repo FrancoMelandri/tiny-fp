@@ -2,21 +2,20 @@
 using NUnit.Framework;
 using static TinyFp.Prelude;
 
-namespace TinyFpTest.DataTypes
-{
-    [TestFixture]
-    public class OptionPreludeTests
-    {
-        [Test]
-        public void Some_CreateSome()
-            => Some("not-empty")
-                .IsSome
-                .Should().BeTrue();
+namespace TinyFpTest.DataTypes;
 
-        [Test]
-        public void None_CreateNone()
-            => None<string>()
-                .IsNone
-                .Should().BeTrue();
-    }
+[TestFixture]
+public class OptionPreludeTests
+{
+    [Test]
+    public void Some_CreateSome()
+        => Some("not-empty")
+            .IsSome
+            .Should().BeTrue();
+
+    [Test]
+    public void None_CreateNone()
+        => None<string>()
+            .IsNone
+            .Should().BeTrue();
 }

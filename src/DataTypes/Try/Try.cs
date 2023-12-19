@@ -1,6 +1,5 @@
 ﻿using TinyFp.Common;
 
-namespace TinyFp
-{
-    public delegate Result<A> Try<A>();
-}
+namespace TinyFp;
+
+public delegate Result<A> Try<A>();

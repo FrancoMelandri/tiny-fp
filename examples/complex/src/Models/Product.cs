@@ -1,8 +1,7 @@
-﻿namespace TinyFpTest.Models
+﻿namespace TinyFpTest.Models;
+
+public struct Product
 {
-    public struct Product
-    {
-        public string Sku { get; set; }
-        public string Name { get; set; }
-    }
+    public string Sku { get; set; }
+    public string Name { get; set; }
 }

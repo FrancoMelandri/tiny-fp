@@ -2,66 +2,65 @@
 using NUnit.Framework;
 using FluentAssertions;
 
-namespace TinyFpTest.Extensions
+namespace TinyFpTest.Extensions;
+
+[TestFixture]
+public class FunctionalExtensionTests
 {
-    [TestFixture]
-    public class FunctionalExtensionTests
+    [TestCase(true, "teezed")]
+    [TestCase(false, "any")]
+    public void TeeWhen_WithTrueOrFalseCondition_TransformOrNot(bool whenResult, string expected)
+        => "any".TeeWhen(_ => "teezed", () => whenResult)
+            .Should().Be(expected);
+
+    [TestCase(true, "teezed")]
+    [TestCase(false, "any")]
+    public void TeeWhen_WithTrueOrFalseConditionOnInput_TransformOrNot(bool whenResult, string expected)
+        => "any".TeeWhen(_ => "teezed", _ => whenResult)
+            .Should().Be(expected);
+
+    [Test]
+    public void Tee_Transform()
     {
-        [TestCase(true, "teezed")]
-        [TestCase(false, "any")]
-        public void TeeWhen_WithTrueOrFalseCondition_TransformOrNot(bool whenResult, string expected)
-            => "any".TeeWhen(_ => "teezed", () => whenResult)
-                .Should().Be(expected);
+        var result = "any".Tee(_ => "teezed");
 
-        [TestCase(true, "teezed")]
-        [TestCase(false, "any")]
-        public void TeeWhen_WithTrueOrFalseConditionOnInput_TransformOrNot(bool whenResult, string expected)
-            => "any".TeeWhen(_ => "teezed", _ => whenResult)
-                .Should().Be(expected);
+        result.Should().Be("teezed");
+    }
 
-        [Test]
-        public void Tee_Transform()
+    [Test]
+    public void Map_MapToOutput()
+        => "42".Map(Convert.ToInt32)
+            .Should().Be(42);
+
+    internal class TestClass
+    {
+        internal string Status;
+    }
+
+    [Test]
+    public void Tee_WithAction_ReturnSameObject()
+    {
+        var input = new TestClass
         {
-            var result = "any".Tee(_ => "teezed");
+            Status = "initial"
+        };
 
-            result.Should().Be("teezed");
-        }
+        var result = input.Tee(_ => _.Status = "final");
 
-        [Test]
-        public void Map_MapToOutput()
-            => "42".Map(Convert.ToInt32)
-                .Should().Be(42);
+        result.Should().Be(input);
+        result.Status.Should().Be("final");
+    }
 
-        internal class TestClass
+    [Test]
+    public void Do_CallAction()
+    {
+        var input = new TestClass
         {
-            internal string Status;
-        }
+            Status = "initial"
+        };
 
-        [Test]
-        public void Tee_WithAction_ReturnSameObject()
-        {
-            var input = new TestClass
-            {
-                Status = "initial"
-            };
+        input.Do(_ => _.Status = "final");
 
-            var result = input.Tee(_ => _.Status = "final");
-
-            result.Should().Be(input);
-            result.Status.Should().Be("final");
-        }
-
-        [Test]
-        public void Do_CallAction()
-        {
-            var input = new TestClass
-            {
-                Status = "initial"
-            };
-
-            input.Do(_ => _.Status = "final");
-
-            input.Status.Should().Be("final");
-        }
+        input.Status.Should().Be("final");
     }
 }

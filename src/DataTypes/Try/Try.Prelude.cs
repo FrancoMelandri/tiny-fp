@@ -1,11 +1,10 @@
 ﻿using System.Diagnostics.Contracts;
 
-namespace TinyFp
+namespace TinyFp;
+
+public static partial class Prelude
 {
-    public static partial class Prelude
-    {
-        [Pure]
-        public static Try<A> Try<A>(Func<A> f) 
-            => () => f();
-    }
+    [Pure]
+    public static Try<A> Try<A>(Func<A> f) 
+        => () => f();
 }

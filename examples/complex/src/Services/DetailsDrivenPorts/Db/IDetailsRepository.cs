@@ -1,10 +1,9 @@
 ﻿using TinyFp;
 using TinyFpTest.Models;
 
-namespace TinyFpTest.Services.Details
+namespace TinyFpTest.Services.Details;
+
+public interface IDetailsRepository
 {
-    public interface IDetailsRepository
-    {
-        Task<Option<ProductDetails>> GetByProductName(string productName);
-    }
+    Task<Option<ProductDetails>> GetByProductName(string productName);
 }

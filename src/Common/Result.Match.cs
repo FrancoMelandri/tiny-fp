@@ -1,19 +1,18 @@
 ﻿using System.Diagnostics.Contracts;
 
-namespace TinyFp.Common
-{
-    public partial struct Result<A>
-    {
-        [Pure]
-        public R Match<R>(Func<A, R> succ, Func<Exception, R> fail)
-            => IsFaulted
-                ? fail(Exception)
-                : succ(Value);
+namespace TinyFp.Common;
 
-        [Pure]
-        public Task<R> MatchAsync<R>(Func<A, Task<R>> succAsync, Func<Exception, Task<R>> failAsync)
-            => IsFaulted
-                ? failAsync(Exception)
-                : succAsync(Value);
-    }
+public readonly partial struct Result<A>
+{
+    [Pure]
+    public R Match<R>(Func<A, R> success, Func<Exception, R> fail)
+        => IsFaulted
+            ? fail(Exception)
+            : success(Value);
+
+    [Pure]
+    public Task<R> MatchAsync<R>(Func<A, Task<R>> successAsync, Func<Exception, Task<R>> failAsync)
+        => IsFaulted
+            ? failAsync(Exception)
+            : successAsync(Value);
 }

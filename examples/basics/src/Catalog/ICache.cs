@@ -1,8 +1,7 @@
-﻿namespace TinyFpTest.Examples.Basics.Catalog
+﻿namespace TinyFpTest.Examples.Basics.Catalog;
+
+public interface ICache
 {
-    public interface ICache
-    {
-        Catalog Get();
-        void Set(Catalog catalog);
-    }
+    Catalog Get();
+    void Set(Catalog catalog);
 }

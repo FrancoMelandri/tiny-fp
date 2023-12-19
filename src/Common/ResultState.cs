@@ -1,8 +1,7 @@
-﻿namespace TinyFp.Common
+﻿namespace TinyFp.Common;
+
+public enum ResultState : byte
 {
-    public enum ResultState : byte
-    {
-        Faulted,
-        Success
-    }
+    Faulted,
+    Success
 }
