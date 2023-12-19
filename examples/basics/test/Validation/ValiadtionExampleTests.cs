@@ -17,28 +17,28 @@ namespace TinyFpTest.Examples.Basics.Validation
         public void WhenAllDataIsValid_ReturEmptyString()
         {
             var result = _sut.Validate("aa@aa.com", "aaaa", "1234");
-            Assert.AreEqual("", result);
+            Assert.That(result == "");
         }
 
         [Test]
         public void WhenEmailIsNotValid_ReturErrorString()
         {
             var result = _sut.Validate("aa.com", "aaaa", "1234");
-            Assert.AreEqual("invalid mail", result);
+            Assert.That(result == "invalid mail");
         }
 
         [Test]
         public void WhenPasswordIsNotValid_ReturErrorString()
         {
             var result = _sut.Validate("aa@aa.com", "aaa", "1234");
-            Assert.AreEqual("invalid password", result);
+            Assert.That(result == "invalid password");
         }
 
         [Test]
         public void WhenCodeIsNotValid_ReturErrorString()
         {
             var result = _sut.Validate("aa@aa.com", "aaaa", "abcd");
-            Assert.AreEqual("invalid code", result);
+            Assert.That(result == "invalid code");
         }
     }
 }

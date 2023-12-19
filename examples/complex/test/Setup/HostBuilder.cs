@@ -20,7 +20,6 @@ namespace TinyFpTest.Complex
             => WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostingContext, config) => config.AddJsonFile(args[0]))
                 .ConfigureKestrel(options => options.AddServerHeader = false)
-                .UseStartup<TStartup>()
-                .UseSerilog();
+                .UseStartup<TStartup>();
     }
 }

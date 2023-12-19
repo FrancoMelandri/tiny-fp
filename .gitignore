@@ -1,5 +1,9 @@
 .vs/
+.idea/
+.vscode/
 obj/
 bin/
 TestResults/
 **/*.nupkg
+nuget.config
+*.user
