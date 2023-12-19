@@ -6,3 +6,4 @@ bin/
 TestResults/
 **/*.nupkg
 nuget.config
+*.user
