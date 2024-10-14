@@ -31,7 +31,7 @@ public class ValidationTests
     [Test]
     public void Success_ImplicitCast_WhenNull_RaiseException()
     {
-        Action act = () => { Validation<string, object> val = (object)null; };
+        var act = () => { Validation<string, object> val = (object)null; };
 
         act.Should().Throw<ValueIsNullException>();
     }
@@ -47,7 +47,7 @@ public class ValidationTests
     [Test]
     public void Fail_ImplicitCast_WhenNull_RaiseException()
     {
-        Action act = () => { Validation<string, object> val = (string)null; };
+        var act = () => { Validation<string, object> val = (string)null; };
 
         act.Should().Throw<ValueIsNullException>();
     }

@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics;
+using FluentAssertions;
 using NUnit.Framework;
 using TinyFp;
 using static TinyFp.Prelude;
@@ -303,4 +304,47 @@ public class TaskTests
             .Result
             .IsNone
             .Should().BeTrue();
+    
+    [Test]
+    public void TeeAsync_TeeToOutput()
+    {
+        var result = 0;
+        Task.FromResult("42")
+            .TeeAsync(_ => result = Convert.ToInt32(_))
+            .Result
+            .Should().Be("42");
+        result.Should().Be(42);
+    }
+
+    [Test]
+    public void TeeAsync_AsyncTeeToOutput()
+    {
+        var result = Task.FromResult(0);
+        Task.FromResult("42")
+            .TeeAsync(_ => result = Convert.ToInt32(_).AsTask())
+            .Result
+            .Should().Be("42");
+        result.Result.Should().Be(42);
+    }
+
+    [Test]
+    public async Task TeeAsync_AsyncDelayAwaited()
+    {
+        var stopWatch = new Stopwatch();
+        stopWatch.Start();
+
+        _ = await Unit.Default
+            .AsTask()
+            .TeeAsync(_ => Task.Delay(TimeSpan.FromSeconds(3)));
+
+        stopWatch.Stop();
+        stopWatch.Elapsed.Seconds.Should().BeGreaterThan(2);
+    }
+
+    [Test]
+    public void TeeAsync_TeeToOutputChangingResult()
+        => Task.FromResult("0")
+            .TeeAsync(_ => Task.FromResult("42"))
+            .Result
+            .Should().Be("42");
 }
