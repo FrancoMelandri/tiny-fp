@@ -72,7 +72,7 @@ public class UsingExtensionsTests
     [Test]
     public void Using_WithFunction_ShouldCallDispose()
     {            
-        Func<bool> action = () => true;
+        var action = () => true;
         var log = new Mock<ILog>();
         var disposable = new CanBeDisposed(log.Object);
 
