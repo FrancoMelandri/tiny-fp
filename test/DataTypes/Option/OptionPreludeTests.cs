@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Shouldly;
 using static TinyFp.Prelude;
 
 namespace TinyFpTest.DataTypes;
@@ -11,11 +11,11 @@ public class OptionPreludeTests
     public void Some_CreateSome()
         => Some("not-empty")
             .IsSome
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void None_CreateNone()
         => None<string>()
             .IsNone
-            .Should().BeTrue();
+            .ShouldBeTrue();
 }

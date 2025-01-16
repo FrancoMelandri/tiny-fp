@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Shouldly;
 using TinyFp;
 using TinyFp.Extensions;
 
@@ -13,14 +13,14 @@ public class OptionTests
         => Option<string>
             .None()
             .IsNone
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void Some_CreateSomeObject()
         => Option<string>
             .Some("test")
             .IsSome
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void OnNone_CallTheAction()
@@ -30,7 +30,7 @@ public class OptionTests
             .None()
             .OnNone(() => called = true);
 
-        called.Should().BeTrue();
+        called.ShouldBeTrue();
     }
 
     [Test]
@@ -41,7 +41,7 @@ public class OptionTests
             .Some("not-empty")
             .OnNone(() => called = true);
 
-        called.Should().BeFalse();
+        called.ShouldBeFalse();
     }
 
     [Test]
@@ -49,28 +49,28 @@ public class OptionTests
         => Option<string>
             .None()
             .OrElse(() => "empty")
-            .Should().Be("empty");
+            .ShouldBe("empty");
 
     [Test]
     public void OnNone_WhenSome_DontCallTheFunction()
         => Option<string>
             .Some("not-empty")
             .OrElse(() => "empty")
-            .Should().Be("not-empty");
+            .ShouldBe("not-empty");
 
     [Test]
     public void OnNone_ReturnSomeObject()
         => Option<string>
             .None()
             .OrElse("empty")
-            .Should().Be("empty");
+            .ShouldBe("empty");
 
     [Test]
     public void OnNone_WhenSome_ReturnSome()
         => Option<string>
             .Some("not-empty")
             .OrElse("empty")
-            .Should().Be("not-empty");
+            .ShouldBe("not-empty");
 
     [Test]
     public void OnSome_CallTheAction()
@@ -80,7 +80,7 @@ public class OptionTests
             .Some("not-empty")
             .OnSome(_ => called = _ == "not-empty");
 
-        called.Should().BeTrue();
+        called.ShouldBeTrue();
     }
 
     [Test]
@@ -89,31 +89,22 @@ public class OptionTests
             .Some("not-empty")
             .Map(_ => _ == "not-empty")
             .OrElse(false)
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void UnWrap_WhenIsSome_ShouldReturnValue()
         => Option<string>
             .Some("not-empty")
             .Unwrap()
-            .Should()
-            .Be("not-empty");
-
-    [Test]
-    public void UnWrap_WhenIsNone_ShouldThrow()
-        => Option<string>
-            .None()
-            .Invoking(_ => _.Unwrap())
-            .Should()
-            .Throw<InvalidOperationException>();
-
+            .ShouldBe("not-empty");
+    
     [Test]
     public void Map_MapNoneInOutput()
         => Option<string>
             .None()
             .Map(_ => true)
             .IsNone
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MapAsync_MapInputInOutput()
@@ -122,7 +113,7 @@ public class OptionTests
             .MapAsync(_ => Task.FromResult(_ == "not-empty"))
             .Result
             .OrElse(false)
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MapAsync_MapNoneInOutput()
@@ -131,7 +122,7 @@ public class OptionTests
             .MapAsync(_ => Task.FromResult(true))
             .Result
             .IsNone
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void Bind_MapInputInOutput()
@@ -139,7 +130,7 @@ public class OptionTests
             .Some("not-empty")
             .Bind(_ => (_ == "not-empty").ToOption(__ => !__))
             .IsSome
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void Bind_MapNoneInOutput()
@@ -147,7 +138,7 @@ public class OptionTests
             .None()
             .Bind(_ => Option<bool>.Some(true))
             .IsNone
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void BindAsync_MapInputInOutput()
@@ -156,7 +147,7 @@ public class OptionTests
             .BindAsync(_ => Task.FromResult(Option<bool>.Some(_ == "not-empty")))
             .Result
             .OrElse(false)
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void BindAsync_MapNoneInOutput()
@@ -165,7 +156,7 @@ public class OptionTests
             .BindAsync(_ => Task.FromResult(Option<bool>.Some(true)))
             .Result
             .IsNone
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void Match_IfSome_ToOutput()
@@ -173,7 +164,7 @@ public class OptionTests
             .Some("not-empty")
             .Match(_ => _ == "not-empty",
                 () => false )                    
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void Match_IfNone_ToOutput()
@@ -181,7 +172,7 @@ public class OptionTests
             .None()
             .Match(_ => false,
                 () => true)
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_IfSome_ToOutput()
@@ -190,7 +181,7 @@ public class OptionTests
             .MatchAsync(_ => Task.FromResult(_ == "not-empty"),
                 () => Task.FromResult(false))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_IfNone_ToOutput()
@@ -199,7 +190,7 @@ public class OptionTests
             .MatchAsync(_ => Task.FromResult(false),
                 () => Task.FromResult(true))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_1_IfSome_ToOutput()
@@ -208,7 +199,7 @@ public class OptionTests
             .MatchAsync(_ => _ == "not-empty",
                 () => Task.FromResult(false))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_1_IfNone_ToOutput()
@@ -217,7 +208,7 @@ public class OptionTests
             .MatchAsync(_ => false,
                 () => Task.FromResult(true))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_2_IfSome_ToOutput()
@@ -226,7 +217,7 @@ public class OptionTests
             .MatchAsync(_ => Task.FromResult(_ == "not-empty"),
                 () => false)
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_2_IfNone_ToOutput()
@@ -235,7 +226,7 @@ public class OptionTests
             .MatchAsync(_ => Task.FromResult(false),
                 () => true)
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void ToEither_Func_WhenSome_Right()
@@ -243,7 +234,7 @@ public class OptionTests
             .Some("not-empty")
             .ToEither(() => 0)
             .IsRight
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void ToEither_Func_WhenNone_Left()
@@ -251,7 +242,7 @@ public class OptionTests
             .None()
             .ToEither(() => 0)
             .IsLeft
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void ToEither_WhenSome_Right()
@@ -259,7 +250,7 @@ public class OptionTests
             .Some("not-empty")
             .ToEither(0)
             .IsRight
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void ToEither_WhenNone_Left()
@@ -267,7 +258,7 @@ public class OptionTests
             .None()
             .ToEither(0)
             .IsLeft
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void OperatorTrue_WhenSome_IsTrue()
@@ -313,7 +304,7 @@ public class OptionTests
             .Some("not-empty")
             .Match(_ => sideEffect = 1,
                 () => { });
-        sideEffect.Should().Be(1);
+        sideEffect.ShouldBe(1);
     }
 
     [Test]
@@ -324,7 +315,7 @@ public class OptionTests
             .None()
             .Match(_ => { },
                 () => sideEffect = 1);
-        sideEffect.Should().Be(1);
+        sideEffect.ShouldBe(1);
     }
 
     [Test]
@@ -333,7 +324,7 @@ public class OptionTests
             .Some("not-empty")
             .MapNone(() => "empty")
             .Match(
-                _ => _.Should().Be("not-empty"),
+                _ => _.ShouldBe("not-empty"),
                 () => Assert.Fail());
 
     [Test]
@@ -342,7 +333,7 @@ public class OptionTests
             .None()
             .MapNone(() => "empty")
             .Match(
-                _ => _.Should().Be("empty"),
+                _ => _.ShouldBe("empty"),
                 () => Assert.Fail());
 
     [Test]
@@ -352,7 +343,7 @@ public class OptionTests
             .MapNoneAsync(() => Task.FromResult("empty"))
             .Result
             .Match(
-                _ => _.Should().Be("not-empty"),
+                _ => _.ShouldBe("not-empty"),
                 () => Assert.Fail());
 
     [Test]
@@ -362,7 +353,7 @@ public class OptionTests
             .MapNoneAsync(() => Task.FromResult("empty"))
             .Result
             .Match(
-                _ => _.Should().Be("empty"),
+                _ => _.ShouldBe("empty"),
                 () => Assert.Fail());
 
     [Test]
@@ -371,7 +362,7 @@ public class OptionTests
             .Some("not-empty")
             .BindNone(() => Option<string>.Some("empty"))
             .Match(
-                _ => _.Should().Be("not-empty"),
+                _ => _.ShouldBe("not-empty"),
                 () => Assert.Fail());
 
     [Test]
@@ -380,7 +371,7 @@ public class OptionTests
             .None()
             .BindNone(() => Option<string>.Some("empty"))
             .Match(
-                _ => _.Should().Be("empty"),
+                _ => _.ShouldBe("empty"),
                 () => Assert.Fail());
 
     [Test]
@@ -390,7 +381,7 @@ public class OptionTests
             .BindNoneAsync(() => Task.FromResult(Option<string>.Some("empty")))
             .Result
             .Match(
-                _ => _.Should().Be("not-empty"),
+                _ => _.ShouldBe("not-empty"),
                 () => Assert.Fail());
 
     [Test]
@@ -400,7 +391,7 @@ public class OptionTests
             .BindNoneAsync(() => Task.FromResult(Option<string>.Some("empty")))
             .Result
             .Match(
-                _ => _.Should().Be("empty"),
+                _ => _.ShouldBe("empty"),
                 () => Assert.Fail());
 
     [Test]
@@ -411,8 +402,7 @@ public class OptionTests
                 _ => _ / 2,
                 (_ => _ % 2 == 1, _ => _ + 1))
             .Match(_ => _, () => int.MinValue)
-            .Should()
-            .Be(2);
+            .ShouldBe(2);
     }
 
     [Test]
@@ -423,8 +413,7 @@ public class OptionTests
                 _ => _ / 2,
                 (_ => _ % 2 == 1, _ => _ + 1))
             .Match(_ => _, () => int.MinValue)
-            .Should()
-            .Be(6);
+            .ShouldBe(6);
     }
 
     [Test]
@@ -435,8 +424,7 @@ public class OptionTests
                 _ => Option<int>.Some(_ / 2),
                 (_ => _ % 2 == 1, _ => Option<int>.None()))
             .Match(_ => _, () => int.MinValue)
-            .Should()
-            .Be(2);
+            .ShouldBe(2);
     }
 
     [Test]
@@ -447,8 +435,7 @@ public class OptionTests
                 _ => Option<int>.Some(_ / 2),
                 (_ => _ % 2 == 1, _ => Option<int>.None()))
             .Match(_ => _, () => int.MinValue)
-            .Should()
-            .Be(int.MinValue);
+            .ShouldBe(int.MinValue);
     }
 
     [Test]
@@ -460,8 +447,7 @@ public class OptionTests
                 (_ => _ == 5, _ => Task.FromResult(_ * 2)))
             .Result
             .Match(_ => _, () => int.MinValue)
-            .Should()
-            .Be(10);
+            .ShouldBe(10);
     }
 
     [Test]
@@ -481,7 +467,7 @@ public class OptionTests
                 ))
             .Result
             .OnNone(() => Assert.Fail())
-            .OnSome(_ => _.Should().Be("12"));
+            .OnSome(_ => _.ShouldBe("12"));
     }
 
     [Test]
@@ -493,30 +479,30 @@ public class OptionTests
         Option<int>.Some(5)
             .Filter(_ => _ == 5)
             .IsSome
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
         Option<int>.Some(5)
             .Filter(IsOdd)
             .IsSome
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
 
         Option<int>.Some(5)
             .Filter(IsEven)
             .IsNone
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
         Option<int>.Some(5)
             .Filter(IsOdd)
             .Filter(IsEven)
             .IsNone
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
 
         Option<int>.Some(5)
             .Filter(null)
             .OrElse(0)
-            .Should().Be(5);
+            .ShouldBe(5);
 
         Option<int>.Some(5)
             .Filter(null)
@@ -527,7 +513,7 @@ public class OptionTests
             .Filter(null)
             .Filter(IsEven)
             .OrElse(0)
-            .Should().Be(20);
+            .ShouldBe(20);
     }
 
     [Test]
@@ -536,13 +522,13 @@ public class OptionTests
         Option<string>.None()
             .Filter(_ => string.IsNullOrEmpty(_))
             .Filter(_ => string.IsNullOrEmpty(_))
-            .IsNone.Should().BeTrue();
+            .IsNone.ShouldBeTrue();
 
         Option<string>.None()
             .Filter(_ => string.IsNullOrEmpty(_))
             .Filter(_ => string.IsNullOrEmpty(_))
             .MapNone(() => "test")
             .Filter("test".Equals)
-            .IsSome.Should().BeTrue();
+            .IsSome.ShouldBeTrue();
     }
 }

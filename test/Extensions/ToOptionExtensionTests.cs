@@ -1,6 +1,6 @@
-﻿using TinyFp.Extensions;
-using NUnit.Framework;
-using FluentAssertions;
+﻿using NUnit.Framework;
+using Shouldly;
+using TinyFp.Extensions;
 
 namespace TinyFpTest.Extensions;
 
@@ -13,7 +13,7 @@ public class ToOptionExtensionTests
         var value = (string)null;
         var option = value.ToOption(_ => Convert.ToInt32(_), _ => false);
 
-        option.IsNone.Should().BeTrue();
+        option.IsNone.ShouldBeTrue();
     }
 
     [Test]
@@ -22,7 +22,7 @@ public class ToOptionExtensionTests
         var value = (string)null;
         var option = value.ToOption(_ => Convert.ToInt32(_), _ => true);
 
-        option.IsNone.Should().BeTrue();
+        option.IsNone.ShouldBeTrue();
     }
 
     [Test]
@@ -31,7 +31,7 @@ public class ToOptionExtensionTests
         var value = "42";
         var option = value.ToOption(_ => Convert.ToInt32(_), _ => true);
 
-        option.IsNone.Should().BeTrue();
+        option.IsNone.ShouldBeTrue();
     }
 
     [Test]
@@ -40,8 +40,8 @@ public class ToOptionExtensionTests
         var value = "42";
         var option = value.ToOption(_ => Convert.ToInt32(_), _ => false);
 
-        option.IsSome.Should().BeTrue();
-        option.OnSome(_ => _.Should().Be(42));
+        option.IsSome.ShouldBeTrue();
+        option.OnSome(_ => _.ShouldBe(42));
     }
 
     [Test]
@@ -50,8 +50,8 @@ public class ToOptionExtensionTests
         var value = "42";
         var option = value.ToOption(_ => Convert.ToInt32(_), _ => false);
 
-        option.IsSome.Should().BeTrue();
-        option.OnSome(_ => _.Should().Be(42));
+        option.IsSome.ShouldBeTrue();
+        option.OnSome(_ => _.ShouldBe(42));
     }
 
     [Test]
@@ -60,7 +60,7 @@ public class ToOptionExtensionTests
         var value = (string)null;
         var option = value.ToOption(_ => true);
 
-        option.IsNone.Should().BeTrue();
+        option.IsNone.ShouldBeTrue();
     }
 
     [Test]
@@ -69,7 +69,7 @@ public class ToOptionExtensionTests
         var value = (string)null;
         var option = value.ToOption(_ => false);
 
-        option.IsNone.Should().BeTrue();
+        option.IsNone.ShouldBeTrue();
     }
 
     [Test]
@@ -78,7 +78,7 @@ public class ToOptionExtensionTests
         var value = "42";
         var option = value.ToOption(_ => true);
 
-        option.IsNone.Should().BeTrue();
+        option.IsNone.ShouldBeTrue();
     }
 
     [Test]
@@ -87,7 +87,7 @@ public class ToOptionExtensionTests
         var value = "42";
         var option = value.ToOption(_ => false);
 
-        option.IsSome.Should().BeTrue();
+        option.IsSome.ShouldBeTrue();
     }
 
     [Test]
@@ -96,7 +96,7 @@ public class ToOptionExtensionTests
         var value = (string)null;
         var option = value.ToOption();
 
-        option.IsNone.Should().BeTrue();
+        option.IsNone.ShouldBeTrue();
     }
 
     [Test]
@@ -105,7 +105,7 @@ public class ToOptionExtensionTests
         var value = "42";
         var option = value.ToOption(_ => false);
 
-        option.IsSome.Should().BeTrue();
+        option.IsSome.ShouldBeTrue();
     }
 
     [Test]
@@ -114,7 +114,7 @@ public class ToOptionExtensionTests
         var value = Task.FromResult((string)null);
         var option = value.ToOptionAsync(_ => Convert.ToInt32(_), _ => false).Result;
 
-        option.IsNone.Should().BeTrue();
+        option.IsNone.ShouldBeTrue();
     }
 
     [Test]
@@ -123,7 +123,7 @@ public class ToOptionExtensionTests
         var value = Task.FromResult((string)null);
         var option = value.ToOptionAsync(_ => Convert.ToInt32(_), _ => true).Result;
 
-        option.IsNone.Should().BeTrue();
+        option.IsNone.ShouldBeTrue();
     }
 
     [Test]
@@ -132,7 +132,7 @@ public class ToOptionExtensionTests
         var value = Task.FromResult("42");
         var option = value.ToOptionAsync(_ => Convert.ToInt32(_), _ => true).Result;
 
-        option.IsNone.Should().BeTrue();
+        option.IsNone.ShouldBeTrue();
     }
 
     [Test]
@@ -141,8 +141,8 @@ public class ToOptionExtensionTests
         var value = Task.FromResult("42");
         var option = value.ToOptionAsync(_ => Convert.ToInt32(_), _ => false).Result;
 
-        option.IsSome.Should().BeTrue();
-        option.OnSome(_ => _.Should().Be(42));
+        option.IsSome.ShouldBeTrue();
+        option.OnSome(_ => _.ShouldBe(42));
     }
 
     [Test]
@@ -151,8 +151,8 @@ public class ToOptionExtensionTests
         var value = Task.FromResult("42");
         var option = value.ToOptionAsync(_ => Convert.ToInt32(_), _ => false).Result;
 
-        option.IsSome.Should().BeTrue();
-        option.OnSome(_ => _.Should().Be(42));
+        option.IsSome.ShouldBeTrue();
+        option.OnSome(_ => _.ShouldBe(42));
     }
 
     [Test]
@@ -161,7 +161,7 @@ public class ToOptionExtensionTests
         var value = Task.FromResult((string)null);
         var option = value.ToOptionAsync(_ => true).Result;
 
-        option.IsNone.Should().BeTrue();
+        option.IsNone.ShouldBeTrue();
     }
 
     [Test]
@@ -170,7 +170,7 @@ public class ToOptionExtensionTests
         var value = Task.FromResult((string)null);
         var option = value.ToOptionAsync(_ => false).Result;
 
-        option.IsNone.Should().BeTrue();
+        option.IsNone.ShouldBeTrue();
     }
 
     [Test]
@@ -179,7 +179,7 @@ public class ToOptionExtensionTests
         var value = Task.FromResult("42");
         var option = value.ToOptionAsync(_ => true).Result;
 
-        option.IsNone.Should().BeTrue();
+        option.IsNone.ShouldBeTrue();
     }
 
     [Test]
@@ -188,7 +188,7 @@ public class ToOptionExtensionTests
         var value = Task.FromResult("42");
         var option = value.ToOptionAsync(_ => false).Result;
 
-        option.IsSome.Should().BeTrue();
+        option.IsSome.ShouldBeTrue();
     }
 
     [Test]
@@ -197,7 +197,7 @@ public class ToOptionExtensionTests
         var value = Task.FromResult((string)null);
         var option = value.ToOptionAsync().Result;
 
-        option.IsNone.Should().BeTrue();
+        option.IsNone.ShouldBeTrue();
     }
 
     [Test]
@@ -206,6 +206,6 @@ public class ToOptionExtensionTests
         var value = Task.FromResult("42");
         var option = value.ToOptionAsync(_ => false).Result;
 
-        option.IsSome.Should().BeTrue();
+        option.IsSome.ShouldBeTrue();
     }
 }

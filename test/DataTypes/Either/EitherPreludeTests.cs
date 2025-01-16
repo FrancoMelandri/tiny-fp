@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Shouldly;
 using static TinyFp.Prelude;
 
 namespace TinyFpTest.DataTypes;
@@ -11,11 +11,11 @@ public class EitherPreludeTests
     public void Right_CreateRight()
         => Right<string, int>(10)
             .IsRight
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void Left_CreateLeft()
         => Left<string, int>("failed")
             .IsLeft
-            .Should().BeTrue();
+            .ShouldBeTrue();
 }

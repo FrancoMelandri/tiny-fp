@@ -1,5 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics;
 using NUnit.Framework;
+using Shouldly;
 using TinyFp;
 using static TinyFp.Prelude;
 
@@ -12,19 +13,19 @@ public class TaskTests
     public void AsTask_ReturnTask()
         => new object()
             .AsTask()
-            .Should().BeOfType(typeof(Task<object>));
+            .ShouldBeOfType(typeof(Task<object>));
 
     [Test]
     public void MatchAsync_WhenLeft_CallLeft()
         => Task.FromResult(Left<string, int>("left"))
             .MatchAsync(_ => { Assert.Fail(); return Task.CompletedTask; }, 
-                _ => { _.Should().Be("left"); return Task.CompletedTask; })
+                _ => { _.ShouldBe("left"); return Task.CompletedTask; })
             .Wait();
 
     [Test]
     public void MatchAsync_WhenRight_CallRight()
         => Task.FromResult(Right<string, int>(42))
-            .MatchAsync(_ => { _.Should().Be(42); return Task.CompletedTask; }, 
+            .MatchAsync(_ => { _.ShouldBe(42); return Task.CompletedTask; }, 
                 _ => { Assert.Fail(); return Task.CompletedTask; })
             .Wait();
 
@@ -33,63 +34,63 @@ public class TaskTests
         => Task.FromResult(Either<int, string>.Right("either"))
             .MatchAsync(_ => true, _ => Task.FromResult(false))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_1_WhenLeft_ToOuput()
         => Task.FromResult(Either<int, string>.Left(42))
             .MatchAsync(_ => false, _ => Task.FromResult(true))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_2_WhenRight_ToOuput()
         => Task.FromResult(Either<int, string>.Right("either"))
             .MatchAsync(_ => Task.FromResult(true), _ => false)
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_2_WhenLeft_ToOuput()
         => Task.FromResult(Either<int, string>.Left(42))
             .MatchAsync(_ => Task.FromResult(false), _ => true)
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_3_WhenRight_ToOuput()
         => Task.FromResult(Either<int, string>.Right("either"))
             .MatchAsync(_ => true, _ => false)
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_3_WhenLeft_ToOuput()
         => Task.FromResult(Either<int, string>.Left(42))
             .MatchAsync(_ => false, _ => true)
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_4_WhenRight_ToOuput()
         => Task.FromResult(Either<int, string>.Right("either"))
             .MatchAsync(_ => Task.FromResult(true), _ => Task.FromResult(false))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_4_WhenLeft_ToOuput()
         => Task.FromResult(Either<int, string>.Left(42))
             .MatchAsync(_ => Task.FromResult(false), _ => Task.FromResult(true))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MapAsync_MapToOutput()
         => Task.FromResult("42")
             .MapAsync(_ => Task.FromResult(Convert.ToInt32(_)))
             .Result
-            .Should().Be(42);
+            .ShouldBe(42);
 
     [Test]
     public void BindAsync_WhenRight_CallTheRightFunc()
@@ -98,8 +99,8 @@ public class TaskTests
 
         var result = either.BindAsync(right => (Either<int, string>)right.ToUpper()).Result;
 
-        result.IsRight.Should().BeTrue();
-        result.OnRight(_ => _.Should().Be("RIGHT"));
+        result.IsRight.ShouldBeTrue();
+        result.OnRight(_ => _.ShouldBe("RIGHT"));
     }
 
     [Test]
@@ -109,7 +110,7 @@ public class TaskTests
 
         var result = either.BindAsync(right => (Either<int, string>)right.ToUpper()).Result;
 
-        result.IsLeft.Should().BeTrue();
+        result.IsLeft.ShouldBeTrue();
     }
 
     [Test]
@@ -119,8 +120,8 @@ public class TaskTests
 
         var result = either.BindAsync(right => Task.FromResult((Either<int, string>)right.ToUpper())).Result;
 
-        result.IsRight.Should().BeTrue();
-        result.OnRight(_ => _.Should().Be("RIGHT"));
+        result.IsRight.ShouldBeTrue();
+        result.OnRight(_ => _.ShouldBe("RIGHT"));
     }
 
     [Test]
@@ -130,7 +131,7 @@ public class TaskTests
 
         var result = either.BindAsync(right => Task.FromResult((Either<int, string>)right.ToUpper())).Result;
 
-        result.IsLeft.Should().BeTrue();
+        result.IsLeft.ShouldBeTrue();
     }
 
     [Test]
@@ -140,8 +141,8 @@ public class TaskTests
 
         var result = either.BindLeftAsync(intLeft => (Either<int, string>)(intLeft * 10)).Result;
 
-        result.IsLeft.Should().BeTrue();
-        result.OnLeft(_ => _.Should().Be(100));
+        result.IsLeft.ShouldBeTrue();
+        result.OnLeft(_ => _.ShouldBe(100));
     }
 
     [Test]
@@ -150,7 +151,7 @@ public class TaskTests
             .MapAsync(_ => _ == "either")
             .Result
             .IsRight
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MapAsync_WhenLeft_DontMapToOutput()
@@ -158,7 +159,7 @@ public class TaskTests
             .MapAsync(_ => _ == "either")
             .Result
             .IsLeft
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MapAsync_Task_WhenRight_MapToOutput()
@@ -166,7 +167,7 @@ public class TaskTests
             .MapAsync(_ => Task.FromResult(_ == "either"))
             .Result
             .IsRight
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MapAsync_Task_WhenLeft_DontMapToOutput()
@@ -174,7 +175,7 @@ public class TaskTests
             .MapAsync(_ => Task.FromResult(_ == "either"))
             .Result
             .IsLeft
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MapLeftAsync_WhenRight_DontMapToOutput()
@@ -183,7 +184,7 @@ public class TaskTests
         Task.FromResult(Either<int, string>.Right("either"))
             .MapLeftAsync(_ => called = true).Wait();
 
-        called.Should().BeFalse();
+        called.ShouldBeFalse();
     }
 
     [Test]
@@ -193,7 +194,7 @@ public class TaskTests
         Task.FromResult(Either<int, string>.Left(0))
             .MapLeftAsync(_ => called = true).Wait();
 
-        called.Should().BeTrue();
+        called.ShouldBeTrue();
     }
 
     [Test]
@@ -203,7 +204,7 @@ public class TaskTests
             .MatchAsync(_ => _ == "not-empty",
                 () => false)
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_1_IfSome_ToOutput()
@@ -212,7 +213,7 @@ public class TaskTests
             .MatchAsync(_ => _ == "not-empty",
                 () => Task.FromResult(false))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_1_IfNone_ToOutput()
@@ -221,7 +222,7 @@ public class TaskTests
             .MatchAsync(_ => false,
                 () => Task.FromResult(true))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_2_IfSome_ToOutput()
@@ -230,7 +231,7 @@ public class TaskTests
             .MatchAsync(_ => Task.FromResult(_ == "not-empty"),
                 () => false)
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_2_IfNone_ToOutput()
@@ -239,7 +240,7 @@ public class TaskTests
             .MatchAsync(_ => Task.FromResult(false),
                 () => true)
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_3_IfSome_ToOutput()
@@ -248,7 +249,7 @@ public class TaskTests
             .MatchAsync(_ => Task.FromResult(_ == "not-empty"),
                 () => Task.FromResult(false))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_3_IfNone_ToOutput()
@@ -257,7 +258,7 @@ public class TaskTests
             .MatchAsync(_ => Task.FromResult(false),
                 () => Task.FromResult(true))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_IfNone_ToOutput()
@@ -266,7 +267,7 @@ public class TaskTests
             .MatchAsync(_ => false,
                 () => true)
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void BindAsync_MapInputInOutput()
@@ -275,7 +276,7 @@ public class TaskTests
             .BindAsync(_ => Option<bool>.Some(_ == "not-empty"))
             .Result
             .OrElse(false)
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void BindAsync_MapNoneInOutput()
@@ -284,7 +285,7 @@ public class TaskTests
             .BindAsync(_ => Option<bool>.Some(true))
             .Result
             .IsNone
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MapAsync_MapInputInOutput()
@@ -293,7 +294,7 @@ public class TaskTests
             .MapAsync(_ => _ == "not-empty")
             .Result
             .OrElse(false)
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MapAsync_MapNoneInOutput()
@@ -302,5 +303,48 @@ public class TaskTests
             .MapAsync(_ => true)
             .Result
             .IsNone
-            .Should().BeTrue();
+            .ShouldBeTrue();
+    
+    [Test]
+    public void TeeAsync_TeeToOutput()
+    {
+        var result = 0;
+        Task.FromResult("42")
+            .TeeAsync(_ => result = Convert.ToInt32(_))
+            .Result
+            .ShouldBe("42");
+        result.ShouldBe(42);
+    }
+
+    [Test]
+    public void TeeAsync_AsyncTeeToOutput()
+    {
+        var result = Task.FromResult(0);
+        Task.FromResult("42")
+            .TeeAsync(_ => result = Convert.ToInt32(_).AsTask())
+            .Result
+            .ShouldBe("42");
+        result.Result.ShouldBe(42);
+    }
+
+    [Test]
+    public async Task TeeAsync_AsyncDelayAwaited()
+    {
+        var stopWatch = new Stopwatch();
+        stopWatch.Start();
+
+        _ = await Unit.Default
+            .AsTask()
+            .TeeAsync(_ => Task.Delay(TimeSpan.FromSeconds(3)));
+
+        stopWatch.Stop();
+        stopWatch.Elapsed.Seconds.ShouldBeGreaterThan(2);
+    }
+
+    [Test]
+    public void TeeAsync_TeeToOutputChangingResult()
+        => Task.FromResult("0")
+            .TeeAsync(_ => Task.FromResult("42"))
+            .Result
+            .ShouldBe("42");
 }

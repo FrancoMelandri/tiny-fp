@@ -1,5 +1,5 @@
-﻿using TinyFp.Extensions;
-using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
+using TinyFp.Extensions;
 using static TinyFp.Prelude;
 
 namespace TinyFp;
