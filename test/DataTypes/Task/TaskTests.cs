@@ -342,6 +342,62 @@ public class TaskTests
     }
 
     [Test]
+    public async Task TeeWhenAsync_WhenTrue_AsyncDelayAwaited()
+    {
+        var stopWatch = new Stopwatch();
+        stopWatch.Start();
+
+        _ = await Unit.Default
+            .AsTask()
+            .TeeWhenAsync(_ => Task.Delay(TimeSpan.FromSeconds(2)), () => true);
+
+        stopWatch.Stop();
+        stopWatch.Elapsed.Seconds.ShouldBeGreaterThan(1);
+    }
+
+    [Test]
+    public async Task TeeWhenAsync_WhenFalse_DoNotAsyncDelayAwaited()
+    {
+        var stopWatch = new Stopwatch();
+        stopWatch.Start();
+
+        _ = await Unit.Default
+            .AsTask()
+            .TeeWhenAsync(_ => Task.Delay(TimeSpan.FromSeconds(2)), () => false);
+
+        stopWatch.Stop();
+        stopWatch.Elapsed.Seconds.ShouldBeLessThan(1);
+    }
+
+    [Test]
+    public async Task TeeWhenAsync_WithInput_WhenTrue_AsyncDelayAwaited()
+    {
+        var stopWatch = new Stopwatch();
+        stopWatch.Start();
+
+        _ = await Unit.Default
+            .AsTask()
+            .TeeWhenAsync(_ => Task.Delay(TimeSpan.FromSeconds(2)), _ => true);
+
+        stopWatch.Stop();
+        stopWatch.Elapsed.Seconds.ShouldBeGreaterThan(1);
+    }
+
+    [Test]
+    public async Task TeeWhenAsync_WithInput_WhenFalse_DoNotAsyncDelayAwaited()
+    {
+        var stopWatch = new Stopwatch();
+        stopWatch.Start();
+
+        _ = await Unit.Default
+            .AsTask()
+            .TeeWhenAsync(_ => Task.Delay(TimeSpan.FromSeconds(2)), _ => false);
+
+        stopWatch.Stop();
+        stopWatch.Elapsed.Seconds.ShouldBeLessThan(1);
+    }
+
+    [Test]
     public void TeeAsync_TeeToOutputChangingResult()
         => Task.FromResult("0")
             .TeeAsync(_ => Task.FromResult("42"))

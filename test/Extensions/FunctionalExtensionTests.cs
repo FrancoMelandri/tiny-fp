@@ -15,8 +15,26 @@ public class FunctionalExtensionTests
 
     [TestCase(true, "teezed")]
     [TestCase(false, "any")]
+    public void TeeWhen_Action_WithTrueOrFalseCondition_TransformOrNot(bool whenResult, string expected)
+        =>  new StringHolder { Value = "any"}
+            .TeeWhen(_ => _.Value = "teezed", () => whenResult)
+            .Value
+            .ShouldBe(expected);
+
+    [TestCase(true, "teezed")]
+    [TestCase(false, "any")]
     public void TeeWhen_WithTrueOrFalseConditionOnInput_TransformOrNot(bool whenResult, string expected)
         => "any".TeeWhen(_ => "teezed", _ => whenResult)
+            .ShouldBe(expected);
+
+    [TestCase(true, "teezed")]
+    [TestCase(false, "any")]
+    public void TeeWhen_Action_WithTrueOrFalseConditionOnInput_TransformOrNot(bool whenResult, string expected)
+        => new StringHolder { Value = "any" }.TeeWhen(_ =>
+            {
+                _.Value = "teezed";
+            }, _ => whenResult)
+            .Value
             .ShouldBe(expected);
 
     [Test]
