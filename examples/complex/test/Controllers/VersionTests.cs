@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Net;
 using NUnit.Framework;
-using System.Net;
+using Shouldly;
 using TinyFp.Complex.Setup;
 
 namespace TinyFp.Complex.Contorllers;
@@ -13,7 +13,7 @@ public class VersionTests : BaseIntegrationTest
         var response = Client.GetAsync("/version").Result;
         var responseContent = response.Content.ReadAsStringAsync().Result;
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        responseContent.Should().Be("Hello world");
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        responseContent.ShouldBe("Hello world");
     }
 }

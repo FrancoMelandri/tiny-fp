@@ -1,12 +1,12 @@
-﻿using FluentAssertions;
-using NUnit.Framework;
-using System.Net;
+﻿using System.Net;
 using Moq;
+using Newtonsoft.Json;
+using NUnit.Framework;
+using Shouldly;
 using TinyFp.Complex.Setup;
+using TinyFpTest.Models;
 using static System.IO.File;
 using static System.IO.Path;
-using Newtonsoft.Json;
-using TinyFpTest.Models;
 
 namespace TinyFp.Complex.Contorllers;
 
@@ -24,7 +24,7 @@ public class DetailsDrivenPortsApiTests : DetailsDrivenPortsbaseTests
         StubDetailsOk("prd", 200, ReadAllText(Combine("ApiStubs", "details-prd.json")));
 
         var response = Client.GetAsync("/details?productName=prd").Result;
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
         TestStartup
             .Logger
@@ -40,8 +40,8 @@ public class DetailsDrivenPortsApiTests : DetailsDrivenPortsbaseTests
         var responseContent = response.Content.ReadAsStringAsync().Result;
         var product = JsonConvert.DeserializeObject<ProductDetails>(responseContent);
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        product.Should().BeEquivalentTo(new ProductDetails
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        product.ShouldBeEquivalentTo(new ProductDetails
         {
             Name = "prd",
             Sku = "sku",
@@ -51,7 +51,7 @@ public class DetailsDrivenPortsApiTests : DetailsDrivenPortsbaseTests
         IntegrationTestHttpRequestHandler
             .RequestsReceived
             .Where(_ => _.RequestUri.ToString().Contains("/details/prd"))
-            .Should().HaveCount(1);
+            .Count().ShouldBe(1);
 
         TestStartup
             .Logger
@@ -65,12 +65,12 @@ public class DetailsDrivenPortsApiTests : DetailsDrivenPortsbaseTests
 
         var response = Client.GetAsync("/details?productName=yyy").Result;
 
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
 
         IntegrationTestHttpRequestHandler
             .RequestsReceived
             .Where(_ => _.RequestUri.ToString().Contains("/details/yyy"))
-            .Should().HaveCount(1);
+            .Count().ShouldBe(1);
 
         TestStartup
             .Logger

@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
+using Shouldly;
 
 namespace TinyFpTest.Examples.Basics.Catalog;
 
@@ -20,8 +20,8 @@ public class FunctionCatalogExampleTests
 
         _catalog = new Catalog
         {
-            Products = new[]
-            {
+            Products =
+            [
                 new Product
                 {
                     Name = "Name1",
@@ -32,7 +32,7 @@ public class FunctionCatalogExampleTests
                     Name = "Name2",
                     Description = "Description2"
                 }
-            }
+            ]
         };
     }
 
@@ -45,8 +45,8 @@ public class FunctionCatalogExampleTests
 
         var result = _sut.Get();
 
-        result.IsRight.Should().BeTrue();
-        result.OnRight(_ => _.Products.Length.Should().Be(2));
+        result.IsRight.ShouldBeTrue();
+        result.OnRight(_ => _.Products.Length.ShouldBe(2));
     }
 
     [Test]
@@ -58,7 +58,7 @@ public class FunctionCatalogExampleTests
 
         var result = _sut.Get();
 
-        result.IsLeft.Should().BeTrue();
-        result.OnLeft(_ => _.Should().Be("error"));
+        result.IsLeft.ShouldBeTrue();
+        result.OnLeft(_ => _.ShouldBe("error"));
     }
 }

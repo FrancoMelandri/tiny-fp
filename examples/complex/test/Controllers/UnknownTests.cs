@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Net;
 using NUnit.Framework;
-using System.Net;
+using Shouldly;
 using TinyFp.Complex.Setup;
 
 namespace TinyFp.Complex.Contorllers;
@@ -11,6 +11,6 @@ public class UnknownTests : BaseIntegrationTest
     public void Unknown_Get_ReturnsNotFound()
         => Client.GetAsync("/unknown").Result
             .StatusCode
-            .Should().Be(HttpStatusCode.NotFound);
+            .ShouldBe(HttpStatusCode.NotFound);
 
 }

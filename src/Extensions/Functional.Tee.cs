@@ -8,6 +8,20 @@ public static partial class Functional
     public static T TeeWhen<T>(this T @this, Func<T, T> tee, Func<T, bool> when)
         => when(@this) ? tee(@this) : @this;
 
+    public static T TeeWhen<T>(this T @this, Action<T> tee, Func<bool> when)
+        => when() ?  @this.Tee(_ =>
+            {
+                tee(_);
+                return _;
+            }) : @this;
+
+    public static T TeeWhen<T>(this T @this,Action<T> tee, Func<T, bool> when)
+        => when(@this) ?  @this.Tee(_ =>
+            {
+                tee(_);
+                return _;
+            }) : @this;
+
     public static T Tee<T>(this T @this, Func<T, T> tee)
         => tee(@this);
 

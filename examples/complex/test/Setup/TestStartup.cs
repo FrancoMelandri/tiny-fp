@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Http;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Http;
 using Moq;
-using System.Diagnostics.CodeAnalysis;
 using TinyFpTest.Complex;
 using TinyFpTest.Services;
 using TinyFpTest.Services.Details;

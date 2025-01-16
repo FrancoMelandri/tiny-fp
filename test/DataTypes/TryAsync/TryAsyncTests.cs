@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Shouldly;
 using TinyFp;
 using static TinyFp.Prelude;
 
@@ -14,7 +14,7 @@ public class TryAsyncTests
     [Test]
     public void TryAsyncMatch_WhenNoException_Success()
         => TryAsync(() => GetValueAsync(10))
-            .Match(_ => { _.Should().Be(10); return Unit.Default; },
+            .Match(_ => { _.ShouldBe(10); return Unit.Default; },
                 _ => { Assert.Fail(); return Unit.Default; })
             .GetAwaiter().GetResult();
 
@@ -28,7 +28,7 @@ public class TryAsyncTests
     [Test]
     public void TryAsyncMatch_FuncSuccTask_WhenNoException_Success()
         => TryAsync(() => GetValueAsync(10))
-            .Match(_ => { _.Should().Be(10); return Task.FromResult(Unit.Default); },
+            .Match(_ => { _.ShouldBe(10); return Task.FromResult(Unit.Default); },
                 _ => { Assert.Fail(); return Unit.Default; })
             .GetAwaiter().GetResult();
 
@@ -42,7 +42,7 @@ public class TryAsyncTests
     [Test]
     public void TryAsyncMatch_FuncFailTask_WhenNoException_Success()
         => TryAsync(() => GetValueAsync(10))
-            .Match(_ => { _.Should().Be(10); return Unit.Default; },
+            .Match(_ => { _.ShouldBe(10); return Unit.Default; },
                 _ => { Assert.Fail(); return Task.FromResult(Unit.Default); })
             .GetAwaiter().GetResult();
 
@@ -56,7 +56,7 @@ public class TryAsyncTests
     [Test]
     public void TryAsyncMatch_FuncTask_WhenNoException_Success()
         => TryAsync(() => GetValueAsync(10))
-            .Match(_ => { _.Should().Be(10); return Task.FromResult(Unit.Default); },
+            .Match(_ => { _.ShouldBe(10); return Task.FromResult(Unit.Default); },
                 _ => { Assert.Fail(); return Task.FromResult(Unit.Default); })
             .GetAwaiter().GetResult();
 
@@ -70,7 +70,7 @@ public class TryAsyncTests
     [Test]
     public void TryAsyncMatch_FuncSucc_WhenNoException_Success()
         => TryAsync(() => GetValueAsync(10))
-            .Match(_ => { _.Should().Be(10); return Unit.Default; },
+            .Match(_ => { _.ShouldBe(10); return Unit.Default; },
                 Unit.Default)
             .GetAwaiter().GetResult();
 
@@ -80,12 +80,12 @@ public class TryAsyncTests
             .Match(_ => { Assert.Fail(); return Unit.Default; },
                 Unit.Default)
             .GetAwaiter().GetResult()
-            .Should().Be(Unit.Default);
+            .ShouldBe(Unit.Default);
 
     [Test]
     public void TryAsyncMatch_FuncTaskSucc_WhenNoException_Success()
         => TryAsync(() => GetValueAsync(10))
-            .Match(_ => { _.Should().Be(10); return Task.FromResult(Unit.Default); },
+            .Match(_ => { _.ShouldBe(10); return Task.FromResult(Unit.Default); },
                 Unit.Default)
             .GetAwaiter().GetResult();
 
@@ -95,77 +95,77 @@ public class TryAsyncTests
             .Match(_ => { Assert.Fail(); return Task.FromResult(Unit.Default); },
                 Unit.Default)
             .GetAwaiter().GetResult()
-            .Should().Be(Unit.Default);
+            .ShouldBe(Unit.Default);
 
     [Test]
     public void TryAsyncOnFail_WhenNoException_Value()
         => TryAsync(() => GetValueAsync(10))                
             .OnFail(0)
             .Result
-            .Should().Be(10);
+            .ShouldBe(10);
 
     [Test]
     public void TryAsyncOnFail_WhenException_Fallback()
         => TryAsync(() => GetValueAsync(0))                
             .OnFail(10)
             .Result
-            .Should().Be(10);
+            .ShouldBe(10);
 
     [Test]
     public void TryAsyncOnFail_FuncTask_WhenNoException_Value()
         => TryAsync(() => GetValueAsync(10))
             .OnFail(() => Task.FromResult(0))
             .Result
-            .Should().Be(10);
+            .ShouldBe(10);
 
     [Test]
     public void TryAsyncOnFail_FuncTask_WhenException_Fallback()
         => TryAsync(() => GetValueAsync(0))
             .OnFail(() => Task.FromResult(10))
             .Result
-            .Should().Be(10);
+            .ShouldBe(10);
 
     [Test]
     public void TryAsyncOnFail_Func_WhenNoException_Value()
         => TryAsync(() => GetValueAsync(10))
             .OnFail(() => 0)
             .Result
-            .Should().Be(10);
+            .ShouldBe(10);
 
     [Test]
     public void TryAsyncOnFail_Func_WhenException_Fallback()
         => TryAsync(() => GetValueAsync(0))
             .OnFail(() => 10)
             .Result
-            .Should().Be(10);
+            .ShouldBe(10);
 
     [Test]
     public void TryAsyncOnFail_FuncEx_WhenNoException_Value()
         => TryAsync(() => GetValueAsync(10))
             .OnFail(ex => 0)
             .Result
-            .Should().Be(10);
+            .ShouldBe(10);
 
     [Test]
     public void TryAsyncOnFail_FuncEx_WhenException_Fallback()
         => TryAsync(() => GetValueAsync(0))
             .OnFail(ex => ex.Message == "Attempted to divide by zero." ? 10 : 0)
             .Result
-            .Should().Be(10);
+            .ShouldBe(10);
 
     [Test]
     public void TryAsyncOnFail_FuncExTask_WhenNoException_Value()
         => TryAsync(() => GetValueAsync(10))
             .OnFail(ex => Task.FromResult(0))
             .Result
-            .Should().Be(10);
+            .ShouldBe(10);
 
     [Test]
     public void TryAsyncOnFail_FuncExTask_WhenException_Fallback()
         => TryAsync(() => GetValueAsync(0))
             .OnFail(ex => Task.FromResult(ex.Message == "Attempted to divide by zero." ? 10 : 0))
             .Result
-            .Should().Be(10);
+            .ShouldBe(10);
 
     [Test]
     public void TryAsyncToEither_WhenNoException_Right()
@@ -173,7 +173,7 @@ public class TryAsyncTests
             .ToEither()
             .Result
             .IsRight
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void TryAsyncToEither_WhenException_Left()
@@ -181,7 +181,7 @@ public class TryAsyncTests
             .ToEither()
             .Result
             .IsLeft
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void TryAsyncBind_WhenNoException_Call()
@@ -189,7 +189,7 @@ public class TryAsyncTests
             .Bind(_ => TryAsync(() => GetValueAsync(5)))                
             .OnFail(0)
             .Result
-            .Should().Be(20);
+            .ShouldBe(20);
 
     [Test]
     public void TryAsyncBind_WhenFirstException_DontCall()
@@ -197,7 +197,7 @@ public class TryAsyncTests
             .Bind(_ => { Assert.Fail(); return TryAsync(() => GetValueAsync(5)); })
             .OnFail(0)
             .Result
-            .Should().Be(0);
+            .ShouldBe(0);
 
     [Test]
     public void TryAsyncDo_WhenNoException_Call()
@@ -205,7 +205,7 @@ public class TryAsyncTests
             .Do(_ => { })
             .OnFail(0)
             .Result
-            .Should().Be(10);
+            .ShouldBe(10);
 
     [Test]
     public void TryAsyncDo_WhenException_DontCall()
@@ -213,7 +213,7 @@ public class TryAsyncTests
             .Do(_ => { })
             .OnFail(0)
             .Result
-            .Should().Be(0);
+            .ShouldBe(0);
 
     [Test]
     public void TryAsyncMemo_WhenNoExcpetion_MemoizeTheTryCall()
@@ -224,7 +224,7 @@ public class TryAsyncTests
         memo().Wait();
         memo().Wait();
         memo().Wait();
-        counter.Should().Be(1);
+        counter.ShouldBe(1);
     }
 
     [Test]
@@ -236,7 +236,7 @@ public class TryAsyncTests
         memo().Wait();
         memo().Wait();
         memo().Wait();
-        counter.Should().Be(2);
+        counter.ShouldBe(2);
     }
 
 }

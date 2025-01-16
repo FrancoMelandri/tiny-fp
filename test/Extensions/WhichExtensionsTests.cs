@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Shouldly;
 using TinyFp;
 using static TinyFp.Extensions.Functional;
 
@@ -14,7 +14,7 @@ class WhichExtensionsTests
                            () => 1,
                            () => 10);
 
-        retVal.Should().Be(10);
+        retVal.ShouldBe(10);
     }
 
     [Test]
@@ -24,7 +24,7 @@ class WhichExtensionsTests
                            () => 1,
                            () => 10);
 
-        retVal.Should().Be(1);
+        retVal.ShouldBe(1);
     }
 
     [Test]
@@ -36,7 +36,7 @@ class WhichExtensionsTests
                                  _ => 1,
                                  _ => 10);
 
-        retVal.Should().Be(1);
+        retVal.ShouldBe(1);
     }
 
     [Test]
@@ -46,7 +46,7 @@ class WhichExtensionsTests
                            () => 1.AsTask(),
                            () => 10.AsTask());
 
-        retVal.Should().Be(1);
+        retVal.ShouldBe(1);
     }
 
     [Test]
@@ -58,6 +58,6 @@ class WhichExtensionsTests
                                  _ => 1.AsTask(),
                                  _ => 10.AsTask());
 
-        retVal.Should().Be(1);
+        retVal.ShouldBe(1);
     }
 }

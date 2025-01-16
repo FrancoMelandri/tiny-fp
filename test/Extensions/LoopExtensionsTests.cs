@@ -1,8 +1,7 @@
 ﻿using NUnit.Framework;
-using FluentAssertions;
-using Moq;
-using static TinyFp.Extensions.Functional;
+using Shouldly;
 using TinyFp;
+using static TinyFp.Extensions.Functional;
 
 namespace TinyFpTest.Extensions;
 
@@ -16,7 +15,7 @@ public class LoopExtensionsTests
             _ => _ < 10,
             _ => ++_);
 
-        counter.Should().Be(10);
+        counter.ShouldBe(10);
     }
 
     [Test]
@@ -27,7 +26,7 @@ public class LoopExtensionsTests
                 _ => (++_).AsTask())
             .Result;
 
-        counter.Should().Be(10);
+        counter.ShouldBe(10);
     }
 
     [Test]
@@ -38,6 +37,6 @@ public class LoopExtensionsTests
                 _ => (++_).AsTask())
             .Result;
 
-        counter.Should().Be(10);
+        counter.ShouldBe(10);
     }
 }

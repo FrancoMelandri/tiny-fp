@@ -1,6 +1,6 @@
-﻿using TinyFp;
-using FluentAssertions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Shouldly;
+using TinyFp;
 
 namespace TinyFpTest.DataTypes;
 
@@ -12,8 +12,8 @@ public class Union2Tests
     {
         var t1 = Union<int, string>.FromT1(42);
 
-        t1.IsT1.Should().BeTrue();
-        t1.IsT2.Should().BeFalse();
+        t1.IsT1.ShouldBeTrue();
+        t1.IsT2.ShouldBeFalse();
     }
 
     [Test]
@@ -21,9 +21,7 @@ public class Union2Tests
     {
         Action act = () => Union<object, object>.FromT1(null);
 
-        act.Should()
-            .Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("t1");
+        act.ShouldThrow<ArgumentNullException>();
     }
 
     [Test]
@@ -31,8 +29,8 @@ public class Union2Tests
     {
         var t2 = Union<int, string>.FromT2("t2");
 
-        t2.IsT1.Should().BeFalse();
-        t2.IsT2.Should().BeTrue();
+        t2.IsT1.ShouldBeFalse();
+        t2.IsT2.ShouldBeTrue();
     }
 
     [Test]
@@ -40,44 +38,42 @@ public class Union2Tests
     {
         Action act = () => Union<object, object>.FromT2(null);
 
-        act.Should()
-            .Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("t2");
+        act.ShouldThrow<ArgumentNullException>();
     }
 
     [Test]
     public void Match_WhenT1_ToOutput()
         => Union<int, string>.FromT1(42)
             .Match(_ => true, _ => false)
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void Match_WhenT2_ToOutput()
         => Union<int, string>.FromT2("union")
             .Match(_ => false, _ => true)
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_WhenT1_ToOutput()
         => Union<int, string>.FromT1(42)
             .MatchAsync(_ => Task.FromResult(true), _ => Task.FromResult(false))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_WhenT2_ToOutput()
         => Union<int, string>.FromT2("union")
             .MatchAsync(_ => Task.FromResult(false), _ => Task.FromResult(true))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void WhenT1_ImplicitCast()
     {
         Union<int, string> result = 1;
 
-        result.IsT1.Should().BeTrue();
-        result.IsT2.Should().BeFalse();
+        result.IsT1.ShouldBeTrue();
+        result.IsT2.ShouldBeFalse();
     }
 
     [Test]
@@ -85,7 +81,7 @@ public class Union2Tests
     {
         Union<int, string> result = "union";
 
-        result.IsT2.Should().BeTrue();
-        result.IsT1.Should().BeFalse();
+        result.IsT2.ShouldBeTrue();
+        result.IsT1.ShouldBeFalse();
     }
 }

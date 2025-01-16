@@ -6,7 +6,7 @@ namespace TinyFpTest.Complex;
 public static class Program
 {
     public static void Main()
-        => Host.CreateDefaultBuilder(Array.Empty<string>())
+        => Host.CreateDefaultBuilder([])
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();

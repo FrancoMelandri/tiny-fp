@@ -1,6 +1,6 @@
-﻿using Serilog;
+﻿using System.Diagnostics.CodeAnalysis;
+using Serilog;
 using Serilog.Events;
-using System.Diagnostics.CodeAnalysis;
 using TinyFp.Extensions;
 using TinyFpTest.Configuration;
 using TinyFpTest.Services;

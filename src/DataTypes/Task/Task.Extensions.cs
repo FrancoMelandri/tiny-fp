@@ -37,4 +37,20 @@ public static partial class TaskExtensions
         await tee(result);
         return result;
     }
+
+    public static async Task<T> TeeWhenAsync<T>(this Task<T> @this, Func<T, Task> tee, Func<bool> when)
+    {
+        var result = await @this;
+        if (when())
+            await tee(result);
+        return result;
+    }
+
+    public static async Task<T> TeeWhenAsync<T>(this Task<T> @this, Func<T, Task> tee, Func<T, bool> when)
+    {
+        var result = await @this;
+        if (when(result))
+            await tee(result);
+        return result;
+    }
 }

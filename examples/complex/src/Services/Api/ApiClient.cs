@@ -1,9 +1,9 @@
-﻿using TinyFp;
+﻿using System.Net;
 using Newtonsoft.Json;
-using System.Net;
-using static TinyFp.Prelude;
-using static TinyFp.Extensions.Functional;
+using TinyFp;
 using static System.TimeSpan;
+using static TinyFp.Extensions.Functional;
+using static TinyFp.Prelude;
 using static TinyFpTest.Constants.Errors;
 
 namespace TinyFpTest.Services.Api;

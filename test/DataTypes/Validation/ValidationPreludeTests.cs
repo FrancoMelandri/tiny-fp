@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Shouldly;
 using TinyFp;
 using static TinyFp.Prelude;
 
@@ -12,11 +12,11 @@ public class ValidationPreludeTests
     public void Success_CreateSuccessValidation()
         => Success<string, Unit>(Unit.Default)
             .IsSuccess
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void Fail_CreateFailValidation()
         => Fail<string, Unit>("failed")
             .IsFail
-            .Should().BeTrue();
+            .ShouldBeTrue();
 }

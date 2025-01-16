@@ -1,8 +1,8 @@
-﻿using NUnit.Framework;
-using FluentAssertions;
-using Moq;
-using static TinyFp.Extensions.Functional;
+﻿using Moq;
+using NUnit.Framework;
+using Shouldly;
 using TinyFp;
+using static TinyFp.Extensions.Functional;
 
 namespace TinyFpTest.Extensions;
 
@@ -65,7 +65,7 @@ public class UsingExtensionsTests
 
         Using(disposable, action);
 
-        called.Should().BeTrue();
+        called.ShouldBeTrue();
         log.Verify(m => m.Log("dispose"), Times.Once);
     }
 
@@ -78,7 +78,7 @@ public class UsingExtensionsTests
 
         var called = Using(disposable, action);
 
-        called.Should().BeTrue();
+        called.ShouldBeTrue();
         log.Verify(m => m.Log("dispose"), Times.Once);
     }
 
@@ -87,7 +87,7 @@ public class UsingExtensionsTests
     {
         Func<CanBeDisposed, bool> action = _ =>
         {
-            _.GetType().Should().Be(typeof(CanBeDisposed));
+            _.GetType().ShouldBe(typeof(CanBeDisposed));
             return true;
         };
         var log = new Mock<ILog>();
@@ -95,7 +95,7 @@ public class UsingExtensionsTests
 
         var called = Using(disposable, action);
 
-        called.Should().BeTrue();
+        called.ShouldBeTrue();
         log.Verify(m => m.Log("dispose"), Times.Once);
     }
 
@@ -105,7 +105,7 @@ public class UsingExtensionsTests
         var called = false;
         Action<IDisposable> action = _ =>
         {
-            _.GetType().Should().Be(typeof(CanBeDisposed));
+            _.GetType().ShouldBe(typeof(CanBeDisposed));
             called = true;
         };
         var log = new Mock<ILog>();
@@ -113,7 +113,7 @@ public class UsingExtensionsTests
 
         Using(disposable, action);
 
-        called.Should().BeTrue();
+        called.ShouldBeTrue();
         log.Verify(m => m.Log("dispose"), Times.Once);
     }
 
@@ -126,8 +126,8 @@ public class UsingExtensionsTests
         var result = UsingAsync(new CanBeDisposed(log.Object),
             cbd => cbd.SetTrueAsync(ref called)).Result;
 
-        result.Should().Be(Unit.Default);
-        called.Should().BeTrue();
+        result.ShouldBe(Unit.Default);
+        called.ShouldBeTrue();
         log.Verify(m => m.Log("dispose"), Times.Once);
     }
 
@@ -139,7 +139,7 @@ public class UsingExtensionsTests
         var result = UsingAsync(new CanBeDisposed(log.Object),
             cbd => cbd.GetTrueAsync()).Result;
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
         log.Verify(m => m.Log("dispose"), Times.Once);
     }
 
@@ -158,9 +158,9 @@ public class UsingExtensionsTests
                 await cbda.SetTrueAsync(ref calledAlt);
             }).Result;
 
-        result.Should().Be(Unit.Default);
-        called.Should().BeTrue();
-        calledAlt.Should().Be("True");
+        result.ShouldBe(Unit.Default);
+        called.ShouldBeTrue();
+        calledAlt.ShouldBe("True");
         log.Verify(m => m.Log("dispose"), Times.Once);
         log.Verify(m => m.Log("dispose-alt"), Times.Once);
     }
@@ -178,8 +178,8 @@ public class UsingExtensionsTests
                 await cbda.GetTrueAsync()
             )).Result;
 
-        result1.Should().BeTrue();
-        result2.Should().Be("True");
+        result1.ShouldBeTrue();
+        result2.ShouldBe("True");
         log.Verify(m => m.Log("dispose"), Times.Once);
         log.Verify(m => m.Log("dispose-alt"), Times.Once);
     }

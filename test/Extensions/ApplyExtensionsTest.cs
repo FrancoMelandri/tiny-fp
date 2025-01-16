@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Shouldly;
 using TinyFp.Extensions;
 
 namespace TinyFpTest.Extensions;
@@ -15,7 +15,7 @@ internal class ApplyExtensionsTest
         var partiallyAppliedFunc = addFunc.Apply(fixedValue);
         var result = partiallyAppliedFunc(3);
 
-        result.Should().Be(8);
+        result.ShouldBe(8);
     }
 
     [Test]
@@ -27,7 +27,7 @@ internal class ApplyExtensionsTest
         var partiallyAppliedFunc = repeatFunc.Apply(fixedValue);
         var result = partiallyAppliedFunc(3);
 
-        result.Should().Be("aaa");
+        result.ShouldBe("aaa");
     }
 
     [Test]
@@ -39,7 +39,7 @@ internal class ApplyExtensionsTest
         var partiallyAppliedFunc = checkLengthFunc.Apply(fixedValue);
         var result = partiallyAppliedFunc(5);
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     [Test]
@@ -51,7 +51,7 @@ internal class ApplyExtensionsTest
         var partiallyAppliedFunc = addFunc.Apply(fixedValue);
         var result = partiallyAppliedFunc(3, 2);
 
-        result.Should().Be(10);
+        result.ShouldBe(10);
     }
 
     [Test]
@@ -63,7 +63,7 @@ internal class ApplyExtensionsTest
         var partiallyAppliedFunc = repeatFunc.Apply(fixedValue);
         var result = partiallyAppliedFunc(2, 3);
 
-        result.Should().Be("aaaaa");
+        result.ShouldBe("aaaaa");
     }
 
     [Test]
@@ -75,7 +75,7 @@ internal class ApplyExtensionsTest
         var partiallyAppliedFunc = addFunc.Apply(fixedValue);
         var result = partiallyAppliedFunc(3, 2, 1);
 
-        result.Should().Be(11);
+        result.ShouldBe(11);
     }
 
     [Test]
@@ -87,6 +87,6 @@ internal class ApplyExtensionsTest
         var partiallyAppliedFunc = repeatFunc.Apply(fixedValue);
         var result = partiallyAppliedFunc(1, 2, 3);
 
-        result.Should().Be("aaaaaa");
+        result.ShouldBe("aaaaaa");
     }
 }

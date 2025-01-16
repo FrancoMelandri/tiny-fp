@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Net;
 using NUnit.Framework;
-using System.Net;
+using Shouldly;
 using TinyFp.Complex.Setup;
 
 namespace TinyFp.Complex.Contorllers;
@@ -19,7 +19,7 @@ public class DetailsDrivenPortsbaseTests : BaseIntegrationTest
     public void Search_Get_ReturnBadRequest(string productName)
     {
         var response = Client.GetAsync($"/details?productName={productName}").Result;
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
 
         TestStartup
             .Logger

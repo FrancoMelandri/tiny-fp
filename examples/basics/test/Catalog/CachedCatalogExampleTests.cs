@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
+using Shouldly;
 using TinyFp;
 
 namespace TinyFpTest.Examples.Basics.Catalog;
@@ -24,8 +24,8 @@ public class CachedCatalogExampleTests
 
         _catalog = new Catalog
         {
-            Products = new[]
-            {
+            Products =
+            [
                 new Product
                 {
                     Name = "Name1",
@@ -36,7 +36,7 @@ public class CachedCatalogExampleTests
                     Name = "Name2",
                     Description = "Description2"
                 }
-            }
+            ]
         };
     }
 
@@ -49,7 +49,7 @@ public class CachedCatalogExampleTests
 
         var result = _sut.Get();
 
-        result.IsRight.Should().BeTrue();
+        result.IsRight.ShouldBeTrue();
         _catalogCache
             .Verify(m => m.Set(It.IsAny<Catalog>()), Times.Never);
         _catalogService
@@ -68,7 +68,7 @@ public class CachedCatalogExampleTests
 
         var result = _sut.Get();
 
-        result.IsRight.Should().BeTrue();
+        result.IsRight.ShouldBeTrue();
         _catalogCache
             .Verify(m => m.Set(It.IsAny<Catalog>()), Times.Once);
         _catalogService
@@ -87,7 +87,7 @@ public class CachedCatalogExampleTests
 
         var result = _sut.Get();
 
-        result.IsLeft.Should().BeTrue();
+        result.IsLeft.ShouldBeTrue();
         _catalogCache
             .Verify(m => m.Set(It.IsAny<Catalog>()), Times.Never);
         _catalogService
@@ -104,8 +104,8 @@ public class CachedCatalogExampleTests
 
         var result = _sut.Get();
 
-        result.IsLeft.Should().BeTrue();
-        result.OnLeft(_ => _.Should().Be("error"));
+        result.IsLeft.ShouldBeTrue();
+        result.OnLeft(_ => _.ShouldBe("error"));
         _catalogCache
             .Verify(m => m.Set(It.IsAny<Catalog>()), Times.Never);
         _catalogService

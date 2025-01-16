@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using FluentAssertions;
+using Shouldly;
 using static TinyFp.Extensions.Functional;
 
 namespace TinyFpTest.Extensions;
@@ -12,8 +12,8 @@ public class ToEitherExtensionsTests
     {
         var sut = ((string)null).ToEither(_ => 10, _ => false, 0);
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
@@ -21,8 +21,8 @@ public class ToEitherExtensionsTests
     {
         var sut = ((string)null).ToEither(_ => 10, _ => true, 0);
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
@@ -30,8 +30,8 @@ public class ToEitherExtensionsTests
     {
         var sut = "not-empty".ToEither(_ => 10, _ => true, 0);
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
@@ -39,8 +39,8 @@ public class ToEitherExtensionsTests
     {
         var sut = "not-empty".ToEither(_ => 10, _ => false, 0);
 
-        sut.IsRight.Should().BeTrue();
-        sut.OnRight(_ => _.Should().Be(10));
+        sut.IsRight.ShouldBeTrue();
+        sut.OnRight(_ => _.ShouldBe(10));
     }
 
     [Test]
@@ -48,8 +48,8 @@ public class ToEitherExtensionsTests
     {
         var sut = ((string)null).ToEither(_ => 10, _ => false, () => 0);
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
@@ -57,8 +57,8 @@ public class ToEitherExtensionsTests
     {
         var sut = ((string)null).ToEither(_ => 10, _ => true, () => 0);
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
@@ -66,8 +66,8 @@ public class ToEitherExtensionsTests
     {
         var sut = "not-empty".ToEither(_ => 10, _ => true, () => 0);
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
@@ -75,8 +75,8 @@ public class ToEitherExtensionsTests
     {
         var sut = "not-empty".ToEither(_ => 10, _ => false, () => 0);
 
-        sut.IsRight.Should().BeTrue();
-        sut.OnRight(_ => _.Should().Be(10));
+        sut.IsRight.ShouldBeTrue();
+        sut.OnRight(_ => _.ShouldBe(10));
     }
 
     [Test]
@@ -84,36 +84,36 @@ public class ToEitherExtensionsTests
     {
         var sut = ((string)null).ToEither(0);
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
     public void ToEither_WhenValue_Right()
         => "not-empty".ToEither(0)
-            .IsRight.Should().BeTrue();
+            .IsRight.ShouldBeTrue();
 
     [Test]
     public void ToEither_Func_WhenNoValue_Left()
     {
         var sut = ((string)null).ToEither(() => 0);
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
     public void ToEither_Func_WhenValue_Right()
         => "not-empty".ToEither(() => 0)
-            .IsRight.Should().BeTrue();
+            .IsRight.ShouldBeTrue();
 
     [Test]
     public void ToEitherAsync_WithMapAndWhen_WhenNoValue_AndWhenFalse_Left()
     {
         var sut = Task.FromResult((string)null).ToEitherAsync(_ => 10, _ => false, 0).Result;
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
@@ -121,8 +121,8 @@ public class ToEitherExtensionsTests
     {
         var sut = Task.FromResult((string)null).ToEitherAsync(_ => 10, _ => true, 0).Result;
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
@@ -130,8 +130,8 @@ public class ToEitherExtensionsTests
     {
         var sut = Task.FromResult("not-empty").ToEitherAsync(_ => 10, _ => true, 0).Result;
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
@@ -139,8 +139,8 @@ public class ToEitherExtensionsTests
     {
         var sut = Task.FromResult("not-empty").ToEitherAsync(_ => 10, _ => false, 0).Result;
 
-        sut.IsRight.Should().BeTrue();
-        sut.OnRight(_ => _.Should().Be(10));
+        sut.IsRight.ShouldBeTrue();
+        sut.OnRight(_ => _.ShouldBe(10));
     }
 
     [Test]
@@ -148,8 +148,8 @@ public class ToEitherExtensionsTests
     {
         var sut = Task.FromResult((string)null).ToEitherAsync(_ => 10, _ => false, () => 0).Result;
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
@@ -157,8 +157,8 @@ public class ToEitherExtensionsTests
     {
         var sut = Task.FromResult((string)null).ToEitherAsync(_ => 10, _ => true, () => 0).Result;
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
@@ -166,8 +166,8 @@ public class ToEitherExtensionsTests
     {
         var sut = Task.FromResult("not-empty").ToEitherAsync(_ => 10, _ => true, () => 0).Result;
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
@@ -175,8 +175,8 @@ public class ToEitherExtensionsTests
     {
         var sut = Task.FromResult("not-empty").ToEitherAsync(_ => 10, _ => false, () => 0).Result;
 
-        sut.IsRight.Should().BeTrue();
-        sut.OnRight(_ => _.Should().Be(10));
+        sut.IsRight.ShouldBeTrue();
+        sut.OnRight(_ => _.ShouldBe(10));
     }
 
     [Test]
@@ -184,26 +184,26 @@ public class ToEitherExtensionsTests
     {
         var sut = Task.FromResult((string)null).ToEitherAsync(0).Result;
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
     public void ToEitherAsync_WhenValue_Right()
         => Task.FromResult("not-empty").ToEitherAsync(0).Result
-            .IsRight.Should().BeTrue();
+            .IsRight.ShouldBeTrue();
 
     [Test]
     public void ToEitherAsync_Func_WhenNoValue_Left()
     {
         var sut = Task.FromResult((string)null).ToEitherAsync(() => 0).Result;
 
-        sut.IsLeft.Should().BeTrue();
-        sut.OnLeft(_ => _.Should().Be(0));
+        sut.IsLeft.ShouldBeTrue();
+        sut.OnLeft(_ => _.ShouldBe(0));
     }
 
     [Test]
     public void ToEitherAsync_Func_WhenValue_Right()
         => Task.FromResult("not-empty").ToEitherAsync(() => 0).Result
-            .IsRight.Should().BeTrue();
+            .IsRight.ShouldBeTrue();
 }

@@ -1,5 +1,5 @@
-﻿using NUnit.Framework;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using NUnit.Framework;
 using TinyFpTest.Complex;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -19,7 +19,7 @@ public class BaseIntegrationTest : IDisposable
 
     public IWebHostBuilder GetWebHostBuilder(string jsonFile)
         => new HostBuilder<TestStartup>()
-            .CreateDefaultBuilder(new[] { jsonFile } );
+            .CreateDefaultBuilder([jsonFile]);
 
     [OneTimeSetUp]
     public void GlobalSetup()

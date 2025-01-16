@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using TinyFp.Exceptions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace TinyFp.Common;
 

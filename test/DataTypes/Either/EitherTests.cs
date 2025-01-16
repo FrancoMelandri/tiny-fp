@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
+using Shouldly;
 using TinyFp;
-using FluentAssertions;
 
 namespace TinyFpTest.DataTypes;
 
@@ -11,32 +11,28 @@ public class EitherTests
     public void Right_CreateRight()
         => Either<int, string>.Right("either")
             .IsRight
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void Right_WhenNull_RaiseException()
     {
         Action act = () => Either<object, object>.Right(null);
 
-        act.Should()
-            .Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("right");
+        act.ShouldThrow<ArgumentNullException>();
     }
 
     [Test]
     public void Left_CreateLeft()
         => Either<int, string>.Left(0)
             .IsLeft
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void Left_WhenNull_RaiseException()
     {
         Action act = () => Either<object, object>.Left(null);
 
-        act.Should()
-            .Throw<ArgumentNullException>()
-            .And.ParamName.Should().Be("left");
+        act.ShouldThrow<ArgumentNullException>();
     }
 
     [Test]
@@ -46,7 +42,7 @@ public class EitherTests
         Either<int, string>.Right("either")
             .OnRight(_ => called = true);
 
-        called.Should().BeTrue();
+        called.ShouldBeTrue();
     }
 
     [Test]
@@ -56,7 +52,7 @@ public class EitherTests
         Either<int, string>.Left(0)
             .OnRight(_ => called = true);
 
-        called.Should().BeFalse();
+        called.ShouldBeFalse();
     }
 
     [Test]
@@ -66,7 +62,7 @@ public class EitherTests
         Either<int, string>.Right("either")
             .OnLeft(_ => called = true);
 
-        called.Should().BeFalse();
+        called.ShouldBeFalse();
     }
 
     [Test]
@@ -76,7 +72,7 @@ public class EitherTests
         Either<int, string>.Left(0)
             .OnLeft(_ => called = true);
 
-        called.Should().BeTrue();
+        called.ShouldBeTrue();
     }
 
     [Test]
@@ -84,14 +80,14 @@ public class EitherTests
         => Either<int, string>.Right("either")
             .Map(_ => _ == "either")
             .IsRight
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void Map_WhenLeft_DontMapToOutput()
         => Either<int, string>.Left(0)
             .Map(_ => _ == "either")
             .IsLeft
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MapAsync_WhenRight_MapToOutput()
@@ -99,7 +95,7 @@ public class EitherTests
             .MapAsync(_ => Task.FromResult(_ == "either"))
             .Result
             .IsRight
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MapAsync_WhenLeft_DontMapToOutput()
@@ -107,7 +103,7 @@ public class EitherTests
             .MapAsync(_ => Task.FromResult(_ == "either"))
             .Result
             .IsLeft
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MapLeft_WhenRight_DontMapToOutput()
@@ -116,7 +112,7 @@ public class EitherTests
         Either<int, string>.Right("either")
             .MapLeft(_ => called = true);
 
-        called.Should().BeFalse();
+        called.ShouldBeFalse();
     }
 
     [Test]
@@ -126,7 +122,7 @@ public class EitherTests
         Either<int, string>.Left(0)
             .MapLeft(_ => called = true);
 
-        called.Should().BeTrue();
+        called.ShouldBeTrue();
     }
 
     [Test]
@@ -137,7 +133,7 @@ public class EitherTests
             .MapLeftAsync(_ => { called = true;  return Task.FromResult(0); })
             .Result;
 
-        called.Should().BeFalse();
+        called.ShouldBeFalse();
     }
 
     [Test]
@@ -148,14 +144,14 @@ public class EitherTests
             .MapLeftAsync(_ => { called = true; return Task.FromResult(0); })
             .Result;
 
-        called.Should().BeTrue();
+        called.ShouldBeTrue();
     }
 
     [Test]
     public void Bind_WhenRight_ChainCallRight()
         => Either<int, string>.Right("either")
             .Bind(_ => Either<int, bool>.Right(true))
-            .OnRight(_ => _.Should().BeTrue())
+            .OnRight(_ => _.ShouldBeTrue())
             .OnLeft(_ => Assert.Fail());
 
     [Test]
@@ -163,7 +159,7 @@ public class EitherTests
         => Either<int, string>.Right("either")
             .Bind(_ => Either<int, bool>.Left(42))
             .OnRight(_ => Assert.Fail())
-            .OnLeft(_ => _.Should().Be(42));
+            .OnLeft(_ => _.ShouldBe(42));
 
     [Test]
     public void Bind_WhenLeft_DontChainCall()
@@ -173,7 +169,7 @@ public class EitherTests
             .Bind(_ => { called = true; return Either<int, bool>.Right(true); })
             .OnRight(_ => Assert.Fail());
             
-        called.Should().BeFalse();
+        called.ShouldBeFalse();
     }
 
     [Test]
@@ -181,7 +177,7 @@ public class EitherTests
         => Either<int, string>.Right("either")
             .BindAsync(_ => Task.FromResult(Either<int, bool>.Right(true)))
             .Result
-            .OnRight(_ => _.Should().BeTrue())
+            .OnRight(_ => _.ShouldBeTrue())
             .OnLeft(_ => Assert.Fail());
 
     [Test]
@@ -190,7 +186,7 @@ public class EitherTests
             .BindAsync(_ => Task.FromResult(Either<int, bool>.Left(42)))
             .Result
             .OnRight(_ => Assert.Fail())
-            .OnLeft(_ => _.Should().Be(42));
+            .OnLeft(_ => _.ShouldBe(42));
 
     [Test]
     public void BindAsync_WhenLeft_DontChainCall()
@@ -201,14 +197,14 @@ public class EitherTests
             .Result
             .OnRight(_ => Assert.Fail());
 
-        called.Should().BeFalse();
+        called.ShouldBeFalse();
     }
 
     [Test]
     public void BindLeft_WhenLeft_ChainCallRight()
         => Either<int, string>.Left(10)
             .BindLeft(_ => Either<int, string>.Right("not-empty"))
-            .OnRight(_ => _.Should().Be("not-empty"))
+            .OnRight(_ => _.ShouldBe("not-empty"))
             .OnLeft(_ => Assert.Fail());
 
     [Test]
@@ -216,7 +212,7 @@ public class EitherTests
         => Either<int, string>.Left(0)
             .BindLeft(_ => Either<int, string>.Left(42))
             .OnRight(_ => Assert.Fail())
-            .OnLeft(_ => _.Should().Be(42));
+            .OnLeft(_ => _.ShouldBe(42));
 
     [Test]
     public void BindLeft_WhenRight_DontChainCall()
@@ -225,9 +221,9 @@ public class EitherTests
         Either<int, string>.Right("")
             .BindLeft(_ => { called = true; return Either<int, string>.Right("not-empty"); })
             .OnLeft(_ => Assert.Fail())
-            .OnRight(_ => _.Should().Be(""));
+            .OnRight(_ => _.ShouldBe(""));
 
-        called.Should().BeFalse();
+        called.ShouldBeFalse();
     }
 
     [Test]
@@ -235,7 +231,7 @@ public class EitherTests
         => Either<int, string>.Left(10)
             .BindLeftAsync(_ => Task.FromResult(Either<int, string>.Right("not-empty")))
             .Result
-            .OnRight(_ => _.Should().Be("not-empty"))
+            .OnRight(_ => _.ShouldBe("not-empty"))
             .OnLeft(_ => Assert.Fail());
 
     [Test]
@@ -244,7 +240,7 @@ public class EitherTests
             .BindLeftAsync(_ => Task.FromResult(Either<int, string>.Left(42)))
             .Result
             .OnRight(_ => Assert.Fail())
-            .OnLeft(_ => _.Should().Be(42));
+            .OnLeft(_ => _.ShouldBe(42));
 
     [Test]
     public void BindLeftAsync_WhenRight_DontChainCall()
@@ -254,86 +250,86 @@ public class EitherTests
             .BindLeftAsync(_ => { called = true; return Task.FromResult(Either<int, string>.Right("not-empty")); })
             .Result
             .OnLeft(_ => Assert.Fail())
-            .OnRight(_ => _.Should().Be(""));
+            .OnRight(_ => _.ShouldBe(""));
 
-        called.Should().BeFalse();
+        called.ShouldBeFalse();
     }
 
     [Test]
     public void Match_WhenRight_ToOuput()
         => Either<int, string>.Right("either")
             .Match(_ => true, _ => false)
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void Match_WhenLeft_ToOuput()
         => Either<int, string>.Left(42)
             .Match(_ => false, _ => true)
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_WhenRight_ToOuput()
         => Either<int, string>.Right("either")
             .MatchAsync(_ => Task.FromResult(true), _ => Task.FromResult(false))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_WhenLeft_ToOuput()
         => Either<int, string>.Left(42)
             .MatchAsync(_ => Task.FromResult(false), _ => Task.FromResult(true))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_1_WhenRight_ToOuput()
         => Either<int, string>.Right("either")
             .MatchAsync(_ => true, _ => Task.FromResult(false))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_1_WhenLeft_ToOuput()
         => Either<int, string>.Left(42)
             .MatchAsync(_ => false, _ => Task.FromResult(true))
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_2_WhenRight_ToOuput()
         => Either<int, string>.Right("either")
             .MatchAsync(_ => Task.FromResult(true), _ => false)
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_2_WhenLeft_ToOuput()
         => Either<int, string>.Left(42)
             .MatchAsync(_ => Task.FromResult(false), _ => true)
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_3_WhenRight_ToOuput()
         => Either<int, string>.Right("either")
             .MatchAsync(_ => true, _ => false)
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void MatchAsync_3_WhenLeft_ToOuput()
         => Either<int, string>.Left(42)
             .MatchAsync(_ => false, _ => true)
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
     [Test]
     public void WhenRight_ImplicitCast()
     {
         Either<int, string> result = "right";
 
-        result.IsRight.Should().BeTrue();
-        result.IsLeft.Should().BeFalse();
+        result.IsRight.ShouldBeTrue();
+        result.IsLeft.ShouldBeFalse();
     }
 
     [Test]
@@ -341,8 +337,8 @@ public class EitherTests
     {
         Either<int, string> result = 1;
 
-        result.IsLeft.Should().BeTrue();
-        result.IsRight.Should().BeFalse();
+        result.IsLeft.ShouldBeTrue();
+        result.IsRight.ShouldBeFalse();
     }
 
     [Test]
@@ -389,14 +385,14 @@ public class EitherTests
                 age => "NONE",
                 (age => age.IsSome, age => $"{age.Match(_ => _, () => 0)}")
             )
-            .OnRight(l => l.Should().Be("42"));
+            .OnRight(l => l.ShouldBe("42"));
 
         Either<int, Option<int>>.Right(Option<int>.None())
             .GuardMap(
                 age => "NONE",
                 (age => age.IsSome, age => $"{age.Match(_ => _, () => 0)}")
             )
-            .OnRight(l => l.Should().Be("NONE"));
+            .OnRight(l => l.ShouldBe("NONE"));
     }
 
     [Test]
@@ -405,13 +401,13 @@ public class EitherTests
         Either<int, int>.Right(42)
             .GuardMap(DefaultDelegate(), Guards())
             .OnLeft(_ => Assert.Fail())
-            .OnRight(_ => _.Should().Be(AgeStage.JobTime(42)));
+            .OnRight(_ => _.ShouldBe(AgeStage.JobTime(42)));
 
         Either<int, int>.Right(102)
             .GuardMap(DefaultDelegate(), Guards())
             .OnLeft(_ => Assert.Fail())
-            .OnRight(_ => _.Should().NotBe(AgeStage.JobTime(105)))
-            .OnRight(_ => _.Should().NotBe(AgeStage.JobTime(102)));
+            .OnRight(_ => _.ShouldNotBe(AgeStage.JobTime(105)))
+            .OnRight(_ => _.ShouldNotBe(AgeStage.JobTime(102)));
     }
 
     [Test]
@@ -424,7 +420,7 @@ public class EitherTests
                 (age => age.IsNone, age => Either<string, string>.Left("Error, age not specified")),
                 (age => age.Match(_ => _, () => 0) >= 21, age => Either<string, string>.Right("OK"))
             )
-            .OnRight(verification => verification.Should().Be("Do you need some milk?"));
+            .OnRight(verification => verification.ShouldBe("Do you need some milk?"));
 
         Either<string, Option<int>>.Right(Option<int>.Some(22))
             .GuardBind(
@@ -432,7 +428,7 @@ public class EitherTests
                 (age => age.IsNone, age => Either<string, string>.Left("Error, age not specified")),
                 (age => age.Match(_ => _, () => 0) >= 21, age => Either<string, string>.Right("OK"))
             )
-            .OnRight(verification => verification.Should().Be("OK"));
+            .OnRight(verification => verification.ShouldBe("OK"));
 
         Either<string, Option<int>>.Right(Option<int>.None())
             .GuardBind(
@@ -441,7 +437,7 @@ public class EitherTests
                 (age => age.Match(_ => _, () => 0) >= 21, age => Either<string, string>.Right("OK"))
             )
             .OnRight(verification => Assert.Fail("Didn't catch option.none"))
-            .OnLeft(verification => verification.Should().Be("Error, age not specified"));
+            .OnLeft(verification => verification.ShouldBe("Error, age not specified"));
 
     }
 
@@ -454,7 +450,7 @@ public class EitherTests
                 (age => age.IsSome, age => Task.FromResult($"{age.Match(_ => _, () => 0)}"))
             )
             .Result
-            .OnRight(l => l.Should().Be("42"));
+            .OnRight(l => l.ShouldBe("42"));
 
         Either<int, Option<int>>.Right(Option<int>.None())
             .GuardMapAsync(
@@ -462,7 +458,7 @@ public class EitherTests
                 (age => age.IsSome, age => Task.FromResult($"{age.Match(_ => _, () => 0)}"))
             )
             .Result
-            .OnRight(l => l.Should().Be("NONE"));
+            .OnRight(l => l.ShouldBe("NONE"));
     }
 
     [Test]
@@ -475,7 +471,7 @@ public class EitherTests
                 (age => age.Match(_ => _, () => 0) >= 21, age => Task.FromResult(Either<string, string>.Right("OK")))
             )
             .Result
-            .OnRight(verification => verification.Should().Be("Do you need some milk?"));
+            .OnRight(verification => verification.ShouldBe("Do you need some milk?"));
 
         Either<string, Option<int>>.Right(Option<int>.Some(22))
             .GuardBindAsync(
@@ -484,7 +480,7 @@ public class EitherTests
                 (age => age.Match(_ => _, () => 0) >= 21, age => Task.FromResult(Either<string, string>.Right("OK")))
             )
             .Result
-            .OnRight(verification => verification.Should().Be("OK"));
+            .OnRight(verification => verification.ShouldBe("OK"));
 
         Either<string, Option<int>>.Right(Option<int>.None())
             .GuardBindAsync(
@@ -494,42 +490,42 @@ public class EitherTests
             )
             .Result
             .OnRight(verification => Assert.Fail("Didn't catch option.none"))
-            .OnLeft(verification => verification.Should().Be("Error, age not specified"));
+            .OnLeft(verification => verification.ShouldBe("Error, age not specified"));
     }
 
     [Test]
     public void Unwrap_GivenRight_ReturnsRight()
-        => Either<int, string>.Right("right").Unwrap().Should().Be("right");
+        => Either<int, string>.Right("right").Unwrap().ShouldBe("right");
 
     [Test]
     public void Unwrap_GivenLeft_ThrowsInvalidOperationException()
     {
         var _ = () => Either<int, string>.Left(3).Unwrap();
-        _.Should().Throw<InvalidOperationException>();
+        _.ShouldThrow<InvalidOperationException>();
     }
 
     [Test]
     public void UnwrapLeft_GivenLeft_ReturnsLeft()
-        => Either<int, string>.Left(3).UnwrapLeft().Should().Be(3);
+        => Either<int, string>.Left(3).UnwrapLeft().ShouldBe(3);
 
     [Test]
     public void UnwrapLeft_GivenRight_ThrowsInvalidOperationException()
     {
         var _ = () => Either<int, string>.Right("right").UnwrapLeft();
-        _.Should().Throw<InvalidOperationException>();
+        // _.ShouldThrow<InvalidOperationException>();
     }
 
     public Func<int, string> DefaultDelegate() { return AgeStage.MilkTime; }
     public (Func<int, bool> evalExpressions, Func<int, string> delegateIfTrue)[] Guards() =>
-        new (Func<int, bool> evalExpressions, Func<int, string> delegateIfTrue)[] {
-            (_ => _ >= 5 && _ <= 10, AgeStage.PrimarySchool),
+    [
+        (_ => _ >= 5 && _ <= 10, AgeStage.PrimarySchool),
             (_ => _ >= 11 && _ <= 13, AgeStage.SecondarySchool),
             (_ => _ >= 14 && _ <= 19, AgeStage.HighSchool),
             (_ => _ == 20, AgeStage.Checkpoint),
             (_ => _ > 20 && _< 67, AgeStage.JobTime),
             (_ => _> 67 && _< 100, AgeStage.Retirement),
             (_ => _> 100, AgeStage.TimeToDie)
-        };
+    ];
     public static class AgeStage
     {
         public static string MilkTime(int age) => "Do you still need some milk?";

@@ -1,5 +1,5 @@
-﻿using Serilog.Events;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using Serilog.Events;
 
 namespace TinyFpTest.Configuration;
 
