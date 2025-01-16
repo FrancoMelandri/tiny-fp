@@ -1,8 +1,8 @@
 ﻿using System.Net;
-using FluentAssertions;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using Shouldly;
 using TinyFp.Complex.Setup;
 using TinyFpTest.Models;
 using static System.IO.File;
@@ -19,12 +19,12 @@ public class SearchTests : BaseIntegrationTest
         StubProducts(200, "[]");
 
         var response = Client.GetAsync("/search?forName=prd").Result;
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
 
         IntegrationTestHttpRequestHandler
             .RequestsReceived
             .Where(_ => _.RequestUri.ToString().Contains("/products"))
-            .Should().HaveCount(1);
+            .Count().ShouldBe(1);
 
         TestStartup
             .Logger
@@ -43,12 +43,12 @@ public class SearchTests : BaseIntegrationTest
         var response = Client.GetAsync($"/search?forName={forName}").Result;
         var responseContent = response.Content.ReadAsStringAsync().Result;
 
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
 
         IntegrationTestHttpRequestHandler
             .RequestsReceived
             .Where(_ => _.RequestUri.ToString().Contains("/products"))
-            .Should().HaveCount(0);
+            .Count().ShouldBe(0);
 
         TestStartup
             .Logger
@@ -64,13 +64,13 @@ public class SearchTests : BaseIntegrationTest
         var responseContent = response.Content.ReadAsStringAsync().Result;
         var products = JsonConvert.DeserializeObject<Product[]>(responseContent);
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        products.Should().HaveCount(2);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        products.Count().ShouldBe(2);
 
         IntegrationTestHttpRequestHandler
             .RequestsReceived
             .Where(_ => _.RequestUri.ToString().Contains("/products"))
-            .Should().HaveCount(1);
+            .Count().ShouldBe(1);
 
         TestStartup
             .Logger
@@ -88,26 +88,26 @@ public class SearchTests : BaseIntegrationTest
         var responseContent = response.Content.ReadAsStringAsync().Result;
         var products = JsonConvert.DeserializeObject<Product[]>(responseContent);
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        products.Should().HaveCount(2);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        products.Count().ShouldBe(2);
 
         response = Client.GetAsync("/search?forName=prd").Result;
         responseContent = response.Content.ReadAsStringAsync().Result;
         products = JsonConvert.DeserializeObject<Product[]>(responseContent);
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        products.Should().HaveCount(2);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        products.Count().ShouldBe(2);
 
         IntegrationTestHttpRequestHandler
             .RequestsReceived
             .Where(_ => _.RequestUri.ToString().Contains("/products"))
-            .Should().HaveCount(1);
+            .Count().ShouldBe(1);
 
         TestStartup
             .InMemoryRedisCache
             .ExistsAsync("products:prd")
             .Result
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
         TestStartup
             .Logger
@@ -121,12 +121,12 @@ public class SearchTests : BaseIntegrationTest
 
         var response = Client.GetAsync("/search?forName=yyy").Result;
 
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
 
         IntegrationTestHttpRequestHandler
             .RequestsReceived
             .Where(_ => _.RequestUri.ToString().Contains("/products"))
-            .Should().HaveCount(1);
+            .Count().ShouldBe(1);
 
         TestStartup
             .Logger

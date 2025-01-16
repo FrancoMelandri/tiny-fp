@@ -73,11 +73,12 @@ internal class TraverseExtensionsTest
     [Test]
     public async Task Traverse_AsyncFuncs_ShouldReturnArrayOfEithers()
     {
-        Func<int, Task<Either<string, string>>>[] funcs = {
+        Func<int, Task<Either<string, string>>>[] funcs =
+        [
             async x => await Task.FromResult(Either<string, string>.Right($"Value {x}")),
             async x => await Task.FromResult(Either<string, string>.Right($"Value {x + 1}")),
             async x => await Task.FromResult(Either<string, string>.Right($"Value {x + 2}"))
-        };
+        ];
 
         var value = Task.FromResult(Either<string, int>.Right(1));
 
@@ -93,11 +94,12 @@ internal class TraverseExtensionsTest
     [Test]
     public async Task Traverse_AsyncFuncs_WithLeftValue_ShouldReturnArrayWithLeft()
     {
-        Func<int, Task<Either<string, string>>>[] funcs = {
+        Func<int, Task<Either<string, string>>>[] funcs =
+        [
             async x => await Task.FromResult(Either<string, string>.Right($"Value {x}")),
             async x => await Task.FromResult(Either<string, string>.Left("Error")),
             async x => await Task.FromResult(Either<string, string>.Right($"Value {x + 2}"))
-        };
+        ];
 
         var value = Task.FromResult(Either<string, int>.Right(1));
 

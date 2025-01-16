@@ -14,7 +14,7 @@ public struct ApiRequest
     }
 
     public static ApiRequest Create()
-        => new(string.Empty, new List<(string name, string value)>(), 5000);
+        => new(string.Empty, [], 5000);
 
     public ApiRequest WithUrl(string url)
         => new(url, Headers, Timeout);

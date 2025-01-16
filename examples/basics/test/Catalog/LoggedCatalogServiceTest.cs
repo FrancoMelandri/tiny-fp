@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
+using Shouldly;
 using TinyFp;
 
 namespace TinyFpTest.Examples.Basics.Catalog;
@@ -24,8 +24,8 @@ public class LoggedCatalogServiceTest
 
         _catalog = new Catalog
         {
-            Products = new[]
-            {
+            Products =
+            [
                 new Product
                 {
                     Name = "Name1",
@@ -36,7 +36,7 @@ public class LoggedCatalogServiceTest
                     Name = "Name2",
                     Description = "Description2"
                 }
-            }
+            ]
         };
     }
 
@@ -49,7 +49,7 @@ public class LoggedCatalogServiceTest
 
         var result = _sut.Get();
 
-        result.IsRight.Should().BeTrue();
+        result.IsRight.ShouldBeTrue();
         _logger
             .Verify(m => m.Log(It.IsAny<string>()), Times.Never);
     }
@@ -65,7 +65,7 @@ public class LoggedCatalogServiceTest
 
         var result = _sut.Get();
 
-        result.IsLeft.Should().BeTrue();
+        result.IsLeft.ShouldBeTrue();
         _logger
             .Verify(m => m.Log("error"), Times.Once);
     }

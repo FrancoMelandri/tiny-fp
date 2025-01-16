@@ -517,15 +517,15 @@ public class EitherTests
 
     public Func<int, string> DefaultDelegate() { return AgeStage.MilkTime; }
     public (Func<int, bool> evalExpressions, Func<int, string> delegateIfTrue)[] Guards() =>
-        new (Func<int, bool> evalExpressions, Func<int, string> delegateIfTrue)[] {
-            (_ => _ >= 5 && _ <= 10, AgeStage.PrimarySchool),
+    [
+        (_ => _ >= 5 && _ <= 10, AgeStage.PrimarySchool),
             (_ => _ >= 11 && _ <= 13, AgeStage.SecondarySchool),
             (_ => _ >= 14 && _ <= 19, AgeStage.HighSchool),
             (_ => _ == 20, AgeStage.Checkpoint),
             (_ => _ > 20 && _< 67, AgeStage.JobTime),
             (_ => _> 67 && _< 100, AgeStage.Retirement),
             (_ => _> 100, AgeStage.TimeToDie)
-        };
+    ];
     public static class AgeStage
     {
         public static string MilkTime(int age) => "Do you still need some milk?";

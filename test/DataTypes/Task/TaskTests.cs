@@ -335,10 +335,10 @@ public class TaskTests
 
         _ = await Unit.Default
             .AsTask()
-            .TeeAsync(_ => Task.Delay(TimeSpan.FromSeconds(3)));
+            .TeeAsync(_ => Task.Delay(TimeSpan.FromSeconds(2)));
 
         stopWatch.Stop();
-        stopWatch.Elapsed.Seconds.ShouldBeGreaterThan(2);
+        stopWatch.Elapsed.Seconds.ShouldBeGreaterThan(1);
     }
 
     [Test]

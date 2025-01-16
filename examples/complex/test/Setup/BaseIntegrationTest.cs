@@ -19,7 +19,7 @@ public class BaseIntegrationTest : IDisposable
 
     public IWebHostBuilder GetWebHostBuilder(string jsonFile)
         => new HostBuilder<TestStartup>()
-            .CreateDefaultBuilder(new[] { jsonFile } );
+            .CreateDefaultBuilder([jsonFile]);
 
     [OneTimeSetUp]
     public void GlobalSetup()

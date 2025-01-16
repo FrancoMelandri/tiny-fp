@@ -4,7 +4,7 @@ namespace TinyFp.Complex.Setup;
 
 public class IntegrationTestHttpRequestHandler : DelegatingHandler
 {
-    private static readonly List<HttpRequestMessage> _requestsReceived = new List<HttpRequestMessage>();
+    private static readonly List<HttpRequestMessage> _requestsReceived = [];
     public static IEnumerable<HttpRequestMessage> RequestsReceived => _requestsReceived;
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)

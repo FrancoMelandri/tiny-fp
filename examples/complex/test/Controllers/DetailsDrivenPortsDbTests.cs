@@ -1,8 +1,8 @@
 ﻿using System.Net;
-using FluentAssertions;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using Shouldly;
 using TinyFp.Complex.Setup;
 using TinyFpTest.Models;
 
@@ -30,13 +30,12 @@ public class DetailsDrivenPortsDbTests : DetailsDrivenPortsbaseTests
             }));
 
         var response = Client.GetAsync("/details?productName=prd").Result;
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var responseContent = response.Content.ReadAsStringAsync().Result;
         var products = JsonConvert.DeserializeObject<ProductDetails>(responseContent);
 
         products
-            .Should()
-            .BeEquivalentTo(new ProductDetails
+            .ShouldBeEquivalentTo(new ProductDetails
             {
                 Sku = "sku",
                 Name = "prd",
@@ -61,7 +60,7 @@ public class DetailsDrivenPortsDbTests : DetailsDrivenPortsbaseTests
             .ReturnsAsync(Option<ProductDetails>.None());
 
         var response = Client.GetAsync("/details?productName=prd").Result;
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
 
         TestStartup
             .DetailsRepository
